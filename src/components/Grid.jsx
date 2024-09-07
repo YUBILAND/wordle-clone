@@ -197,21 +197,6 @@ const Grid = () => {
             if (guesses.sixth.length == 5) setSixthCanEnter(true);
             else setSixthCanEnter(false);
         }
-        // if (guesses.second.length == 5 && !secondDone) {
-        //     setSecondCanEnter(true);
-        // }
-        // if (guesses.third.length == 5 && !thirdDone) {
-        //     setThirdCanEnter(true);
-        // }
-        // if (guesses.fourth.length == 5 && !fourthDone) {
-        //     setFourthCanEnter(true);
-        // }
-        // if (guesses.fifth.length == 5 && !fifthDone) {
-        //     setFifthCanEnter(true);
-        // }
-        // if (guesses.sixth.length == 5 && !sixthDone) {
-        //     setSixthCanEnter(true);
-        // }
     }, [guesses])
 
     const greenLetter = (dummyWord, guessedWord) => {
@@ -325,14 +310,12 @@ const Grid = () => {
         // Repeat this pattern for the remaining guesses (third, fourth, etc.)
     }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]);
 
-
-
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while data is being fetched
     } 
   return (
     <div className='mx-auto w-[500px]'>
-        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2'>
+        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 mb-[90px]'>
 
             { (firstDone && firstRef.current) ? 
             <>

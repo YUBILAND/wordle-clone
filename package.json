@@ -14,6 +14,9 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
+    "react-simple-keyboard": "^3.7.152",
+    "simple-keyboard": "^3.7.107",
+    "simple-keyboard-input-mask": "^3.0.526",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
