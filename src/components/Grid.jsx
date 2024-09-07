@@ -44,47 +44,61 @@ const Grid = () => {
     }, [correctWord])
 
 
+    var guessLength = 0;
+
     useEffect(() => {
         const onPress = (event) => {
           if (event.key === 'Backspace') {
-            if (!firstDone) {
+            if (!firstDone && guessLength > 0) {
+                guessLength -= 1;
               setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first.slice(0, prevGuess.first.length - 1))}))
             } 
-            else if (!secondDone) {
+            else if (!secondDone && guessLength > 0) {
+                guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second.slice(0, prevGuess.second.length - 1))}))
             } 
-            else if (!thirdDone) {
+            else if (!thirdDone && guessLength > 0) {
+                guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third.slice(0, prevGuess.third.length - 1))}))
             } 
-            else if (!fourthDone) {
+            else if (!fourthDone && guessLength > 0) {
+                guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth.slice(0, prevGuess.fourth.length - 1))}))
             } 
-            else if (!fifthDone) {
+            else if (!fifthDone && guessLength > 0) {
+                guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth.slice(0, prevGuess.fifth.length - 1))}))
             } 
-            else if (!sixthDone) {
+            else if (!sixthDone && guessLength > 0) {
+                guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth.slice(0, prevGuess.sixth.length - 1))}))
             } 
           } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
-            if (!firstDone) {
+            if (!firstDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first + event.key.toUpperCase())}))
             }
-            else if (!secondDone) {
+            else if (!secondDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second + event.key.toUpperCase())}))
             } 
-            else if (!thirdDone) {
+            else if (!thirdDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third + event.key.toUpperCase())}))
             } 
-            else if (!fourthDone) {
+            else if (!fourthDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth + event.key.toUpperCase())}))
             } 
-            else if (!fifthDone) {
+            else if (!fifthDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth + event.key.toUpperCase())}))
             } 
-            else if (!sixthDone) {
+            else if (!sixthDone && guessLength < 5) {
+                guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth + event.key.toUpperCase())}))
-            } 
-          }
+            }
+          } 
         };
     
         // Attach event listener
@@ -96,6 +110,53 @@ const Grid = () => {
         };
       }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]); // Depend only on the completion status
 
+    const [firstCanEnter, setFirstCanEnter] = useState(false);
+    const [secondCanEnter, setSecondCanEnter] = useState(false);
+    const [thirdCanEnter, setThirdCanEnter] = useState(false);
+    const [fourthCanEnter, setFourthCanEnter] = useState(false);
+    const [fifthCanEnter, setFifthCanEnter] = useState(false);
+    const [sixthCanEnter, setSixthCanEnter] = useState(false);
+
+      useEffect(() => {
+        const onPress = (event) => {
+            if (event.key === 'Enter') {
+                if (!firstDone) {
+                    if (firstCanEnter) {
+                        setFirstDone(true);
+                    } else alert("NOt enough letters");
+                }
+                else if (!secondDone) {
+                    if (secondCanEnter) {
+                        setSecondDone(true);
+                    } else alert("NOt enough letters");
+                }
+                else if (!thirdDone) {
+                    if (thirdCanEnter) {
+                        setThirdDone(true);
+                    } else alert("NOt enough letters");
+                }
+                else if (!fourthDone) {
+                    if (fourthCanEnter) {
+                        setFourthDone(true);
+                    } else alert("NOt enough letters");
+                }
+                else if (!fifthDone) {
+                    if (fifthCanEnter) {
+                        setFifthDone(true);
+                    } else alert("NOt enough letters");
+                }
+                else if (!sixthDone) {
+                    if (sixthCanEnter) {
+                        setSixthDone(true);
+                    } else alert("NOt enough letters");
+                }
+            }
+        }
+        document.addEventListener('keydown', onPress);
+        return () => {
+          document.removeEventListener('keydown', onPress);
+        };
+    },[firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter])
     
 
     const compareString = (str1, str2) => {
@@ -106,26 +167,51 @@ const Grid = () => {
             }
         } return indexMatch;
     }
+    
+
+
+
 
     useEffect(() => {
-        if (guesses.first.length == 5 && !firstDone) {
-            setFirstDone(true);
+        if (!firstDone) {
+            if (guesses.first.length == 5) setFirstCanEnter(true);
+            else setFirstCanEnter(false);
         }
-        if (guesses.second.length == 5 && !secondDone) {
-            setSecondDone(true);
+        else if (!secondDone) {
+            if (guesses.second.length == 5) setSecondCanEnter(true);
+            else setSecondCanEnter(false);
         }
-        if (guesses.third.length == 5 && !thirdDone) {
-            setThirdDone(true);
+        else if (!thirdDone) {
+            if (guesses.third.length == 5) setThirdCanEnter(true);
+            else setThirdCanEnter(false);
         }
-        if (guesses.fourth.length == 5 && !fourthDone) {
-            setFourthDone(true);
+        else if (!fourthDone) {
+            if (guesses.fourth.length == 5) setFourthCanEnter(true);
+            else setFourthCanEnter(false);
         }
-        if (guesses.fifth.length == 5 && !fifthDone) {
-            setFifthDone(true);
+        else if (!fifthDone) {
+            if (guesses.fifth.length == 5) setFifthCanEnter(true);
+            else setFifthCanEnter(false);
         }
-        if (guesses.sixth.length == 5 && !sixthDone) {
-            setSixthDone(true);
+        else if (!sixthDone) {
+            if (guesses.sixth.length == 5) setSixthCanEnter(true);
+            else setSixthCanEnter(false);
         }
+        // if (guesses.second.length == 5 && !secondDone) {
+        //     setSecondCanEnter(true);
+        // }
+        // if (guesses.third.length == 5 && !thirdDone) {
+        //     setThirdCanEnter(true);
+        // }
+        // if (guesses.fourth.length == 5 && !fourthDone) {
+        //     setFourthCanEnter(true);
+        // }
+        // if (guesses.fifth.length == 5 && !fifthDone) {
+        //     setFifthCanEnter(true);
+        // }
+        // if (guesses.sixth.length == 5 && !sixthDone) {
+        //     setSixthCanEnter(true);
+        // }
     }, [guesses])
 
     const greenLetter = (dummyWord, guessedWord) => {
@@ -259,9 +345,18 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['first'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['first'][res] || ''}
+                        {guesses['first'][res]}
                     </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                    </div>
+                    
+                    // <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                    //     {guesses['first'][res] || ''}
+                    // </div>
                 ))}
             </>
             }
@@ -277,8 +372,13 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['second'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['second'][res] || ''}
+                        {guesses['second'][res]}
+                    </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                     </div>
                 ))}
             </>
@@ -295,8 +395,13 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['third'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses.third[res] || ''}
+                        {guesses['third'][res]}
+                    </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                     </div>
                 ))}
             </>
@@ -312,8 +417,13 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['fourth'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses.fourth[res] || ''}
+                        {guesses['fourth'][res]}
+                    </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                     </div>
                 ))}
             </>
@@ -329,8 +439,13 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['fifth'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses.fifth[res] || ''}
+                        {guesses['fifth'][res]}
+                    </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                     </div>
                 ))}
             </>
@@ -346,8 +461,13 @@ const Grid = () => {
             :   
             <>
                 {[0,1,2,3,4].map((res) => (
+                    guesses['sixth'][res]
+                    ? 
                     <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses.sixth[res] || ''}
+                        {guesses['sixth'][res]}
+                    </div>
+                    : 
+                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                     </div>
                 ))}
             </>
