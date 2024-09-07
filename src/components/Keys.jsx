@@ -47,13 +47,13 @@ const Keys = ( {colorIn} ) => {
         default : [
           'q w e r t y u i o p',
           'a s d f g h j k l',
-          'enter z x c v b n m back'
+          'ENTER z x c v b n m DEL'
         ]
       }}
       buttonTheme={[
         {
           class: "buttons",
-          buttons: 'q w e r t y u i o p a s d f g h j k l enter z x c v b n m back'
+          buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
         }
       ]}
       theme="hg-theme-default board"

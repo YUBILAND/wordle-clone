@@ -12,3 +12,29 @@
 
 
 }
+
+.hg-rows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+
+}
+.hg-rows > div:nth-child(2){
+    width: 90%;
+
+    
+}
+
+.hg-rows > div:nth-child(3){
+    width: 100%;
+}
+
+.hg-rows > div:nth-child(3) > div:not([data-skbtn="ENTER"], [data-skbtn="DEL"]){
+    width: 40px !important;
+    /* color: blue; */
+}
+
+[data-skbtn="ENTER"], [data-skbtn="DEL"] {
+    /* color: red; */
+    width: 64px !important; 
+}
