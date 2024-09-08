@@ -1,7 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import raw from '../assets/wordle-La.txt'
+import { KeyboardContext } from '../Contexts/KeyboardContext';
+
 
 const Grid = () => {
+
+    
+    // const [kbColor, setKbColor] = useState({});
+
+    const {setKbColor} = useContext(KeyboardContext);
 
     const [wordleList, setWordleList] = useState([]);
     const [firstDone, setFirstDone] = useState(false);
@@ -16,7 +23,6 @@ const Grid = () => {
 
     const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
     const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
-
 
     useEffect(() => {
 
@@ -168,10 +174,6 @@ const Grid = () => {
         } return indexMatch;
     }
     
-
-
-
-
     useEffect(() => {
         if (!firstDone) {
             if (guesses.first.length == 5) setFirstCanEnter(true);
@@ -239,8 +241,12 @@ const Grid = () => {
         }
     }
 
+    
+
+    var newKbColor;
     useEffect(() => {
         if (firstDone && !firstRef.current) { //player has made first guess
+
             cheatVar = greenLetter(correctWord, guesses.first)
             const colorGuess = guesses.first.split('').map((res, ind) => (
                 
@@ -250,6 +256,18 @@ const Grid = () => {
                 ...prevResults,
                 first: [...prevResults.first, ...colorGuess]
             }));
+
+            let newKbColor = guesses.first.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+            
             firstRef.current = true;
         }
         if (secondDone && !secondRef.current) { //player has made first guess
@@ -261,6 +279,18 @@ const Grid = () => {
                 ...prevResults,
                 second: [...prevResults.second, ...colorGuess]
             }));
+
+            let newKbColor = guesses.second.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+
             secondRef.current = true;
         }
         if (thirdDone && !thirdRef.current) { //player has made first guess
@@ -272,6 +302,18 @@ const Grid = () => {
                 ...prevResults,
                 third: [...prevResults.third, ...colorGuess]
             }));
+
+            let newKbColor = guesses.third.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+
             thirdRef.current = true;
         }
         if (fourthDone && !fourthRef.current) { //player has made first guess
@@ -283,6 +325,18 @@ const Grid = () => {
                 ...prevResults,
                 fourth: [...prevResults.fourth, ...colorGuess]
             }));
+
+            let newKbColor = guesses.fourth.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+
             fourthRef.current = true;
         }
         if (fifthDone && !fifthRef.current) { //player has made first guess
@@ -294,6 +348,18 @@ const Grid = () => {
                 ...prevResults,
                 fifth: [...prevResults.fifth, ...colorGuess]
             }));
+
+            let newKbColor = guesses.fifth.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+
             fifthRef.current = true;
         }
         if (sixthDone && !sixthRef.current) { //player has made first guess
@@ -305,6 +371,18 @@ const Grid = () => {
                 ...prevResults,
                 sixth: [...prevResults.sixth, ...colorGuess]
             }));
+
+            let newKbColor = guesses.sixth.split('').reduce((acc, res, ind) => {
+                acc[res] = colorGuess[ind];
+                return acc;
+                
+            }, {});
+
+            setKbColor(prevResults => [
+                ...prevResults,
+                { ...newKbColor }
+            ])
+
             sixthRef.current = true;
         }
         // Repeat this pattern for the remaining guesses (third, fourth, etc.)
@@ -320,7 +398,7 @@ const Grid = () => {
             { (firstDone && firstRef.current) ? 
             <>
                 {guessResults.first.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses['first'][ind] || ''}
                     </div>
                 ))}
@@ -347,7 +425,7 @@ const Grid = () => {
             { secondDone ? 
             <>
                 {guessResults.second.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses['second'][ind] || ''}
                     </div>
                 ))}
@@ -370,7 +448,7 @@ const Grid = () => {
             { thirdDone ? 
             <>
                 {guessResults.third.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses.third[ind] || ''}
                     </div>
                 ))}
@@ -392,7 +470,7 @@ const Grid = () => {
             { fourthDone ? 
             <>
                 {guessResults.fourth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses.fourth[ind] || ''}
                     </div>
                 ))}
@@ -414,7 +492,7 @@ const Grid = () => {
             { fifthDone ? 
             <>
                 {guessResults.fifth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses.fifth[ind] || ''}
                     </div>
                 ))}
@@ -436,7 +514,7 @@ const Grid = () => {
             { sixthDone ? 
             <>
                 {guessResults.sixth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-green-200' :  res == 'yellow' ? 'bg-yellow-200' : 'bg-gray-400'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold` }>
+                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                         {guesses.sixth[ind] || ''}
                     </div>
                 ))}
