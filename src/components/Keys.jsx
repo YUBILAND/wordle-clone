@@ -8,9 +8,9 @@ import { KeyboardContext } from '../Contexts/KeyboardContext';
 
 const Keys = () => {
 
-    const [green, setGreen] = useState('');
-    const [yellow, setYellow] = useState('');
-    const [gray, setGray] = useState('');
+    const [green, setGreen] = useState([]);
+    const [yellow, setYellow] = useState([]);
+    const [gray, setGray] = useState([]);
     const [buttonTheme, setButtonTheme] = useState([])
 
 
@@ -54,13 +54,22 @@ const Keys = () => {
 
                     res[key] == "green" 
                     ?
-                    setGreen(prevKey => prevKey + ' ' + key.toLowerCase())
+                    setGreen(prevKey => ([
+                        ...prevKey,
+                        key.toLowerCase()
+                    ]))
                     :
                     res[key] == 'yellow'
                     ?
-                    setYellow(prevKey => prevKey + ' ' + key.toLowerCase())
+                    setYellow(prevKey => ([
+                        ...prevKey,
+                        key.toLowerCase()
+                    ]))
                     :
-                    setGray(prevKey => prevKey + ' ' + key.toLowerCase())
+                    setGray(prevKey => ([
+                        ...prevKey,
+                        key.toLowerCase()
+                    ]))
                     
 
                     
@@ -71,21 +80,57 @@ const Keys = () => {
 
     }, [kbColor])
 
+    const [greenString, setGreenString] = useState('');
+    const [yellowString, setYellowString] = useState('');
+    const [grayString, setGrayString] = useState('');
+
+    useEffect(() => {
+
+        green && setGreenString(green.join(' '))
+
+        // if gray in yellow remove from gray
+        if (yellow && gray){
+            console.log(gray)
+            const grayYellow = gray.filter((color) => !yellow.includes(color));
+            setGrayString(grayYellow.join(' '))
+
+        }
+            //if yellow in green remove from yellow
+        if ( green && yellow) {
+            const yellowGreen = yellow.filter((color) => !green.includes(color));
+            setYellowString(yellowGreen.join(' '))
+        }   
+        
+        if (gray && !yellow) {
+            setGrayString(gray.join(' '))
+        }
+
+        if (yellow && !gray) {
+            setYellowString(yellow.join(' '))
+        }
+
+        
+
+
+
+    }, [green, yellow, gray])
+
+
     useEffect(() => {
         
 
         setButtonTheme([
             {
                 class: "green",
-                buttons: green || ' '
+                buttons: greenString || ' '
             },
             {
                 class: "yellow",
-                buttons: yellow || ' '
+                buttons: yellowString  || ' '
             },
             {
                 class: "gray",
-                buttons: gray || ' '
+                buttons: grayString || ' '
             },
             {
                 class: "buttons",
@@ -95,7 +140,7 @@ const Keys = () => {
 
 
     
-    },[green, yellow, gray])
+    },[greenString, yellowString, grayString])
 
     // useEffect(() => {
     //     if (buttonTheme.length > 0) {
