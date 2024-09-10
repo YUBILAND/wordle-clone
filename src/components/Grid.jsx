@@ -13,12 +13,15 @@ const Grid = () => {
     // const [kbColor, setKbColor] = useState({});
 
     const {setKbColor} = useContext(KeyboardContext);
-    const [winPage, setWinPage] = useState(false);
+    const {winPage, setWinPage} = useContext(KeyboardContext);
+
     const [winCompliment, setWinCompliment] = useState(false);
     const [win, setWin] = useState(false);
+    const [answer, showAnswer] = useState(false);
 
     const [notEnough, setNotEnough] = useState(false);
 
+    const [wrongWord, setWrongWord] = useState(false);
 
     const [wordleList, setWordleList] = useState([]);
     const [firstDone, setFirstDone] = useState(false);
@@ -50,6 +53,7 @@ const Grid = () => {
     useEffect(() => {
         if (wordleList.length > 0) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
+        console.log(wordleList)
         // setCorrectWord("ELBOW")
         setLoading(false);
         }
@@ -141,32 +145,44 @@ const Grid = () => {
             if (event.key === 'Enter') {
                 if (!firstDone) {
                     if (firstCanEnter) {
-                        setFirstDone(true);
+                        if (wordleList.includes(guesses.first.toLowerCase())) {
+                            setFirstDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
                 else if (!secondDone) {
                     if (secondCanEnter) {
-                        setSecondDone(true);
+                        if (wordleList.includes(guesses.second.toLowerCase())) {
+                            setSecondDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
                 else if (!thirdDone) {
                     if (thirdCanEnter) {
-                        setThirdDone(true);
+                        if (wordleList.includes(guesses.third.toLowerCase())) {
+                            setThirdDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
                 else if (!fourthDone) {
                     if (fourthCanEnter) {
-                        setFourthDone(true);
+                        if (wordleList.includes(guesses.fourth.toLowerCase())) {
+                            setFourthDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
                 else if (!fifthDone) {
                     if (fifthCanEnter) {
-                        setFifthDone(true);
+                        if (wordleList.includes(guesses.fifth.toLowerCase())) {
+                            setFifthDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
                 else if (!sixthDone) {
                     if (sixthCanEnter) {
-                        setSixthDone(true);
+                        if (wordleList.includes(guesses.sixth.toLowerCase())) {
+                            setSixthDone(true);
+                        } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
             }
@@ -188,6 +204,7 @@ const Grid = () => {
             }
         } return indexMatch;
     }
+
     
     useEffect(() => {
         if (!firstDone) {
@@ -256,12 +273,7 @@ const Grid = () => {
         }
     }
 
-    
-    
-    
-    
-
-    var newKbColor;
+    // var newKbColor;
     useEffect(() => {
         if (firstDone && !firstRef.current) { //player has made first guess
 
@@ -405,7 +417,7 @@ const Grid = () => {
 
             fifthRef.current = true;
         }
-        if (sixthDone && !sixthRef.current) { //player has made first guess
+        if (sixthDone && !sixthRef.current) { //player has made final guess
             cheatVar = greenLetter(correctWord, guesses.sixth)
             const colorGuess = guesses.sixth.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -429,6 +441,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+            } else {
+                showAnswer(true);
             }
 
             sixthRef.current = true;
@@ -472,8 +486,23 @@ const Grid = () => {
             }, 5000);
 
     }
-    
 
+    if (wrongWord) {
+        setTimeout(function() {
+            document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+            setWrongWord(false);
+
+            }, 5000);
+    }
+
+    if (answer) {
+        setTimeout(function() {
+            setWinPage(true);
+        }, 1000);
+    }
+
+    
+    
   return (
     <div className='mx-auto w-[500px] opacity-100 mb-[110px]'>
 
@@ -481,7 +510,11 @@ const Grid = () => {
 
         {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not enough letters</span> </div>}
 
+        {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
+
         {winPage && <Statistics /> }
+
+        {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 

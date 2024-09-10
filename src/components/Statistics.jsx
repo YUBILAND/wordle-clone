@@ -1,14 +1,26 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ShareIcon from '@mui/icons-material/Share';
+import { KeyboardContext } from '../Contexts/KeyboardContext';
 
 const Statistics = () => {
+
+    const {winPage, setWinPage} = useContext(KeyboardContext);
+
+    function handleX() {
+        setWinPage(!winPage)
+    }
+
+    function handleReplay() {
+        window.location.reload();
+    }
+
   return (
     <>
         <div className='absolute top-[250px] w-[500px] rounded-md shadow-xl bg-white z-20'>
             <div className='text-right mt-4 pr-4'>
-                <CloseIcon sx={{color: '#787c7e'}}/>
+                <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
             </div>
             <h1 className='text-center font-bold mb-2 uppercase tracking-[0.5px]'>Statistics</h1>
             <div className='grid grid-cols-4 w-[250px] mx-auto text-center mb-2 gap-x-2'>
@@ -46,9 +58,9 @@ const Statistics = () => {
             <div className='flex justify-around w-full mx-auto mb-10'>
                 <div className='border-r border-black pr-10'>
 
-                    <button className='flex items-center green uppercase  text-2xl px-2 rounded-md py-2'>
+                    <button onClick={handleReplay} className='flex items-center green uppercase  text-2xl px-2 rounded-md py-2'>
                         Play again!
-                        <ReplayIcon />
+                        <ReplayIcon/>
                     </button>
                 </div>
                 <div>

@@ -9,14 +9,17 @@ function App() {
   // const[ letterColor, setLetterColor] = useState([]);
 
   const [kbColor, setKbColor] = useState([]);
+  const [winPage, setWinPage] = useState(false)
+  const [tutorial, showTutorial] = useState(false);
+  const [settings, showSettings] = useState(false);
 
   // console.log(kbColor)
 
 
   return (
     <div className="App">
-      <Header />
-      <KeyboardContext.Provider value={{kbColor, setKbColor}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings}}>
+        <Header />
         <Grid />
         <Keys />
       </KeyboardContext.Provider>
