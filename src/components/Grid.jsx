@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import raw from '../assets/wordle-La.txt'
 import { KeyboardContext } from '../Contexts/KeyboardContext';
-
+import CloseIcon from '@mui/icons-material/Close';
+import ReplayIcon from '@mui/icons-material/Replay';
+import ShareIcon from '@mui/icons-material/Share';
+import './Grid.css'
+import Statistics from './Statistics';
 
 const Grid = () => {
 
@@ -9,6 +13,12 @@ const Grid = () => {
     // const [kbColor, setKbColor] = useState({});
 
     const {setKbColor} = useContext(KeyboardContext);
+    const [winPage, setWinPage] = useState(false);
+    const [winCompliment, setWinCompliment] = useState(false);
+    const [win, setWin] = useState(false);
+
+    const [notEnough, setNotEnough] = useState(false);
+
 
     const [wordleList, setWordleList] = useState([]);
     const [firstDone, setFirstDone] = useState(false);
@@ -23,6 +33,7 @@ const Grid = () => {
 
     const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
     const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
+
 
     useEffect(() => {
 
@@ -53,6 +64,7 @@ const Grid = () => {
     var guessLength = 0;
 
     useEffect(() => {
+        
         const onPress = (event) => {
           if (event.key === 'Backspace') {
             if (!firstDone && guessLength > 0) {
@@ -106,15 +118,16 @@ const Grid = () => {
             }
           } 
         };
-    
-        // Attach event listener
-        document.addEventListener('keydown', onPress);
-    
-        // Cleanup function to remove event listener
-        return () => {
-          document.removeEventListener('keydown', onPress);
-        };
-      }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]); // Depend only on the completion status
+        if(!win) {
+            // Attach event listener
+            document.addEventListener('keydown', onPress);
+        
+            // Cleanup function to remove event listener
+            return () => {
+            document.removeEventListener('keydown', onPress);
+            };
+        }
+      }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, win]); // Depend only on the completion status
 
     const [firstCanEnter, setFirstCanEnter] = useState(false);
     const [secondCanEnter, setSecondCanEnter] = useState(false);
@@ -129,40 +142,42 @@ const Grid = () => {
                 if (!firstDone) {
                     if (firstCanEnter) {
                         setFirstDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
                 else if (!secondDone) {
                     if (secondCanEnter) {
                         setSecondDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
                 else if (!thirdDone) {
                     if (thirdCanEnter) {
                         setThirdDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
                 else if (!fourthDone) {
                     if (fourthCanEnter) {
                         setFourthDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
                 else if (!fifthDone) {
                     if (fifthCanEnter) {
                         setFifthDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
                 else if (!sixthDone) {
                     if (sixthCanEnter) {
                         setSixthDone(true);
-                    } else alert("NOt enough letters");
+                    } else setNotEnough(true);
                 }
             }
         }
-        document.addEventListener('keydown', onPress);
-        return () => {
-          document.removeEventListener('keydown', onPress);
-        };
-    },[firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter])
+        if (!win) {
+            document.addEventListener('keydown', onPress);
+            return () => {
+            document.removeEventListener('keydown', onPress);
+            };
+        }
+    },[firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter, win])
     
 
     const compareString = (str1, str2) => {
@@ -242,6 +257,9 @@ const Grid = () => {
     }
 
     
+    
+    
+    
 
     var newKbColor;
     useEffect(() => {
@@ -267,10 +285,15 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
             
             firstRef.current = true;
         }
-        if (secondDone && !secondRef.current) { //player has made first guess
+        if (secondDone && !secondRef.current) { //player has made second guess
             cheatVar = greenLetter(correctWord, guesses.second)
             const colorGuess = guesses.second.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -290,6 +313,11 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
 
             secondRef.current = true;
         }
@@ -313,6 +341,11 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
 
             thirdRef.current = true;
         }
@@ -336,6 +369,11 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
 
             fourthRef.current = true;
         }
@@ -359,6 +397,11 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
 
             fifthRef.current = true;
         }
@@ -382,18 +425,65 @@ const Grid = () => {
                 ...prevResults,
                 { ...newKbColor }
             ])
+            const set = new Set(Object.values(newKbColor))
+            const first = [...set][0]
+            if (set.size == 1 && first == 'green') {
+                setWin(true);
+            }
 
             sixthRef.current = true;
         }
         // Repeat this pattern for the remaining guesses (third, fourth, etc.)
     }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]);
 
-    if (loading) {
-        return <div>Loading...</div>; // Show a loading indicator while data is being fetched
-    } 
+    useEffect(() => {
+
+        if (win) {
+            setWinCompliment(true);
+            setTimeout(() => {
+                /* Code to run after 4 seconds */
+                // alert('wow you have brain')
+                setWinPage(true);
+                // const allExceptDiv = document.querySelectorAll("body > *:not(#stats):not(#stats *)");
+                // allExceptDiv.forEach(el => el.classList.add("unfocus"))
+
+            }, 1000)
+            
+        }
+
+    }, [win])
+
+        // if (loading) {
+        //     return <div>Loading...</div>; // Show a loading indicator while data is being fetched
+        // }
+
+    if(winCompliment) {
+        setTimeout(function() {
+            document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+            setWinCompliment(false);
+            }, 5000);
+    }
+
+    if(notEnough) {
+        setTimeout(function() {
+            document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+            setNotEnough(false);
+
+            }, 5000);
+
+    }
+    
+
   return (
-    <div className='mx-auto w-[500px]'>
-        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 mb-[90px]'>
+    <div className='mx-auto w-[500px] opacity-100 mb-[110px]'>
+
+        {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Magnificent</span> </div>}
+
+        {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not enough letters</span> </div>}
+
+        {winPage && <Statistics /> }
+
+        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 
             { (firstDone && firstRef.current) ? 
             <>
@@ -534,6 +624,11 @@ const Grid = () => {
             </>
             }
         </div>
+         
+        
+
+        
+
         
     </div>
   )
