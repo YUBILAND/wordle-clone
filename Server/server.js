@@ -25,20 +25,38 @@ app.get('/users', (req, res) => {
     })
 })
 
-app.post('/signup', (req, res) => {
-    const sql = "INSERT INTO USERS (`id`, `username`, `email`, `password`) Values (?)";
-    const values = [
-        req.body.id,
-        req.body.username,
-        req.body.email,
-        req.body.password,
-    ]
-    db.query(sql, [values], (err, data) => {
+app.post('/login', (req, res) => {
+    const checkSql = "SELECT * FROM USERS WHERE username = ? AND password = ?";
+    db.query(checkSql, [req.body.username, req.body.password], (err, result) => {
         if (err) return res.json(err);
-        return res.json(data);
+        if (result.length > 0) {
+            // If result is not empty, the username or email already exists
+            return res.json({ message: "Logged in" });
+        }
+        return res.json({message: "Username or password is incorrect"});
     })
+})
 
 
+app.post('/signup', (req, res) => {
+    const checkSql = "SELECT * FROM USERS WHERE username = ? OR email = ?";
+    db.query(checkSql, [req.body.username, req.body.email], (err, result) => {
+        if (err) return res.json(err);
+        if (result.length == 1) {
+            // If result is not empty, the username or email already exists
+            return res.json({ message: "Username or Email already exists" });
+        }
+        const sql = "INSERT INTO USERS ( `username`, `email`, `password`) Values (?)";
+        const values = [
+            req.body.username,
+            req.body.email,
+            req.body.password,
+        ]
+        db.query(sql, [values], (err, data) => {
+            if (err) return res.json(err);
+            return res.json(data);
+        })
+    })
 })
 
 app.listen(8081, () => {
