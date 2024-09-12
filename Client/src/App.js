@@ -23,12 +23,11 @@ function App() {
 
   const [loginPage, showLoginPage] = useState(false);
   const [registerPage, showRegisterPage] = useState(false);
+  const [userID, setUserID] = useState({id:'0'});
 
 
 
-  if (guestMode) {
-
-  }
+  
 
   useEffect(() => {
     fetch('http://localhost:8081/users')
@@ -41,7 +40,7 @@ function App() {
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
 
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID}}>
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
         <Header />

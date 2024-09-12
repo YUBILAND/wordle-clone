@@ -59,6 +59,18 @@ app.post('/signup', (req, res) => {
     })
 })
 
+app.get('/stats', (req, res) => {
+    const sql = "SELECT * FROM STATS WHERE id = ?";
+    db.query(sql, [req.query.id], (err, data) => {
+        if (err) return res.json(err);
+        if (data.length == 1) {
+            // If result is not empty, the username or email already exists
+            return res.json(data[0]);
+        }
+    })
+})
+
+
 app.listen(8081, () => {
     console.log('listening');
 })

@@ -8,6 +8,7 @@ const LandingPage = () => {
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
     const {loginPage, showLoginPage} = useContext(KeyboardContext);
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
+    const {userID, setUserID} = useContext(KeyboardContext);
 
     function handleLogin() {
         showLoginPage(true);
@@ -18,6 +19,7 @@ const LandingPage = () => {
     }
 
     function handleGuest() {
+        // setUserID(0);
         setGuestMode(true);
     }
 

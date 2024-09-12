@@ -1,12 +1,87 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ShareIcon from '@mui/icons-material/Share';
 import { KeyboardContext } from '../Contexts/KeyboardContext';
+import axios from 'axios';
 
 const Statistics = () => {
 
     const {winPage, setWinPage} = useContext(KeyboardContext);
+    const {userID, setUserID} = useContext(KeyboardContext);
+    const [statsDone, setStatsDone] = useState(false);
+    const [stats, setStats] = useState(
+        {
+            guess1: '',
+            guess2: '',
+            guess3: '',
+            guess4: '',
+            guess5: '',
+            guess6: '',
+            played: '',
+            wins: '',
+            streak: '',
+            highest: '',
+        });
+    const [widthDone, setWidthDone] = useState(false);
+    const [width, setWidth] = useState({ 
+        guess1: '0',
+        guess2: '0',
+        guess3: '0',
+        guess4: '0',
+        guess5: '0',
+        guess6: '0'
+    }); 
+
+    useEffect(() => {
+        // console.log("HERE")
+        if (winPage) {
+
+            axios.get('http://localhost:8081/stats', { params: { ...userID } })
+            .then(res => {
+                setStats(prevStats => ({
+                    ...prevStats, 
+                    guess1: res.data.guess1,
+                    guess2: res.data.guess2,
+                    guess3: res.data.guess3,
+                    guess4: res.data.guess4,
+                    guess5: res.data.guess5,
+                    guess6: res.data.guess6,
+                    played: res.data.played,
+                    wins: res.data.wins,
+                    streak: res.data.streak,
+                    highest: res.data.highest,
+                }))
+                setStatsDone(true);
+            })
+            .catch(err => console.log(err));
+        }
+    }, [winPage])
+
+    useEffect(() => {
+        if (statsDone)
+        console.log(stats)
+
+        Object.entries(width).map(([key]) => {
+            console.log(key)
+            
+            const guessMax = Math.max(stats.guess1, stats.guess2, stats.guess3, stats.guess4, stats.guess5, stats.guess6)
+            setWidth(prevWidth => ({
+                ...prevWidth,
+                [key]: Math.round( parseInt(stats[key]) / guessMax * 100 + 10).toString()
+            })) 
+        } )
+        setWidthDone(true);
+
+    }, [statsDone])
+
+
+    useEffect(() => {
+        if (widthDone)
+            console.log(width)
+        // console.log(width.guess1)
+    },[widthDone])
+    
 
     function handleX() {
         setWinPage(!winPage)
@@ -24,10 +99,10 @@ const Statistics = () => {
             </div>
             <h1 className='text-center font-bold mb-2 uppercase tracking-[0.5px]'>Statistics</h1>
             <div className='grid grid-cols-4 w-[250px] mx-auto text-center mb-2 gap-x-2'>
-                <div className='text-4xl'>12</div>
-                <div className='text-4xl'>67</div>
-                <div className='text-4xl'>1</div>
-                <div className='text-4xl'>1</div>
+                <div className='text-4xl'>{stats.played}</div>
+                <div className='text-4xl'>{Math.round(stats.wins / stats.played * 100)}</div>
+                <div className='text-4xl'>{stats.streak}</div>
+                <div className='text-4xl'>{stats.highest}</div>
                 <div className='text-xs'>Played</div>
                 <div className='text-xs'>Win %</div>
                 <div className='text-xs'>Current Streak</div>
@@ -45,12 +120,16 @@ const Statistics = () => {
                     <span className='w-fit pb-[4px]'>6</span>
                 </div>
                 <div className='w-full'>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
-                    <h1 className= 'w-full gray text-right font-bold pr-2 mb-1'>1</h1>
+                    {widthDone && 
+                    <>
+                    <h1 style={{ width: `${width.guess1}%` }} className= 'pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess1}</h1>
+                    <h1 style={{ width: `${width.guess2}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess2}</h1>
+                    <h1 style={{ width: `${width.guess3}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess3}</h1>
+                    <h1 style={{ width: `${width.guess4}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess4}</h1>
+                    <h1 style={{ width: `${width.guess5}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess5}</h1>
+                    <h1 style={{ width: `${width.guess6}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess6}</h1>
+                    </>
+                    }
                 </div>
 
             </div>
