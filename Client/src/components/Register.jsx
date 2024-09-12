@@ -6,11 +6,12 @@ import axios from 'axios'
 const Register = () => {
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
     const [regAcc, setRegAcc] = useState({
-        id: '1',
         username: '',
         email: '',
         password: ''
     })
+    const {userMode, setUserMode} = useContext(KeyboardContext);
+    const[wrong, setWrong] = useState(false);
 
     function handleClose() {
         showRegisterPage(false);
@@ -23,8 +24,18 @@ const Register = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.post('http://localhost:8081/signup', regAcc)
-        .then(res => console.log("Registered Succesfully!"))
+        .then(res => {
+            if (res.data.message) {
+                console.log(res.data.message)
+                setWrong(true);
+            } else { 
+                console.log("Registered Successfully!"); 
+                setWrong(false);
+                setUserMode(true) 
+            }
+        })
         .catch(err => console.log(err));
+        
     }
 
   return (
@@ -33,6 +44,11 @@ const Register = () => {
             <CloseIcon className='cursor-pointer' onClick={handleClose} sx={{color: '#787c7e'}}/>
         </div>
         <div className='w-[300px] mx-auto '>
+            {wrong &&
+            <div className='text-center'>
+                <p className='text-red-500 font-bold'>Username or Email Taken</p>
+            </div>
+            }
            <form onSubmit={handleSubmit} action="">
                 <div className='flex flex-col pt-5 pb-3'>
                     <span className='font-bold text-2xl pb-2'>Username:</span>

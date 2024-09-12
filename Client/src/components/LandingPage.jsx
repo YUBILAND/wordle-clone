@@ -23,7 +23,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className='absolute top-0 left-0 bg-[#e3e3e1] w-screen h-screen'>
+    <div className='absolute top-0 left-0 bg-[#e3e3e1] w-screen min-h-screen'>
         <div className='w-[500px] mx-auto mt-8'>
 
             <div className='flex flex-col items-center'>

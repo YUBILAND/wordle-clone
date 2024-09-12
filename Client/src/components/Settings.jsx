@@ -9,6 +9,11 @@ const Settings = () => {
 
     const {settings, showSettings} = useContext(KeyboardContext);
     const {darkMode, setDarkMode} = useContext(KeyboardContext);
+    const {userMode, setUserMode} = useContext(KeyboardContext);
+    const {guestMode, setGuestMode} = useContext(KeyboardContext);
+    const {loginPage, showLoginPage} = useContext(KeyboardContext);
+    const {registerPage, showRegisterPage} = useContext(KeyboardContext);
+
 
     function handleX() {
         showSettings(!settings);
@@ -137,6 +142,23 @@ const Settings = () => {
       setDarkMode(!darkMode);
     }
 
+    function handleLogOut() {
+      showSettings(false);
+      setUserMode(false);
+    }
+
+    function handleLogIn() {
+      showSettings(false);
+      setGuestMode(false);
+      showLoginPage(true);
+    }
+
+    function handleRegister() {
+      showSettings(false);
+      setGuestMode(false);
+      showRegisterPage(true);
+    }
+
     // useEffect(() => {
     //   if (darkMode) {document.body.style.setProperty('background-color', 'black', 'important'); console.log("HELLO");}
     //   else document.body.style.backgroundColor = '!white';
@@ -196,6 +218,18 @@ const Settings = () => {
             </div>
 
             <hr/>
+
+            <div className='text-center pr-2 py-4'>
+              {guestMode && 
+              <div className='flex justify-around'>
+                <button onClick={handleLogIn} className='basis-1/2 green text-white w-full h-full py-2 mx-4 font-bold rounded-xl'>Log In</button>
+                <button onClick={handleRegister} className='basis-1/2 green text-white w-full h-full py-2 mx-4 font-bold rounded-xl'>Create an account</button>
+              </div>
+              }
+              {userMode && 
+                <button onClick={handleLogOut} className='bg-red-500 text-white py-2 px-2 font-bold rounded-xl'>Sign Out</button>
+              }
+            </div>
 
         </div>
     </div>

@@ -58,7 +58,7 @@ const Grid = () => {
         const fetchWords = async () => { 
             const response = await fetch(raw);
             const text = await response.text();
-            const lines = text.split('\n').slice(0, 2315);
+            const lines = text.split('\r\n').slice(0, 2315);
             setWordleList(lines)
         };
         fetchWords();
@@ -67,6 +67,7 @@ const Grid = () => {
     useEffect(() => {
         if (wordleList.length > 0) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
+        console.log(wordleList);
         setLoading(false);
         }
     }, [wordleList])
