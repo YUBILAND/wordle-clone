@@ -6,6 +6,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import ShareIcon from '@mui/icons-material/Share';
 import './Grid.css'
 import Statistics from './Statistics';
+import axios from 'axios';
 
 const Grid = () => {
 
@@ -13,12 +14,16 @@ const Grid = () => {
     // const [kbColor, setKbColor] = useState({});
     const {darkMode} = useContext(KeyboardContext);
 
+    const {userID, setUserID} = useContext(KeyboardContext);
+
 
     const {setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
 
+    const {guessWon, setGuessWon} = useContext(KeyboardContext);
+
     const [winCompliment, setWinCompliment] = useState(false);
-    const [win, setWin] = useState(false);
+    const {win, setWin} = useContext(KeyboardContext);
     const [answer, showAnswer] = useState(false);
 
     const [notEnough, setNotEnough] = useState(false);
@@ -269,23 +274,18 @@ const Grid = () => {
 
     useEffect(() => {
         if (firstDone && !firstRef.current) { //player has made first guess
-
             cheatVar = greenLetter(correctWord, guesses.first)
             const colorGuess = guesses.first.split('').map((res, ind) => (
-                
                 evaluteGuess(res, ind)
             ))
             setGuessResults(prevResults => ({
                 ...prevResults,
                 first: [...prevResults.first, ...colorGuess]
             }));
-
             let newKbColor = guesses.first.split('').reduce((acc, res, ind) => {
                 acc[res] = colorGuess[ind];
                 return acc;
-                
             }, {});
-
             setKbColor(prevResults => [
                 ...prevResults,
                 { ...newKbColor }
@@ -294,8 +294,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess1');
             }
-            
             firstRef.current = true;
         }
         if (secondDone && !secondRef.current) { //player has made second guess
@@ -307,13 +307,10 @@ const Grid = () => {
                 ...prevResults,
                 second: [...prevResults.second, ...colorGuess]
             }));
-
             let newKbColor = guesses.second.split('').reduce((acc, res, ind) => {
                 acc[res] = colorGuess[ind];
                 return acc;
-                
             }, {});
-
             setKbColor(prevResults => [
                 ...prevResults,
                 { ...newKbColor }
@@ -322,8 +319,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess2');
             }
-
             secondRef.current = true;
         }
         if (thirdDone && !thirdRef.current) { //player has made first guess
@@ -335,13 +332,10 @@ const Grid = () => {
                 ...prevResults,
                 third: [...prevResults.third, ...colorGuess]
             }));
-
             let newKbColor = guesses.third.split('').reduce((acc, res, ind) => {
                 acc[res] = colorGuess[ind];
                 return acc;
-                
             }, {});
-
             setKbColor(prevResults => [
                 ...prevResults,
                 { ...newKbColor }
@@ -350,8 +344,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess3');
             }
-
             thirdRef.current = true;
         }
         if (fourthDone && !fourthRef.current) { //player has made first guess
@@ -363,13 +357,10 @@ const Grid = () => {
                 ...prevResults,
                 fourth: [...prevResults.fourth, ...colorGuess]
             }));
-
             let newKbColor = guesses.fourth.split('').reduce((acc, res, ind) => {
                 acc[res] = colorGuess[ind];
                 return acc;
-                
             }, {});
-
             setKbColor(prevResults => [
                 ...prevResults,
                 { ...newKbColor }
@@ -378,8 +369,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess4');
             }
-
             fourthRef.current = true;
         }
         if (fifthDone && !fifthRef.current) { //player has made first guess
@@ -406,8 +397,8 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess5');
             }
-
             fifthRef.current = true;
         }
         if (sixthDone && !sixthRef.current) { //player has made final guess
@@ -419,13 +410,10 @@ const Grid = () => {
                 ...prevResults,
                 sixth: [...prevResults.sixth, ...colorGuess]
             }));
-
             let newKbColor = guesses.sixth.split('').reduce((acc, res, ind) => {
                 acc[res] = colorGuess[ind];
                 return acc;
-                
             }, {});
-
             setKbColor(prevResults => [
                 ...prevResults,
                 { ...newKbColor }
@@ -434,14 +422,25 @@ const Grid = () => {
             const first = [...set][0]
             if (set.size == 1 && first == 'green') {
                 setWin(true);
+                setGuessWon('guess6');
+
             } else {
                 showAnswer(true);
             }
-
             sixthRef.current = true;
         }
         // Repeat this pattern for the remaining guesses (third, fourth, etc.)
     }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]);
+
+    useEffect(() => {
+        if (win ^ answer) {
+            axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
+            .then(res => {
+                console.log(res.data.message)
+            })
+            .catch(err => console.log(err));
+        }
+    }, [win, answer])
 
     useEffect(() => {
 

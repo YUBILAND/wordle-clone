@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 
 const Settings = () => {
 
@@ -13,6 +14,8 @@ const Settings = () => {
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
     const {loginPage, showLoginPage} = useContext(KeyboardContext);
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
+    const {userID, setUserID} = useContext(KeyboardContext);
+
 
 
     function handleX() {
@@ -158,6 +161,13 @@ const Settings = () => {
       setGuestMode(false);
       showRegisterPage(true);
     }
+    function handleEraseGuestData() {
+      axios.post('http://localhost:8081/eraseGuestData', userID)
+            .then(res => {
+                console.log(res.data.message);
+            })
+            .catch(err => console.log(err));
+    }
 
     // useEffect(() => {
     //   if (darkMode) {document.body.style.setProperty('background-color', 'black', 'important'); console.log("HELLO");}
@@ -219,7 +229,7 @@ const Settings = () => {
 
             <hr/>
 
-            <div className='text-center pr-2 py-4'>
+            <div className='text-center py-4'>
               {guestMode && 
               <div className='flex justify-around'>
                 <button onClick={handleLogIn} className='basis-1/2 green text-white w-full h-full py-2 mx-4 font-bold rounded-xl'>Log In</button>
@@ -229,6 +239,12 @@ const Settings = () => {
               {userMode && 
                 <button onClick={handleLogOut} className='bg-red-500 text-white py-2 px-2 font-bold rounded-xl'>Sign Out</button>
               }
+            </div>
+
+            <div className='flex justify-center'>
+            <button onClick={handleEraseGuestData} className='bg-red-500 text-white w-1/2 h-full py-2  font-bold rounded-xl'>Erase local data</button>
+
+
             </div>
 
         </div>

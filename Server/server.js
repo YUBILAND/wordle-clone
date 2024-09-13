@@ -59,7 +59,7 @@ app.post('/signup', (req, res) => {
     })
 })
 
-app.get('/stats', (req, res) => {
+app.get('/getStats', (req, res) => {
     const sql = "SELECT * FROM STATS WHERE id = ?";
     db.query(sql, [req.query.id], (err, data) => {
         if (err) return res.json(err);
@@ -68,6 +68,34 @@ app.get('/stats', (req, res) => {
             return res.json(data[0]);
         }
     })
+})
+
+app.post('/updateStats', (req, res) => {
+    if (req.body.win){
+        const sql = `UPDATE stats SET ${req.body.guessWon} = ${req.body.guessWon} + 1, wins = wins + 1, played = played + 1 WHERE id = ?`;
+        // const sql = "SELECT * FROM STATS WHERE id = ?";
+        db.query(sql, [req.body.id], (err, data) => {
+            if (err) return res.json(err);
+            return res.json({message: "Updated successfully"});
+        })
+    } else {
+        const sql = `UPDATE stats SET played = played + 1, streak = 0 WHERE id = ?`;
+        // const sql = "SELECT * FROM STATS WHERE id = ?";
+        db.query(sql, [req.body.id], (err, data) => {
+            if (err) return res.json(err);
+            return res.json({message: "nice successfully"});
+        })
+    }
+})
+
+app.post('/eraseGuestData', (req, res) => {
+    const sql = `UPDATE stats SET guess1 = 0, guess2 = 0, guess3 = 0, guess4 = 0, guess5 = 0, guess6 = 0, played = 0, wins = 0, streak = 0, highest = 0 WHERE id = ?`;
+    // const sql = "SELECT * FROM STATS WHERE id = ?";
+    db.query(sql, [req.body.id], (err, data) => {
+        if (err) return res.json(err);
+        return res.json({message: "Erased guest data successfully"});
+    })
+    
 })
 
 

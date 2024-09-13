@@ -25,6 +25,12 @@ function App() {
   const [registerPage, showRegisterPage] = useState(false);
   const [userID, setUserID] = useState({id:'0'});
 
+  const [win, setWin] = useState(false);
+
+  const [guessWon, setGuessWon] = useState(false);
+  
+
+
 
 
   
@@ -40,7 +46,7 @@ function App() {
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
 
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon}}>
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
         <Header />
