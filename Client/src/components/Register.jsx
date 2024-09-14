@@ -21,8 +21,13 @@ const Register = () => {
         setRegAcc({...regAcc, [event.target.name] : [event.target.value]})
     }
     
+    const [token, setToken] = useState();
+
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
+        axios.defaults.withCredentials = true;
         axios.post('http://localhost:8081/signup', regAcc)
         .then(res => {
             if (res.data.message) {

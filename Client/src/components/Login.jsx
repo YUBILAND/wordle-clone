@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react'
 import { KeyboardContext } from '../Contexts/KeyboardContext'
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+// import  {useSignIn} from'react-auth-kit';
+
 
 const Login = () => {
 
@@ -11,7 +13,7 @@ const Login = () => {
         password: ''
     })
     const {userMode, setUserMode} = useContext(KeyboardContext);
-    const[wrong, setWrong] = useState(false);
+    const[wrongCred, setWrongCred] = useState(false);
 
     function handleClose() {
         showLoginPage(false);
@@ -20,19 +22,32 @@ const Login = () => {
     const handleLogin = (event) => {
         setLogAcc({...logAcc, [event.target.name] : [event.target.value]})
     }
+
     
+    // const signIn = useSignIn();
+
     const handleSubmit = (event) => {
         event.preventDefault();
+        axios.defaults.withCredentials = true;
         axios.post('http://localhost:8081/login', logAcc)
         .then(res => {
-            if (res.data.message == "Logged in") {
-                setWrong(false);
+            if (res.data.message == "Logged In Successfully!") {
+                console.log(res.data.accessToken)
+                // signIn({
+                // token: res.data.token,
+                // expiresIn: 3600,
+                // tokenType: 'Bearer',
+                // authState: { username : logAcc.username },
+                // });
+
+
+                setWrongCred(false);
                 showLoginPage(false);
                 setUserMode(true) 
                 
             } else { 
                 console.log(res.data.message)
-                setWrong(true);
+                setWrongCred(true);
                 
             }
         })
@@ -46,7 +61,7 @@ const Login = () => {
             <CloseIcon className='cursor-pointer' onClick={handleClose} sx={{color: '#787c7e'}}/>
         </div>
         <div className='w-[300px] mx-auto '>
-            {wrong &&
+            {wrongCred &&
             <div className='text-center'>
                 <p className='text-red-500 font-bold'>Username or password is incorrect</p>
             </div>

@@ -6,6 +6,8 @@ import Keys from './components/Keys';
 import { KeyboardContext } from './Contexts/KeyboardContext';
 import Login from './components/Login';
 import LandingPage from './components/LandingPage';
+import axios from 'axios';
+
 
 function App() {
   // const[ letterColor, setLetterColor] = useState([]);
@@ -29,32 +31,39 @@ function App() {
 
   const [guessWon, setGuessWon] = useState(false);
   
-
-
-
-
-  
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:8081/users')
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+    axios.get('http://localhost:8081/check-auth', { withCredentials: true })
+    .then(res => {
+      setIsAuth(true);
+      setUserMode(true);
+    })
+    .catch(err => {
+      setIsAuth(false);
+      setUserMode(false);
+    })
   }, [])
 
 
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
-
+      
       <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon}}>
+      
+      
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
+        
         <Header />
         <Grid />
         <Keys />
         </>
         }
+
+
       </KeyboardContext.Provider>
+
     </div>
   );
 }
