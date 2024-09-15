@@ -25,7 +25,7 @@ function App() {
 
   const [loginPage, showLoginPage] = useState(false);
   const [registerPage, showRegisterPage] = useState(false);
-  const [userID, setUserID] = useState({id:'0'});
+  const [userID, setUserID] = useState({id: 0});
 
   const [win, setWin] = useState(false);
 
@@ -33,15 +33,28 @@ function App() {
   
   const [isAuth, setIsAuth] = useState(false);
 
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
   useEffect(() => {
     axios.get('http://localhost:8081/check-auth', { withCredentials: true })
     .then(res => {
-      setIsAuth(true);
+       // res means token is good
+        // setIsAuth(true);
       setUserMode(true);
+      setCheckingAuth(false);
+      // console.log(res.data.id)
+      setUserID({id: res.data.id})
+      // setUserID({id:})
+        
+
     })
     .catch(err => {
-      setIsAuth(false);
+      // setIsAuth(false);
       setUserMode(false);
+      setGuestMode(false);
+      setCheckingAuth(false);
+
+      
     })
   }, [])
 
@@ -49,7 +62,7 @@ function App() {
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :

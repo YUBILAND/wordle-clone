@@ -37,9 +37,9 @@ const jwt = require('jsonwebtoken');
 // })
 
 
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s'})
-}
+// function generateAccessToken(user) {
+//     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s'})
+// }
 
 app.post('/token', (req, res) => {
     const { refreshToken } = req.cookies;
@@ -49,7 +49,7 @@ app.post('/token', (req, res) => {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid refresh token' });
 
-    const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
+    const accessToken = jwt.sign({ username: user.username, id: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
 
     res.json({ accessToken });
   });
@@ -58,8 +58,8 @@ app.post('/token', (req, res) => {
 
 app.get('/check-auth', (req, res) => {
     const { accessToken, refreshToken } = req.cookies;
-    console.log(accessToken)
-    console.log(refreshToken)
+    // console.log(accessToken)
+    // console.log(refreshToken)
     if (!accessToken) {
         if (!refreshToken) {
 
@@ -69,7 +69,8 @@ app.get('/check-auth', (req, res) => {
             if (err) return res.status(403).json({ message: 'Invalid refresh token' });
 
             const now = Math.floor(Date.now() / 1000);
-            const payload = { username: user.username, iat: now}
+            // console.log(user)
+            const payload = { username: user.username, iat: now, id: user.id}
 
             const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
             const newRefreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
@@ -88,13 +89,13 @@ app.get('/check-auth', (req, res) => {
 
 
             // Proceed with the request
-            res.json({ message: 'Access token refreshed', accessToken: newAccessToken, user: user});
+            res.json({ message: 'Access token refreshed', accessToken: newAccessToken, user: user, id: user.id});
         })
     } else {
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid access token' });
 
-    res.json({ authenticated: true, user: user });
+    res.json({ authenticated: true, user: user, id: user.id });
     })
     }
 })
@@ -113,30 +114,6 @@ app.get('/check-auth', (req, res) => {
 //         })
 //     }
 
-const verifyToken = (req, res, next) => {
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) return res.sendStatus(401)
-    
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
-        req.user = user.username
-        next()
-    })
-}
-
-const renewToken = (req, res) => {
-    const refreshToken = req.cookies;
-
-    if (!refreshToken) return res.status(401).json({ message: 'No refresh token provided' }); //no refresh token so user must be logged out or token expired
-    
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid refresh token' });
-        req.user = user.username
-        next()
-    })
-}
-
 
 // function authenticateToken(req, res, next) {
 //     const authHeader = req.headers['authorization']
@@ -150,37 +127,39 @@ const renewToken = (req, res) => {
 //     })
 // }
 
+
 app.post('/login', (req, res) => {
-    const checkSql = "SELECT * FROM USERS WHERE username = ? AND password = ?";
+    const checkSql = "SELECT id FROM USERS WHERE username = ? AND password = ?";
     db.query(checkSql, [req.body.username, req.body.password], (err, result) => {
         if (err) return res.json(err);
         if (result.length > 0) {
             //  User exists so log in
+            const userID = result[0].id;
+                // payload
+            const now = Math.floor(Date.now() / 1000);
+            // console.log(res.insertId)
+            const payload = { username: req.body.username, iat: now, id: userID}
 
-                 // payload
-                const now = Math.floor(Date.now() / 1000);
-                const payload = { username: req.body.username, iat: now}
+            // Generate tokens
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
 
-                // Generate tokens
-                const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
-                const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
-
-                // Store refresh token in database
-                const sql = 'UPDATE users SET token = ? WHERE username = ?';
-                const values = [
-                    refreshToken,
-                    req.body.username
-                ]
-                db.query(sql, values, (err, data) => {
-                    if (err) return res.json(err);
-                    console.log("HI")
-                    
-                    // Send cookies to client
-                    res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
-                    res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
-                    
-                    return res.json({ message: 'Logged In Successfully!' })
-                })
+            // Store refresh token in database
+            const sql = 'UPDATE users SET token = ? WHERE username = ?';
+            const values = [
+                refreshToken,
+                req.body.username
+            ]
+            db.query(sql, values, (err, data) => {
+                if (err) return res.json(err);
+                // console.log("HI")
+                
+                // Send cookies to client
+                res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+                res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+                
+                return res.json({ message: 'Logged In Successfully!', id: userID})
+            })
             
             // accessToken =  generateAccessToken(user)
 
@@ -200,34 +179,57 @@ app.post('/signup', (req, res) => {
             //Found credentials so user already exists, can't sign up
             return res.json({ message: "Username or Email already exists" });
         }
-        // User is in database, account is created
-
-        // payload
-        const user = { username: req.body.username }
-
-        // Generate tokens
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
-        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
-
-        // Store refresh token in database
-
-        const sql = "INSERT INTO users ( `username`, `email`, `password`, `token`) Values (?)";
+        // Insert user into database
+        const insertUser = "INSERT INTO users ( `username`, `email`, `password`) Values (?)";
         const values = [
             req.body.username,
             req.body.email,
-            req.body.password,
-            refreshToken
+            req.body.password
         ]
-        db.query(sql, [values], (err, data) => {
-            if (err) return res.json(err);
 
-            // Send cookies to client
-            res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
-            res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
-            
-            return res.json({ message: 'Registered Successfully!' })
+        let userID = '';
+
+        db.query(insertUser, [values], (err, data) => {
+            if (err) return res.json(err);
+            userID = data.insertId;
+        
+            // payload
+            const user = { username: req.body.username, id: userID }
+            // Generate tokens
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
+
+            // Store refresh token in database
+
+            const insertToken = "UPDATE users SET token = ? WHERE id = ?";
+
+            db.query(insertToken, [refreshToken, userID], (err, data) => {
+                if (err) return res.json(err);
+
+                // Send cookies to client
+                res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+                res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+
+                // console.log(insertedID)
+
+                const sql = "INSERT INTO stats (id, played, wins, streak, highest, guess1, guess2, guess3, guess4, guess5, guess6) VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
+                
+                db.query(sql, userID, (err, data) => {
+                    if (err) return res.json(err);
+
+                    return res.json({ message: 'Registered Successfully!', id: userID })
+
+                })
+                
+            })
         })
     })
+})
+
+app.post('/logout', (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return res.json({ message: "Logged out"});
 })
 
 app.get('/getStats', (req, res) => {
@@ -243,6 +245,7 @@ app.get('/getStats', (req, res) => {
 
 app.post('/updateStats', (req, res) => {
     if (req.body.win){
+        // console.log(req.body.id)
         const sql = `UPDATE stats SET ${req.body.guessWon} = ${req.body.guessWon} + 1, wins = wins + 1, played = played + 1 WHERE id = ?`;
         // const sql = "SELECT * FROM STATS WHERE id = ?";
         db.query(sql, [req.body.id], (err, data) => {

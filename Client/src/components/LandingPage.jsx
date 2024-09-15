@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { KeyboardContext } from '../Contexts/KeyboardContext'
 import Login from './Login';
 import Register from './Register';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const LandingPage = () => {
@@ -9,6 +10,7 @@ const LandingPage = () => {
     const {loginPage, showLoginPage} = useContext(KeyboardContext);
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
+    const {checkingAuth, setCheckingAuth} = useContext(KeyboardContext);
 
     function handleLogin() {
         showLoginPage(true);
@@ -21,6 +23,7 @@ const LandingPage = () => {
     function handleGuest() {
         // setUserID(0);
         setGuestMode(true);
+        setUserID({id: 0})
     }
 
 
@@ -35,7 +38,12 @@ const LandingPage = () => {
                 <h1 className='font-bold'>Wordle</h1>
             </div>
 
-            {loginPage ? <Login /> : registerPage ? <Register /> :
+            {checkingAuth ?
+            <div className='text-center mt-[300px]'>
+                <CircularProgress color="inherit" />
+            </div>
+            : 
+            loginPage ? <Login /> : registerPage ? <Register /> :
 
             <div className='bg-white rounded-md shadow-xl'>
                 <div className='mt-[200px] text-center text-4xl font-bold py-[50px]'>
@@ -49,8 +57,9 @@ const LandingPage = () => {
                 </div>
             
             </div>
-                
+                 
             }
+
         </div>
 
         

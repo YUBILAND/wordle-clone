@@ -14,6 +14,8 @@ const Login = () => {
     })
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const[wrongCred, setWrongCred] = useState(false);
+    const {userID, setUserID} = useContext(KeyboardContext);
+
 
     function handleClose() {
         showLoginPage(false);
@@ -32,18 +34,11 @@ const Login = () => {
         axios.post('http://localhost:8081/login', logAcc)
         .then(res => {
             if (res.data.message == "Logged In Successfully!") {
-                console.log(res.data.accessToken)
-                // signIn({
-                // token: res.data.token,
-                // expiresIn: 3600,
-                // tokenType: 'Bearer',
-                // authState: { username : logAcc.username },
-                // });
-
-
+                
                 setWrongCred(false);
                 showLoginPage(false);
                 setUserMode(true) 
+                setUserID({id: res.data.id})
                 
             } else { 
                 console.log(res.data.message)

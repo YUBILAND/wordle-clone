@@ -146,8 +146,20 @@ const Settings = () => {
     }
 
     function handleLogOut() {
-      showSettings(false);
-      setUserMode(false);
+      axios.defaults.withCredentials = true;
+      axios.post('http://localhost:8081/logout', { withCredentials: true })
+        .then(res => {
+          console.log(res.data.message);
+          
+        })
+        .catch(err => console.log(err))
+
+        showSettings(false);
+        setUserMode(false);
+        showLoginPage(false);
+        showRegisterPage(false);
+      
+
     }
 
     function handleLogIn() {
@@ -163,10 +175,10 @@ const Settings = () => {
     }
     function handleEraseGuestData() {
       axios.post('http://localhost:8081/eraseGuestData', userID)
-            .then(res => {
-                console.log(res.data.message);
-            })
-            .catch(err => console.log(err));
+        .then(res => {
+            console.log(res.data.message);
+        })
+        .catch(err => console.log(err));
     }
 
     // useEffect(() => {

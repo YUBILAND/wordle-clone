@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { KeyboardContext } from '../Contexts/KeyboardContext'
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios'
@@ -23,6 +23,7 @@ const Register = () => {
     
     const [token, setToken] = useState();
 
+    const {userID, setUserID} = useContext(KeyboardContext);
 
 
     const handleSubmit = (event) => {
@@ -32,15 +33,16 @@ const Register = () => {
         .then(res => {
             if (res.data.message) {
                 console.log(res.data.message)
-                setWrong(true);
-            } else { 
-                console.log("Registered Successfully!"); 
+                // console.log(res.data.id)
+                console.log(res.data.id)
+                setUserID({id : res.data.id})
                 setWrong(false);
-                setUserMode(true) 
+                setUserMode(true);
+            } else { 
+                setWrong(true);
             }
         })
         .catch(err => console.log(err));
-        
     }
 
   return (

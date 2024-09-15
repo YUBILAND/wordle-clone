@@ -79,7 +79,8 @@ const Grid = () => {
 
     useEffect(() => {
         setDummyWords({first: correctWord})
-        console.log(correctWord)
+        if( correctWord )
+            console.log(correctWord)
     }, [correctWord])
 
     var guessLength = 0;
@@ -434,6 +435,7 @@ const Grid = () => {
 
     useEffect(() => {
         if (win ^ answer) {
+            // console.log(userID)
             axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 console.log(res.data.message)
