@@ -49,7 +49,7 @@ app.post('/token', (req, res) => {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid refresh token' });
 
-    const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
 
     res.json({ accessToken });
   });
@@ -57,14 +57,46 @@ app.post('/token', (req, res) => {
 })
 
 app.get('/check-auth', (req, res) => {
-    const { accessToken } = req.cookies;
+    const { accessToken, refreshToken } = req.cookies;
     console.log(accessToken)
-    if (!accessToken) return res.status(401).json({ message: 'No access token provided' });
+    console.log(refreshToken)
+    if (!accessToken) {
+        if (!refreshToken) {
+
+            return res.status(401).json({ message: 'No access token provided' });
+        }
+        else jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err) return res.status(403).json({ message: 'Invalid refresh token' });
+
+            const now = Math.floor(Date.now() / 1000);
+            const payload = { username: user.username, iat: now}
+
+            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
+            const newRefreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+
+            const sql = 'UPDATE users SET token = ? WHERE username = ?';
+                const values = [
+                    newRefreshToken,
+                    user.username
+                ]
+                db.query(sql, values, (err, data) => {
+                    if (err) return res.json(err);
+                })
+
+            res.cookie('accessToken', newAccessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+            res.cookie('refreshToken', newRefreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+
+
+            // Proceed with the request
+            res.json({ message: 'Access token refreshed', accessToken: newAccessToken, user: user});
+        })
+    } else {
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid access token' });
 
     res.json({ authenticated: true, user: user });
     })
+    }
 })
 
 
@@ -126,11 +158,12 @@ app.post('/login', (req, res) => {
             //  User exists so log in
 
                  // payload
-                const user = { username: req.body.username }
+                const now = Math.floor(Date.now() / 1000);
+                const payload = { username: req.body.username, iat: now}
 
                 // Generate tokens
-                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+                const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+                const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
 
                 // Store refresh token in database
                 const sql = 'UPDATE users SET token = ? WHERE username = ?';
@@ -143,7 +176,7 @@ app.post('/login', (req, res) => {
                     console.log("HI")
                     
                     // Send cookies to client
-                    res.cookie('accessToken', accessToken, { maxAge: 15 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+                    res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
                     res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
                     
                     return res.json({ message: 'Logged In Successfully!' })
@@ -173,7 +206,7 @@ app.post('/signup', (req, res) => {
         const user = { username: req.body.username }
 
         // Generate tokens
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
         const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
 
         // Store refresh token in database
@@ -189,7 +222,7 @@ app.post('/signup', (req, res) => {
             if (err) return res.json(err);
 
             // Send cookies to client
-            res.cookie('accessToken', accessToken, { maxAge: 15 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+            res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
             res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
             
             return res.json({ message: 'Registered Successfully!' })
