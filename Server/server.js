@@ -246,13 +246,19 @@ app.get('/getStats', (req, res) => {
 app.post('/updateStats', (req, res) => {
     if (req.body.win){
         // console.log(req.body.id)
-        const sql = `UPDATE stats SET ${req.body.guessWon} = ${req.body.guessWon} + 1, wins = wins + 1, played = played + 1 WHERE id = ?`;
-        // const sql = "SELECT * FROM STATS WHERE id = ?";
-        db.query(sql, [req.body.id], (err, data) => {
+        const getHighest = 'SELECT streak, highest FROM stats WHERE id = ?'
+        db.query(getHighest, req.body.id, (err, data) => {
             if (err) return res.json(err);
-            return res.json({message: "Updated successfully"});
+            const maxStreak = Math.max(data[0].streak + 1, data[0].highest);
+            const sql = `UPDATE stats SET ${req.body.guessWon} = ${req.body.guessWon} + 1, wins = wins + 1, played = played + 1, streak = streak + 1, highest = ? WHERE id = ?`;
+            // const sql = "SELECT * FROM STATS WHERE id = ?";
+            db.query(sql, [maxStreak, req.body.id], (err, data) => {
+                if (err) return res.json(err);
+                return res.json({message: "Updated successfully"});
+            })
         })
     } else {
+        
         const sql = `UPDATE stats SET played = played + 1, streak = 0 WHERE id = ?`;
         // const sql = "SELECT * FROM STATS WHERE id = ?";
         db.query(sql, [req.body.id], (err, data) => {

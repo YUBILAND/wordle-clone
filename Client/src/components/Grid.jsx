@@ -435,7 +435,8 @@ const Grid = () => {
 
     useEffect(() => {
         if (win ^ answer) {
-            // console.log(userID)
+            console.log(userID.id)
+            
             axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 console.log(res.data.message)
