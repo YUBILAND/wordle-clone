@@ -95,10 +95,49 @@ const Keys = () => {
     //     }
     // }, [buttonTheme])
     
+    const{guesses, setGuesses} = useContext(KeyboardContext);
+
+    const {guessLength, setGuessLength} = useContext(KeyboardContext);
+
 
     const kbChange = (input) => {
-        console.log(input)
+        // if (input.slice(-1) == "L") {
+            
+        // } else {
+            
+        // }
     }
+
+    const {doneHash, setDoneHash} = useContext(KeyboardContext);
+
+
+    const onKeyPress = button => {
+        console.log("Button pressed", button);
+        Object.entries(doneHash).some(([key, value]) => {
+            console.log(key)
+            console.log(value)
+            const numKey = key.replace('Done', '')
+
+            if (!value) {
+                if (button == "DEL") {
+                    setGuessLength(prevGuessLen => prevGuessLen - 1);
+                    setGuesses( prevGuess => ({ ...prevGuess, [numKey] : (prevGuess[numKey].slice(0, prevGuess[numKey].length - 1))}))
+                } else {
+                    setGuessLength(prevGuessLen => prevGuessLen + 1)
+                    setGuesses( prevGuess => ({ ...prevGuess, [numKey]: (prevGuess[numKey] + button.toUpperCase())}))
+                }
+                return true;
+            }
+            return false;
+        })
+
+            
+    }
+
+    useEffect(() => {
+        console.log(guesses.first)
+
+    }, [guesses])
 
 
     return (
@@ -107,11 +146,12 @@ const Keys = () => {
         <Keyboard 
         className="kibord w-full p-0"
         onChange={kbChange}
+        onKeyPress={onKeyPress}
             
         modules = {[inputMask]}
         inputMask ={{
             default: {
-            mask: '1235',
+            mask: '12345',
             regex: /^[a-zA-Z0-9_-]*$/
             }
         }}

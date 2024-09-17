@@ -31,12 +31,16 @@ const Grid = () => {
     const [wrongWord, setWrongWord] = useState(false);
 
     const [wordleList, setWordleList] = useState([]);
-    const [firstDone, setFirstDone] = useState(false);
-    const [secondDone, setSecondDone] = useState(false);
-    const [thirdDone, setThirdDone] = useState(false);
-    const [fourthDone, setFourthDone] = useState(false);
-    const [fifthDone, setFifthDone] = useState(false);
-    const [sixthDone, setSixthDone] = useState(false);
+
+    const {doneHash, setDoneHash} = useContext(KeyboardContext);
+
+
+    // const [firstDone, setFirstDone] = useState(false);
+    // const [secondDone, setSecondDone] = useState(false);
+    // const [thirdDone, setThirdDone] = useState(false);
+    // const [fourthDone, setFourthDone] = useState(false);
+    // const [fifthDone, setFifthDone] = useState(false);
+    // const [sixthDone, setSixthDone] = useState(false);
 
     const [firstCanEnter, setFirstCanEnter] = useState(false);
     const [secondCanEnter, setSecondCanEnter] = useState(false);
@@ -56,7 +60,9 @@ const Grid = () => {
     const [loading, setLoading] = useState(true);
     const [correctWord, setCorrectWord] = useState('');
 
-    const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
+    // const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
+    const{guesses, setGuesses} = useContext(KeyboardContext);
+
     const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
 
     useEffect(() => {
@@ -83,58 +89,74 @@ const Grid = () => {
             console.log(correctWord)
     }, [correctWord])
 
-    var guessLength = 0;
+    const {guessLength, setGuessLength} = useContext(KeyboardContext);
+
+    // var guessLength = 0;
 
     useEffect(() => {
         const onPress = (event) => {
             if (event.key === 'Backspace') {
-            if (!firstDone && guessLength > 0) {
-                guessLength -= 1;
+            if (!doneHash.firstDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first.slice(0, prevGuess.first.length - 1))}))
             } 
-            else if (!secondDone && guessLength > 0) {
-                guessLength -= 1;
+            else if (!doneHash.secondDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second.slice(0, prevGuess.second.length - 1))}))
             } 
-            else if (!thirdDone && guessLength > 0) {
-                guessLength -= 1;
+            else if (!doneHash.thirdDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third.slice(0, prevGuess.third.length - 1))}))
             } 
-            else if (!fourthDone && guessLength > 0) {
-                guessLength -= 1;
+            else if (!doneHash.fourthDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth.slice(0, prevGuess.fourth.length - 1))}))
             } 
-            else if (!fifthDone && guessLength > 0) {
-                guessLength -= 1;
+            else if (!doneHash.fifthDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth.slice(0, prevGuess.fifth.length - 1))}))
             } 
-            else if (!sixthDone && guessLength > 0) {
-                guessLength -= 1;
+            else if (!doneHash.sixthDone && guessLength > 0) {
+                setGuessLength(prevGuessLen => prevGuessLen - 1);
+                // guessLength -= 1;
                 setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth.slice(0, prevGuess.sixth.length - 1))}))
             } 
             } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
-            if (!firstDone && guessLength < 5) {
-                guessLength += 1;
+            if (!doneHash.firstDone && guessLength < 5) {
+
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
+                // console.log(guessLength);
                 setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first + event.key.toUpperCase())}))
             }
-            else if (!secondDone && guessLength < 5) {
-                guessLength += 1;
+            else if (!doneHash.secondDone && guessLength < 5) {
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second + event.key.toUpperCase())}))
             } 
-            else if (!thirdDone && guessLength < 5) {
-                guessLength += 1;
+            else if (!doneHash.thirdDone && guessLength < 5) {
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third + event.key.toUpperCase())}))
             } 
-            else if (!fourthDone && guessLength < 5) {
-                guessLength += 1;
+            else if (!doneHash.fourthDone && guessLength < 5) {
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth + event.key.toUpperCase())}))
             } 
-            else if (!fifthDone && guessLength < 5) {
-                guessLength += 1;
+            else if (!doneHash.fifthDone && guessLength < 5) {
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth + event.key.toUpperCase())}))
             } 
-            else if (!sixthDone && guessLength < 5) {
-                guessLength += 1;
+            else if (!doneHash.sixthDone && guessLength < 5) {
+                setGuessLength(prevGuessLen => prevGuessLen + 1);
+                // guessLength += 1;
                 setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth + event.key.toUpperCase())}))
             }
             } 
@@ -148,50 +170,57 @@ const Grid = () => {
             document.removeEventListener('keydown', onPress);
             };
         }
-    }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, win]); // Depend only on the completion status
+    }, [win, guessLength, doneHash]); // Depend only on the completion status
+
 
     useEffect(() => {
         const onPress = (event) => {
             if (event.key === 'Enter') {
-                if (!firstDone) {
+                if (!doneHash.firstDone) {
                     if (firstCanEnter) {
                         if (wordleList.includes(guesses.first.toLowerCase())) {
-                            setFirstDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, firstDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
-                else if (!secondDone) {
+                else if (!doneHash.secondDone) {
                     if (secondCanEnter) {
                         if (wordleList.includes(guesses.second.toLowerCase())) {
-                            setSecondDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, secondDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
-                else if (!thirdDone) {
+                else if (!doneHash.thirdDone) {
                     if (thirdCanEnter) {
                         if (wordleList.includes(guesses.third.toLowerCase())) {
-                            setThirdDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, thirdDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
-                else if (!fourthDone) {
+                else if (!doneHash.fourthDone) {
                     if (fourthCanEnter) {
                         if (wordleList.includes(guesses.fourth.toLowerCase())) {
-                            setFourthDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, fourthDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
-                else if (!fifthDone) {
+                else if (!doneHash.fifthDone) {
                     if (fifthCanEnter) {
                         if (wordleList.includes(guesses.fifth.toLowerCase())) {
-                            setFifthDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, fifthDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
-                else if (!sixthDone) {
+                else if (!doneHash.sixthDone) {
                     if (sixthCanEnter) {
                         if (wordleList.includes(guesses.sixth.toLowerCase())) {
-                            setSixthDone(true);
+                            setDoneHash(prevDone => ({ ...prevDone, sixthDone: true}));
+                            setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
                 }
@@ -203,7 +232,7 @@ const Grid = () => {
             document.removeEventListener('keydown', onPress);
             };
         }
-    },[firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone, firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter, win])
+    },[firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter, win, doneHash])
     
     const compareString = (str1, str2) => {
         var indexMatch = '';
@@ -215,27 +244,27 @@ const Grid = () => {
     }
     
     useEffect(() => {
-        if (!firstDone) {
+        if (!doneHash.firstDone) {
             if (guesses.first.length == 5) setFirstCanEnter(true);
             else setFirstCanEnter(false);
         }
-        else if (!secondDone) {
+        else if (!doneHash.secondDone) {
             if (guesses.second.length == 5) setSecondCanEnter(true);
             else setSecondCanEnter(false);
         }
-        else if (!thirdDone) {
+        else if (!doneHash.thirdDone) {
             if (guesses.third.length == 5) setThirdCanEnter(true);
             else setThirdCanEnter(false);
         }
-        else if (!fourthDone) {
+        else if (!doneHash.fourthDone) {
             if (guesses.fourth.length == 5) setFourthCanEnter(true);
             else setFourthCanEnter(false);
         }
-        else if (!fifthDone) {
+        else if (!doneHash.fifthDone) {
             if (guesses.fifth.length == 5) setFifthCanEnter(true);
             else setFifthCanEnter(false);
         }
-        else if (!sixthDone) {
+        else if (!doneHash.sixthDone) {
             if (guesses.sixth.length == 5) setSixthCanEnter(true);
             else setSixthCanEnter(false);
         }
@@ -274,7 +303,7 @@ const Grid = () => {
     }
 
     useEffect(() => {
-        if (firstDone && !firstRef.current) { //player has made first guess
+        if (doneHash.firstDone && !firstRef.current) { //player has made first guess
             cheatVar = greenLetter(correctWord, guesses.first)
             const colorGuess = guesses.first.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -299,7 +328,7 @@ const Grid = () => {
             }
             firstRef.current = true;
         }
-        if (secondDone && !secondRef.current) { //player has made second guess
+        if (doneHash.secondDone && !secondRef.current) { //player has made second guess
             cheatVar = greenLetter(correctWord, guesses.second)
             const colorGuess = guesses.second.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -324,7 +353,7 @@ const Grid = () => {
             }
             secondRef.current = true;
         }
-        if (thirdDone && !thirdRef.current) { //player has made first guess
+        if (doneHash.thirdDone && !thirdRef.current) { //player has made first guess
             cheatVar = greenLetter(correctWord, guesses.third)
             const colorGuess = guesses.third.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -349,7 +378,7 @@ const Grid = () => {
             }
             thirdRef.current = true;
         }
-        if (fourthDone && !fourthRef.current) { //player has made first guess
+        if (doneHash.fourthDone && !fourthRef.current) { //player has made first guess
             cheatVar = greenLetter(correctWord, guesses.fourth)
             const colorGuess = guesses.fourth.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -374,7 +403,7 @@ const Grid = () => {
             }
             fourthRef.current = true;
         }
-        if (fifthDone && !fifthRef.current) { //player has made first guess
+        if (doneHash.fifthDone && !fifthRef.current) { //player has made first guess
             cheatVar = greenLetter(correctWord, guesses.fifth)
             const colorGuess = guesses.fifth.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -402,7 +431,7 @@ const Grid = () => {
             }
             fifthRef.current = true;
         }
-        if (sixthDone && !sixthRef.current) { //player has made final guess
+        if (doneHash.sixthDone && !sixthRef.current) { //player has made final guess
             cheatVar = greenLetter(correctWord, guesses.sixth)
             const colorGuess = guesses.sixth.split('').map((res, ind) => (
                 evaluteGuess(res, ind)
@@ -431,7 +460,7 @@ const Grid = () => {
             sixthRef.current = true;
         }
         // Repeat this pattern for the remaining guesses (third, fourth, etc.)
-    }, [firstDone, secondDone, thirdDone, fourthDone, fifthDone, sixthDone]);
+    }, [doneHash]);
 
     useEffect(() => {
         if (win ^ answer) {
@@ -507,7 +536,7 @@ const Grid = () => {
 
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 
-            { (firstDone && firstRef.current) ? 
+            { (doneHash.firstDone && firstRef.current) ? 
             <>
                 {guessResults.first.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
@@ -534,7 +563,7 @@ const Grid = () => {
             </>
             }
 
-            { secondDone ? 
+            { doneHash.secondDone ? 
             <>
                 {guessResults.second.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
@@ -557,7 +586,7 @@ const Grid = () => {
             </>
             }
 
-            { thirdDone ? 
+            { doneHash.thirdDone ? 
             <>
                 {guessResults.third.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
@@ -579,7 +608,7 @@ const Grid = () => {
                 ))}
             </>
             }
-            { fourthDone ? 
+            { doneHash.fourthDone ? 
             <>
                 {guessResults.fourth.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
@@ -601,7 +630,7 @@ const Grid = () => {
                 ))}
             </>
             }
-            { fifthDone ? 
+            { doneHash.fifthDone ? 
             <>
                 {guessResults.fifth.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
@@ -623,7 +652,7 @@ const Grid = () => {
                 ))}
             </>
             }
-            { sixthDone ? 
+            { doneHash.sixthDone ? 
             <>
                 {guessResults.sixth.map((res, ind) => (
                     <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>

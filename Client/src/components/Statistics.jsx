@@ -35,12 +35,12 @@ const Statistics = () => {
     const [allZeros, setAllZeros] = useState(false);
 
     useEffect(() => {
-        console.log(width)
+        // console.log(width)
         
         const set = new Set(Object.values(width))
         const first = [...set][0]
-        console.log(set)
-        console.log(width)
+        // console.log(set)
+        // console.log(width)
         if (set.size == 1 && first == 0) {
             setAllZeros(true);
         } else setAllZeros(false);
@@ -91,7 +91,7 @@ const Statistics = () => {
     }, [statsDone])
 
     function handleX() {
-        setWinPage(!winPage)
+        setWinPage(false);
     }
 
     function handleReplay() {
