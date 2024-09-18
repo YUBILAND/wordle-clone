@@ -26,28 +26,11 @@ const Grid = () => {
     const {win, setWin} = useContext(KeyboardContext);
     const [answer, showAnswer] = useState(false);
 
-    const [notEnough, setNotEnough] = useState(false);
-
-    const [wrongWord, setWrongWord] = useState(false);
-
-    const [wordleList, setWordleList] = useState([]);
-
+    const {notEnough, setNotEnough} = useContext(KeyboardContext);
+    const {wrongWord, setWrongWord} = useContext(KeyboardContext);
+    const {wordleList, setWordleList} = useContext(KeyboardContext);
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
-
-
-    // const [firstDone, setFirstDone] = useState(false);
-    // const [secondDone, setSecondDone] = useState(false);
-    // const [thirdDone, setThirdDone] = useState(false);
-    // const [fourthDone, setFourthDone] = useState(false);
-    // const [fifthDone, setFifthDone] = useState(false);
-    // const [sixthDone, setSixthDone] = useState(false);
-
-    const [firstCanEnter, setFirstCanEnter] = useState(false);
-    const [secondCanEnter, setSecondCanEnter] = useState(false);
-    const [thirdCanEnter, setThirdCanEnter] = useState(false);
-    const [fourthCanEnter, setFourthCanEnter] = useState(false);
-    const [fifthCanEnter, setFifthCanEnter] = useState(false);
-    const [sixthCanEnter, setSixthCanEnter] = useState(false);
+    const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
 
     const [guessResults, setGuessResults] = useState({first: [], second: [], third: [], fourth: [], fifth: [], sixth: []})
     const firstRef = useRef(false);
@@ -177,7 +160,7 @@ const Grid = () => {
         const onPress = (event) => {
             if (event.key === 'Enter') {
                 if (!doneHash.firstDone) {
-                    if (firstCanEnter) {
+                    if (canEnterHash.firstCanEnter) {
                         if (wordleList.includes(guesses.first.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, firstDone: true}));
                             setGuessLength(0);
@@ -185,7 +168,7 @@ const Grid = () => {
                     } else setNotEnough(true);
                 }
                 else if (!doneHash.secondDone) {
-                    if (secondCanEnter) {
+                    if (canEnterHash.secondCanEnter) {
                         if (wordleList.includes(guesses.second.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, secondDone: true}));
                             setGuessLength(0);
@@ -193,7 +176,7 @@ const Grid = () => {
                     } else setNotEnough(true);
                 }
                 else if (!doneHash.thirdDone) {
-                    if (thirdCanEnter) {
+                    if (canEnterHash.thirdCanEnter) {
                         if (wordleList.includes(guesses.third.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, thirdDone: true}));
                             setGuessLength(0);
@@ -201,7 +184,7 @@ const Grid = () => {
                     } else setNotEnough(true);
                 }
                 else if (!doneHash.fourthDone) {
-                    if (fourthCanEnter) {
+                    if (canEnterHash.fourthCanEnter) {
                         if (wordleList.includes(guesses.fourth.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, fourthDone: true}));
                             setGuessLength(0);
@@ -209,7 +192,7 @@ const Grid = () => {
                     } else setNotEnough(true);
                 }
                 else if (!doneHash.fifthDone) {
-                    if (fifthCanEnter) {
+                    if (canEnterHash.fifthCanEnter) {
                         if (wordleList.includes(guesses.fifth.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, fifthDone: true}));
                             setGuessLength(0);
@@ -217,7 +200,7 @@ const Grid = () => {
                     } else setNotEnough(true);
                 }
                 else if (!doneHash.sixthDone) {
-                    if (sixthCanEnter) {
+                    if (canEnterHash.sixthCanEnter) {
                         if (wordleList.includes(guesses.sixth.toLowerCase())) {
                             setDoneHash(prevDone => ({ ...prevDone, sixthDone: true}));
                             setGuessLength(0);
@@ -232,7 +215,7 @@ const Grid = () => {
             document.removeEventListener('keydown', onPress);
             };
         }
-    },[firstCanEnter, secondCanEnter, thirdCanEnter, fourthCanEnter, fifthCanEnter, sixthCanEnter, win, doneHash])
+    },[win, doneHash, canEnterHash])
     
     const compareString = (str1, str2) => {
         var indexMatch = '';
@@ -245,28 +228,28 @@ const Grid = () => {
     
     useEffect(() => {
         if (!doneHash.firstDone) {
-            if (guesses.first.length == 5) setFirstCanEnter(true);
-            else setFirstCanEnter(false);
+            if (guesses.first.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, firstCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, firstCanEnter: false}));
         }
         else if (!doneHash.secondDone) {
-            if (guesses.second.length == 5) setSecondCanEnter(true);
-            else setSecondCanEnter(false);
+            if (guesses.second.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, secondCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, secondCanEnter: false}));
         }
         else if (!doneHash.thirdDone) {
-            if (guesses.third.length == 5) setThirdCanEnter(true);
-            else setThirdCanEnter(false);
+            if (guesses.third.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, thirdCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, thirdCanEnter: false}));
         }
         else if (!doneHash.fourthDone) {
-            if (guesses.fourth.length == 5) setFourthCanEnter(true);
-            else setFourthCanEnter(false);
+            if (guesses.fourth.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, fourthCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, fourthCanEnter: false}));
         }
         else if (!doneHash.fifthDone) {
-            if (guesses.fifth.length == 5) setFifthCanEnter(true);
-            else setFifthCanEnter(false);
+            if (guesses.fifth.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, fifthCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, fifthCanEnter: false}));
         }
         else if (!doneHash.sixthDone) {
-            if (guesses.sixth.length == 5) setSixthCanEnter(true);
-            else setSixthCanEnter(false);
+            if (guesses.sixth.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, sixthCanEnter: true}));
+            else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, sixthCanEnter: false}));
         }
     }, [guesses])
 

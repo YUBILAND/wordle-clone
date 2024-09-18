@@ -109,22 +109,43 @@ const Keys = () => {
     }
 
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
+    const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
 
+    const {notEnough, setNotEnough} = useContext(KeyboardContext);
+    const {wrongWord, setWrongWord} = useContext(KeyboardContext);
+    const {wordleList, setWordleList} = useContext(KeyboardContext);
+    
 
     const onKeyPress = button => {
         console.log("Button pressed", button);
+
+
+        
+    
+
+
+
+
         Object.entries(doneHash).some(([key, value]) => {
             console.log(key)
             console.log(value)
-            const numKey = key.replace('Done', '')
-
+            const doneKey = key.replace('Done', '')
+            const canEnterKey = doneKey + 'CanEnter';
+            
             if (!value) {
                 if (button == "DEL") {
                     setGuessLength(prevGuessLen => prevGuessLen - 1);
-                    setGuesses( prevGuess => ({ ...prevGuess, [numKey] : (prevGuess[numKey].slice(0, prevGuess[numKey].length - 1))}))
+                    setGuesses( prevGuess => ({ ...prevGuess, [doneKey] : (prevGuess[doneKey].slice(0, prevGuess[doneKey].length - 1))}))
+                } else if (button == "ENTER") {
+                    if (canEnterHash[canEnterKey]) {
+                        if (wordleList.includes(guesses[doneKey].toLowerCase())) {
+                            setDoneHash(prevDone => ({ ...prevDone, [key]: true}));
+                            setGuessLength(0);
+                        } else setWrongWord(true);
+                    } else setNotEnough(true);
                 } else {
                     setGuessLength(prevGuessLen => prevGuessLen + 1)
-                    setGuesses( prevGuess => ({ ...prevGuess, [numKey]: (prevGuess[numKey] + button.toUpperCase())}))
+                    setGuesses( prevGuess => ({ ...prevGuess, [doneKey]: (prevGuess[doneKey] + button.toUpperCase())}))
                 }
                 return true;
             }
@@ -135,7 +156,7 @@ const Keys = () => {
     }
 
     useEffect(() => {
-        console.log(guesses.first)
+        // console.log(guesses.first)
 
     }, [guesses])
 
