@@ -1,10 +1,12 @@
 require('dotenv').config()
 
 
+
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs')
 
 const app = express();
 app.use(express.json());
@@ -129,40 +131,51 @@ app.get('/check-auth', (req, res) => {
 
 
 app.post('/login', (req, res) => {
-    const checkSql = "SELECT id FROM USERS WHERE username = ? AND password = ?";
-    db.query(checkSql, [req.body.username, req.body.password], (err, result) => {
+    const checkSql = "SELECT id, password FROM users WHERE username = ?";
+
+    db.query(checkSql, [req.body.username], async (err, result) => {
         if (err) return res.json(err);
         if (result.length > 0) {
-            //  User exists so log in
-            const userID = result[0].id;
-                // payload
-            const now = Math.floor(Date.now() / 1000);
-            // console.log(res.insertId)
-            const payload = { username: req.body.username, iat: now, id: userID}
+            const storedPass = result[0].password;
 
-            // Generate tokens
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
-            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
+            try {
 
-            // Store refresh token in database
-            const sql = 'UPDATE users SET token = ? WHERE username = ?';
-            const values = [
-                refreshToken,
-                req.body.username
-            ]
-            db.query(sql, values, (err, data) => {
-                if (err) return res.json(err);
-                // console.log("HI")
+                const match = await bcrypt.compare(req.body.password[0], storedPass)
+                if (match) {
+                    //  User exists so log in
+                    const userID = result[0].id;
+                        // payload
+                    const now = Math.floor(Date.now() / 1000);
+                    // console.log(res.insertId)
+                    const payload = { username: req.body.username, iat: now, id: userID}
+
+                    // Generate tokens
+                    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+                    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
+
+                    // Store refresh token in database
+                    const sql = 'UPDATE users SET token = ? WHERE username = ?';
+                    const values = [
+                        refreshToken,
+                        req.body.username
+                    ]
+                    db.query(sql, values, (err, data) => {
+                        if (err) return res.json(err);
+                        // console.log("HI")
+                        
+                        // Send cookies to client
+                        res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+                        res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+                        
+                        return res.json({ message: 'Logged In Successfully!', id: userID})
+                    })
                 
-                // Send cookies to client
-                res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
-                res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
-                
-                return res.json({ message: 'Logged In Successfully!', id: userID})
-            })
-            
-            // accessToken =  generateAccessToken(user)
+                // accessToken =  generateAccessToken(user)
+                } else res.json({message: "Username or password is incorrect"});
 
+            } catch (compareErr) {
+                return res.json(compareErr)
+            }
             // return res.json({ message: "Logged in", accessToken: accessToken });
         } else
         return res.json({message: "Username or password is incorrect"});
@@ -180,11 +193,15 @@ app.post('/signup', (req, res) => {
             return res.json({ message: "Username or Email already exists" });
         }
         // Insert user into database
+        const salt = bcrypt.genSaltSync(10);
+
+        const hashedPassword = bcrypt.hashSync(req.body.password[0], salt);
+        console.log(hashedPassword)
         const insertUser = "INSERT INTO users ( `username`, `email`, `password`) Values (?)";
         const values = [
             req.body.username,
             req.body.email,
-            req.body.password
+            hashedPassword
         ]
 
         let userID = '';
