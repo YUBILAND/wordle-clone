@@ -117,18 +117,8 @@ const Keys = () => {
     
 
     const onKeyPress = button => {
-        console.log("Button pressed", button);
-
-
-        
-    
-
-
-
-
+        // console.log("Button pressed", button);
         Object.entries(doneHash).some(([key, value]) => {
-            console.log(key)
-            console.log(value)
             const doneKey = key.replace('Done', '')
             const canEnterKey = doneKey + 'CanEnter';
             

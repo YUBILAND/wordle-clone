@@ -13,25 +13,18 @@ const Grid = () => {
     
     // const [kbColor, setKbColor] = useState({});
     const {darkMode} = useContext(KeyboardContext);
-
     const {userID, setUserID} = useContext(KeyboardContext);
-
-
     const {setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
-
     const {guessWon, setGuessWon} = useContext(KeyboardContext);
-
     const [winCompliment, setWinCompliment] = useState(false);
     const {win, setWin} = useContext(KeyboardContext);
     const [answer, showAnswer] = useState(false);
-
     const {notEnough, setNotEnough} = useContext(KeyboardContext);
     const {wrongWord, setWrongWord} = useContext(KeyboardContext);
     const {wordleList, setWordleList} = useContext(KeyboardContext);
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
-
     const [guessResults, setGuessResults] = useState({first: [], second: [], third: [], fourth: [], fifth: [], sixth: []})
     const firstRef = useRef(false);
     const secondRef = useRef(false);
@@ -504,10 +497,30 @@ const Grid = () => {
         }, 1000);
     }
 
+    function whichCompliment() {
+        const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
+        console.log(doneHash);
+        console.log(firstTrueIndex);
+        if (firstTrueIndex != -1) {
+            return firstTrueIndex;
+        } else return 6;
+    }
+
+    const compliments = [
+        "",               
+        "Genius",        
+        "Magnificent",   
+        "Impressive",    
+        "Splendid",     
+        "Great",        
+        "Phew"          
+    ];
+
+
   return (
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
 
-        {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Magnificent</span> </div>}
+        {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
 
         {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not enough letters</span> </div>}
 
