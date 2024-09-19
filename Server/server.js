@@ -142,6 +142,7 @@ app.get('/highestStreak', (req, res) => {
                     ...result,
                     username: userMap.get(result.id) || null, // Use null if username not found
                 }));
+
                 return res.json(statsWithUsernames)
             })
         }

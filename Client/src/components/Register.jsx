@@ -31,7 +31,7 @@ const Register = () => {
         axios.defaults.withCredentials = true;
         axios.post('http://localhost:8081/signup', regAcc)
         .then(res => {
-            if (res.data.message) {
+            if (res.data.message == "Registered Successfully!") {
                 console.log(res.data.message)
                 // console.log(res.data.id)
                 console.log(res.data.id)
