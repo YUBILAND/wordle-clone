@@ -43,25 +43,24 @@ const jwt = require('jsonwebtoken');
 //     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s'})
 // }
 
-app.post('/token', (req, res) => {
-    const { refreshToken } = req.cookies;
+const authenticateToken = (req, res, next) => {
+    const accessToken = req.cookies.accessToken; // Retrieve the auth cookie
+    if (accessToken == null) return res.json({ auth: false , message : "Unauthorized" })
 
-    if (!refreshToken) return res.status(401).json({ message: 'No refresh token provided' });
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token' })
+        req.user = user;
+        next()
+    })
+};
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid refresh token' });
-
-    const accessToken = jwt.sign({ username: user.username, id: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-
-    res.json({ accessToken });
-  });
+app.get('/authorized', authenticateToken, (req, res) => {
+    return res.json({ auth : true , message :"Authorized" });
     
 })
 
 app.get('/check-auth', (req, res) => {
     const { accessToken, refreshToken } = req.cookies;
-    // console.log(accessToken)
-    // console.log(refreshToken)
     if (!accessToken) {
         if (!refreshToken) {
 
@@ -117,19 +116,10 @@ app.get('/check-auth', (req, res) => {
 //     }
 
 
-// function authenticateToken(req, res, next) {
-//     const authHeader = req.headers['authorization']
-//     const token = authHeader && authHeader.split(' ')[1];
-//     if (token == null) return res.sendStatus(401)
-    
-//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//         if (err) return res.sendStatus(403)
-//         req.user = user
-//         next()
-//     })
-// }
+
+
 app.get('/highestStreak', (req, res) => {
-    const sortHighestStreak = 'SELECT * FROM stats ORDER BY highest DESC';
+    const sortHighestStreak = 'SELECT * FROM stats WHERE id != 0 ORDER BY highest DESC';
     db.query(sortHighestStreak, (err, result) => {
         if (err) return res.json(err);
         if (result.length > 0) {

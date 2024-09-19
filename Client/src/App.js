@@ -36,6 +36,10 @@ function App() {
   const [notEnough, setNotEnough] = useState(false);
   const [wrongWord, setWrongWord] = useState(false);
   const [leaderBoard, showLeaderBoard] = useState(false);
+  const [accessLeaderBoard, setAccessLeaderBoard] = useState(false);
+  const [clickLeaderBoard, setClickLeaderBoard] = useState(false);
+
+
 
   useEffect(() => {
     axios.get('http://localhost:8081/check-auth', { withCredentials: true })
@@ -64,7 +68,7 @@ function App() {
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickLeaderBoard, setClickLeaderBoard}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :

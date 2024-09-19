@@ -168,7 +168,7 @@ const Statistics = () => {
             </div>
         </div>
 
-        <div className='absolute top-0 left-0 w-screen h-screen bg-white/50 z-10'>
+        <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
         </div>
     </>
   )

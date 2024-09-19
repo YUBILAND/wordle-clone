@@ -41,6 +41,13 @@ const Grid = () => {
 
     const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
 
+    const {clickLeaderBoard, setClickLeaderBoard} = useContext(KeyboardContext);
+
+
+
+  
+
+
     useEffect(() => {
         const fetchWords = async () => { 
             const response = await fetch(raw);
@@ -487,8 +494,14 @@ const Grid = () => {
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setWrongWord(false);
-
             }, 5000);
+    }
+
+    if (clickLeaderBoard) {
+        setTimeout(function() {
+            document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+            setClickLeaderBoard(false);
+            }, 2000);
     }
 
     if (answer) {
@@ -525,6 +538,8 @@ const Grid = () => {
         {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not enough letters</span> </div>}
 
         {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
+
+        {clickLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
 
         {winPage && <Statistics /> }
 
