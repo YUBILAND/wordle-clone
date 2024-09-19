@@ -128,7 +128,25 @@ app.get('/check-auth', (req, res) => {
 //         next()
 //     })
 // }
-
+app.get('/highestStreak', (req, res) => {
+    const sortHighestStreak = 'SELECT * FROM stats ORDER BY highest DESC';
+    db.query(sortHighestStreak, (err, result) => {
+        if (err) return res.json(err);
+        if (result.length > 0) {
+            const ids =  result.map(entry => entry.id)
+            const findUserName = 'SELECT id, username FROM users WHERE id IN (?)'
+            db.query(findUserName, [ids], (err, user) => {
+                if (err) return res.json(err);
+                const userMap = new Map(user.map(user => [user.id, user.username]));
+                const statsWithUsernames = result.map(result => ({
+                    ...result,
+                    username: userMap.get(result.id) || null, // Use null if username not found
+                }));
+                return res.json(statsWithUsernames)
+            })
+        }
+    })
+})
 
 app.post('/login', (req, res) => {
     const checkSql = "SELECT id, password FROM users WHERE username = ?";
