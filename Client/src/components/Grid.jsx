@@ -43,9 +43,10 @@ const Grid = () => {
 
     const {clickLeaderBoard, setClickLeaderBoard} = useContext(KeyboardContext);
 
+    const {clickProfile, setClickProfile} = useContext(KeyboardContext);
 
+    const {guestMode, setGuestMode} = useContext(KeyboardContext);
 
-  
 
 
     useEffect(() => {
@@ -504,6 +505,13 @@ const Grid = () => {
             }, 2000);
     }
 
+    if (clickProfile) {
+        setTimeout(function() {
+            document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+            setClickProfile(false);
+            }, 2000);
+    }
+
     if (answer) {
         setTimeout(function() {
             setWinPage(true);
@@ -533,6 +541,8 @@ const Grid = () => {
   return (
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
 
+        {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
+
         {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
 
         {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not enough letters</span> </div>}
@@ -540,6 +550,8 @@ const Grid = () => {
         {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
 
         {clickLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
+
+        {clickProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
 
         {winPage && <Statistics /> }
 

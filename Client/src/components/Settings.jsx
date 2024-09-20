@@ -21,6 +21,7 @@ const Settings = () => {
     function handleX() {
         showSettings(!settings);
     }
+    
     const GreenSwitch = styled((props) => (
         <Switch checked={darkMode} onChange={handleDark} focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
       ))(({ theme }) => ({

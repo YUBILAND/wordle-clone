@@ -38,37 +38,49 @@ function App() {
   const [leaderBoard, showLeaderBoard] = useState(false);
   const [accessLeaderBoard, setAccessLeaderBoard] = useState(false);
   const [clickLeaderBoard, setClickLeaderBoard] = useState(false);
+  const [userPfpPath, setUserPfpPath] = useState('');
+
+  const [profilePage, showProfilePage] = useState(false);
+  const [accessProfile, setAccessProfile] = useState(false);
+  const [clickProfile, setClickProfile] = useState(false);
 
 
 
   useEffect(() => {
     axios.get('http://localhost:8081/check-auth', { withCredentials: true })
     .then(res => {
-       // res means token is good
-        // setIsAuth(true);
       setUserMode(true);
       setCheckingAuth(false);
-      // console.log(res.data.id)
       setUserID({id: res.data.id})
-      // setUserID({id:})
-        
-
     })
     .catch(err => {
       // setIsAuth(false);
       setUserMode(false);
       setGuestMode(false);
       setCheckingAuth(false);
-
-      
     })
   }, [])
+
+  useEffect(() => {
+    if(userID.id) { //if not 0 ie guest mode
+      axios.get('http://localhost:8081/getPfp', { params: { ...userID } })
+      .then(res => {
+        // console.log(userID)
+        // console.log(res.data.message)
+        // console.log(res.data.pfp)
+
+        if (res.data.message == "Retrieved pfp") setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp)
+
+
+      })
+    }
+  }, [userID])
 
 
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickLeaderBoard, setClickLeaderBoard}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickLeaderBoard, setClickLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickProfile, setClickProfile}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :

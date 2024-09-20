@@ -7,6 +7,8 @@ const mysql = require('mysql');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs')
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -25,23 +27,23 @@ const db = mysql.createConnection({
 
 const jwt = require('jsonwebtoken');
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Specify the directory to save the uploaded files
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to the file name
+    },
+  });
 
-// app.get('/',  (re, res) => {
-//     return res.json("From backend")
-// })
-
-// app.get('/users', (req, res) => {
-//     const sql = "SELECT * FROM USERS";
-//     db.query(sql, (err,data) => {
-//         if (err) return res.json(err);
-//         return res.json(data);
-//     })
-// })
+const upload = multer({ storage });
 
 
-// function generateAccessToken(user) {
-//     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s'})
-// }
+
+
+
+
+
 
 const authenticateToken = (req, res, next) => {
     const accessToken = req.cookies.accessToken; // Retrieve the auth cookie
@@ -101,23 +103,6 @@ app.get('/check-auth', (req, res) => {
     }
 })
 
-
-
-// function authenticateToken(req, res, next) {
-//         const authHeader = req.headers['authorization']
-//         const token = authHeader && authHeader.split(' ')[1];
-//         if (token == null) return res.status(401).json({ message: 'No token provided' });
-        
-//         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//             if (err) return res.status(403).json({ message: 'Invalid token' })
-//             req.user = user
-//             next()
-//         })
-//     }
-
-
-
-
 app.get('/highestStreak', (req, res) => {
     const sortHighestStreak = 'SELECT * FROM stats WHERE id != 0 ORDER BY highest DESC';
     db.query(sortHighestStreak, (err, result) => {
@@ -138,6 +123,43 @@ app.get('/highestStreak', (req, res) => {
         }
     })
 })
+
+app.post('/uploadPfp', upload.single('file'), (req, res) => {
+    const userId = req.body.id; // Get user ID from the request
+    const imgPath = req.file.filename; // Get the file path
+    
+    const uploadPfp = 'UPDATE pfp SET img = ? WHERE id = ?';
+    db.query(uploadPfp, [imgPath, userId] ,(err, result) => {
+        if (err) return res.json(err);
+        return res.json({ message : 'Uploaded pfp', img : imgPath})
+        
+    })
+})
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.get('/uploads/:id', (req, res) => {
+    const imageId = req.params.id;
+    // console.log(imageId)
+    const imgPath = path.join(__dirname, 'uploads', imageId);
+
+    res.sendFile(imgPath, (err) => {
+        if (err) {
+            res.status(err.status).end();
+        }
+    });
+})
+
+app.get('/getPfp', (req, res) => {
+    // console.log(req.query.id)
+    const getPfp = 'SELECT img FROM pfp WHERE id = ?';
+    db.query(getPfp, [req.query.id] ,(err, result) => {
+        if (err) return res.json(err);
+        if (result.length == 0) return res.json({ message : 'No pfp' })
+        if (result[0].img) return res.json({ message : 'Retrieved pfp', pfp : result[0].img})
+    })
+})
+
 
 app.post('/login', (req, res) => {
     const checkSql = "SELECT id, password FROM users WHERE username = ?";
@@ -194,10 +216,11 @@ app.post('/login', (req, res) => {
 app.post('/signup', (req, res) => {
 
     // Check if credentials are already in database
-    const checkSql = "SELECT * FROM USERS WHERE username = ? OR email = ?";
+    const checkSql = "SELECT * FROM users WHERE username = ? OR email = ?";
     db.query(checkSql, [req.body.username, req.body.email], (err, result) => {
         if (err) return res.json(err);
-        if (result.length == 1) {
+        if (result.length > 0) {
+            console.log(result)
             //Found credentials so user already exists, can't sign up
             return res.json({ message: "Username or Email already exists" });
         }
@@ -243,8 +266,12 @@ app.post('/signup', (req, res) => {
                 db.query(sql, userID, (err, data) => {
                     if (err) return res.json(err);
 
-                    return res.json({ message: 'Registered Successfully!', id: userID })
+                    const insertPfp = "INSERT INTO pfp (id, img) VALUES (?,'')";
+                    db.query(insertPfp, userID, (err, data) => {
+                        if (err) return res.json(err);
+                        return res.json({ message: 'Registered Successfully!', id: userID })
 
+                    })
                 })
                 
             })

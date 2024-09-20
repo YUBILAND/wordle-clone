@@ -74,6 +74,73 @@ const LeaderBoard = () => {
         setPlayedButton(true);
     }
 
+    const [rankOneImg, setRankOneImg] = useState('');
+    const [rankTwoImg, setRankTwoImg] = useState('');
+    const [rankThreeImg, setRankThreeImg] = useState('');
+
+    
+
+
+    // const otherPfp = async (otherID) =>  {
+    //     console.log(otherID)
+    //     try {
+    //         const res = await axios.get('http://localhost:8081/getPfp', { params: { id : otherID } })
+    //         console.log(res.data.pfp);
+    //         const header = 'http://localhost:8081/uploads/'
+    //         return header + res.data.pfp
+    //     } catch(error) {
+    //         console.error('Error fetching data:', error);
+    //     }
+    // }
+
+    // function otherPfp(otherID) {
+    //     axios.get('http://localhost:8081/getPfp', { params: { id : otherID } })
+    //     .then(res => {
+    //         console.log(res.data.pfp);
+    //         const header = 'http://localhost:8081/uploads/'
+    //         return header + res.data.pfp
+    //     })
+    //     .catch(err => {
+    //         console.error('Error fetching data:', err);
+    //     }) 
+    // }
+
+    useEffect(() => {
+        if (displayed[0])
+        axios.get('http://localhost:8081/getPfp', { params: { id : displayed[0].id } })
+        .then(res => {
+            const header = 'http://localhost:8081/uploads/'
+            setRankOneImg(header + res.data.pfp)
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        }) 
+
+        if (displayed[1])
+            axios.get('http://localhost:8081/getPfp', { params: { id : displayed[1].id } })
+            .then(res => {
+                const header = 'http://localhost:8081/uploads/'
+                setRankTwoImg(header + res.data.pfp)
+            })
+            .catch(err => {
+                console.error('Error fetching data:', err);
+            }) 
+
+        if (displayed[2])
+            axios.get('http://localhost:8081/getPfp', { params: { id : displayed[2].id } })
+            .then(res => {
+                const header = 'http://localhost:8081/uploads/'
+                setRankThreeImg(header + res.data.pfp)
+            })
+            .catch(err => {
+                console.error('Error fetching data:', err);
+            }) 
+    }, [displayed])
+
+
+    
+
+
     
 
 
@@ -87,7 +154,7 @@ const LeaderBoard = () => {
             </div>
 
             <div className='flex justify-around font-bold tracking-widest p-2 border-2 border-[#787c7e] rounded-md mb-2'>
-                <button onClick={handleHighestStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${highestButton && 'bg-orange-200'}`}>Highest Streak</button>
+                <button onClick={handleHighestStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${highestButton && 'bg-orange-200'}`}>Top Streak</button>
                 <button onClick={handleCurrentStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${streakButton && 'bg-orange-200'}`}>Current Streak</button>
                 <button onClick={handlePlayCount} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${playedButton && 'bg-orange-200'}`}>Play Count</button>
             </div>
@@ -99,19 +166,19 @@ const LeaderBoard = () => {
 
                 <div>
                     <div className='flex flex-col items-center'>
-                        <div className='w-[128px] h-[128px] border-2 border-[#787c7e] bg-white z-40'></div>
+                        { displayed[0] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankOneImg} alt="" /> }
                         <div className='font-bold tracking-widest'>{ displayed.length > 0 && displayed[0].username}</div>
                         {/* <div className='absolute top-[-70px] left-30 z-30'><WhatshotOutlinedIcon sx={{color: 'red', fontSize: '16rem'}}/></div> */}
                     </div>
 
                     <div className='flex justify-around'>
                         <div className=' flex flex-col items-center'>
-                            <div className='w-[128px] h-[128px] border-2 border-[#787c7e]'></div>
+                            { displayed[1] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankTwoImg} alt="" /> }
                             <div className='text-center font-bold tracking-widest'>{displayed.length > 0 && displayed[1].username}</div>
                         </div>
 
                         <div className=' flex flex-col items-center'>
-                            <div className='w-[128px] h-[128px] border-2 border-[#787c7e]'></div>
+                            { displayed[2] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankThreeImg} alt="" /> }
                             <div className='text-center font-bold tracking-widest'>{displayed.length > 0 && displayed[2].username}</div>
                         </div>
                     </div>
