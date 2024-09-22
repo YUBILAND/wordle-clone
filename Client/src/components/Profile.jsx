@@ -64,12 +64,12 @@ const Profile = () => {
     <div>
         {/* Opaque background for when popup changeName */}
         { changeName && 
-            <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-20'>
+            <div className={`absolute top-0 left-0 w-screen h-[1000px] ${darkMode ? 'bg-black/50' : 'bg-white/50' } z-20`}>
             </div>
         }
         {/* Change Name pop up */}
         <Zoom in={changeName}> 
-            <div className='text-base absolute w-64 top-[30%] left-[43.5%] border-8 border-gray-200 rounded-md z-30 pb-2'>
+            <div className={`text-base absolute w-64 top-[30%] left-[43.5%] border-8 ${darkMode ? 'border-gray-500' : 'border-gray-200'} rounded-md z-30 pb-2`}>
                 <div className='flex justify-between font-bold tracking-[0.5px] uppercase pb-1'>
                     <CloseIcon sx={{opacity: '0'}}/>
                     <CloseIcon className='cursor-pointer' onClick={handleXChangeName} sx={{color: '#787c7e'}}/>
@@ -79,7 +79,7 @@ const Profile = () => {
                             Change your name
                         </button>
                         <form action="">
-                            <input className='border-2 rounded-md px-2 border-gray-200' type="text" placeholder='New username'/>
+                            <input className='!text-black border-2 rounded-md px-2 border-gray-200' type="text" placeholder='New username'/>
                         </form>
                     </div>
             </div> 
@@ -105,7 +105,7 @@ const Profile = () => {
                 <div className='relative w-fit mx-auto flex justify-between items-center font-bold text-2xl tracking-widest uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
                     <Tooltip title="Copy name" arrow placement="top">
-                        <button className='hover:bg-gray-200 px-2 rounded-md'>{userID.username}</button>
+                        <button className={`${darkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-200' } px-2 rounded-md`}>{userID.username}</button>
                     </Tooltip>
                     <Tooltip title="Change Name" arrow placement="right">
                         <BrushOutlinedIcon className='cursor-pointer pl-2' onClick={handleChangeName} sx={{color: '#787c7e'}}/>

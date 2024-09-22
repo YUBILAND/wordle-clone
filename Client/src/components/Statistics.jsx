@@ -7,8 +7,9 @@ import axios from 'axios';
 
 const Statistics = () => {
 
+    const {darkMode, setDarkMode} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
-    const {userID, setUserID} = useContext(KeyboardContext);
+    const {userID} = useContext(KeyboardContext);
     const [statsDone, setStatsDone] = useState(false);
     const [stats, setStats] = useState(
         {
@@ -23,7 +24,7 @@ const Statistics = () => {
             streak: 0,
             highest: 0,
         });
-    const [widthDone, setWidthDone] = useState(false);
+
     const [width, setWidth] = useState({ 
         guess1: 0,
         guess2: 0,
@@ -33,25 +34,19 @@ const Statistics = () => {
         guess6: 0
     }); 
     const [allZeros, setAllZeros] = useState(false);
+    const {delay, setDelay} = useContext(KeyboardContext);
+
 
     useEffect(() => {
-        // console.log(width)
         
         const set = new Set(Object.values(width))
         const first = [...set][0]
-        // console.log(set)
-        // console.log(width)
+        
         if (set.size == 1 && first == 0) {
             setAllZeros(true);
         } else setAllZeros(false);
         
     }, [width])
-
-    // const {win, setWin} = useContext(KeyboardContext);
-    // const {guessWon, setGuessWon} = useContext(KeyboardContext);
-    // const [updateStats, setUpdateStats] = useState(false);
-
-
 
     useEffect(() => {
         if(winPage) {
@@ -86,12 +81,12 @@ const Statistics = () => {
                     [key]: Math.round( guessMax ? (stats[key] / guessMax * 100) + 10 : 0)
                 })) 
             } )
-            setWidthDone(true);
         }
     }, [statsDone])
 
     function handleX() {
         setWinPage(false);
+        setDelay(true);
     }
 
     function handleReplay() {
@@ -100,8 +95,8 @@ const Statistics = () => {
 
   return (
     
-    <>
-        <div className='text-right mt-4 pr-4'>
+    <div className={`rounded-md ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} `}>
+        <div className='text-right pt-4 pr-4'>
             <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
         </div>
         <h1 className='text-center font-bold mb-2 uppercase tracking-[0.5px]'>Statistics</h1>
@@ -150,10 +145,10 @@ const Statistics = () => {
 
         </div>
 
-        <div className='flex justify-around w-full mx-auto mb-10'>
-            <div className='border-r border-black pr-10'>
+        <div className='flex justify-around w-full mx-auto pb-10'>
+            <div className={`border-r ${darkMode ? 'border-white' : 'border-black'} pr-10`}>
 
-                <button onClick={handleReplay} className='flex items-center green uppercase  text-2xl px-2 rounded-md py-2'>
+                <button onClick={handleReplay} className='flex items-center green uppercase text-2xl px-2 rounded-md py-2'>
                     Play again!
                     <ReplayIcon/>
                 </button>
@@ -166,7 +161,7 @@ const Statistics = () => {
             </div>
 
         </div>
-    </>
+    </div>
     
   )
 }

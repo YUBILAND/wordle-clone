@@ -8,6 +8,7 @@ import { KeyboardContext } from '../Contexts/KeyboardContext';
 
 const Keys = () => {
 
+    const {darkMode, setDarkMode} = useContext(KeyboardContext);
     const [green, setGreen] = useState([]);
     const [yellow, setYellow] = useState([]);
     const [gray, setGray] = useState([]);
@@ -83,11 +84,11 @@ const Keys = () => {
                 buttons: grayString || ' '
             },
             {
-                class: "buttons",
+                class: `buttons ${ darkMode && 'text-black'}`,
                 buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
             }
         ])
-    },[greenString, yellowString, grayString])
+    },[greenString, yellowString, grayString, buttonTheme])
 
     // useEffect(() => {
     //     if (buttonTheme.length > 0) {

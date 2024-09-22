@@ -17,6 +17,7 @@ const Grid = () => {
     
     // const [kbColor, setKbColor] = useState({});
     const {darkMode} = useContext(KeyboardContext);
+    const {userMode, setUserMode} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
     const {setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
@@ -520,8 +521,8 @@ const Grid = () => {
 
     function whichCompliment() {
         const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
-        console.log(doneHash);
-        console.log(firstTrueIndex);
+        // console.log(doneHash);
+        // console.log(firstTrueIndex);
         if (firstTrueIndex != -1) {
             return firstTrueIndex;
         } else return 6;
@@ -537,22 +538,33 @@ const Grid = () => {
         "Phew"          
     ];
 
-    // const [delay, setDelay] = useState(false);
+    const {delay, setDelay} = useContext(KeyboardContext);
+
     // const handleClickAway = () => {
     //     setWinPage(false);
-        
     //     setDelay(true);
+        
 
     //     setTimeout(function() {
     //         setDelay(false);
     //         }, 1000);
     // }
     
+    useEffect(() => {
+        if (!winPage) {
+            setTimeout(function() {
+                setDelay(false);
+                }, 1000);
+        }
+    }, [winPage])
+    
 
   return (
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
 
         {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
+
+        {userMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest`}>{userID.username}</span> </div>}
 
         {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
 
@@ -567,21 +579,22 @@ const Grid = () => {
                 
         {/* {winPage && <div className=''> <Statistics /> </div>
         } */}
-    {/* {winPage && 
-    <ClickAwayListener onClickAway={handleClickAway}> */}
+    {/* {winPage || delay &&  */}
 
+    {/* <ClickAwayListener onClickAway={handleClickAway}> */}
 
-
-        {/* <Zoom in={winPage} timeout={500}>
-            <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
+        {(winPage || delay )&& 
+        <Zoom in={winPage} timeout={500}>
+            <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl z-20' >
                 <Statistics /> 
             </div>
-        </Zoom> */}
+        </Zoom>
+        }
 
 
 
        
-                {winPage && 
+                {/* {winPage && 
                 <>  
                     <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
                         <Statistics /> 
@@ -589,15 +602,14 @@ const Grid = () => {
                     <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
                      </div>
                 </>
-           
-                }
+                } */}
 
-            {/* </ClickAwayListener>
+        {/* </ClickAwayListener> */}
 
-    } */}
+    {/* } */}
 
-        {/* {winPage && <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
-            </div> } */}
+        {winPage && <div className={`absolute top-0 left-0 w-screen h-[1000px] ${darkMode ? 'bg-black/50' : 'bg-white/50'}  z-10`}>
+            </div> }
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 

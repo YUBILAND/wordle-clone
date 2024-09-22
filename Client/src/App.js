@@ -44,6 +44,9 @@ function App() {
   const [accessProfile, setAccessProfile] = useState(false);
   const [clickDisabledProfile, setClickDisabledProfile] = useState(false);
 
+  const [delay, setDelay] = useState(false);
+
+
 
 
   useEffect(() => {
@@ -78,14 +81,13 @@ function App() {
 
 
   return (
-    <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
-        
         <Header />
         <Grid />
         <Keys />

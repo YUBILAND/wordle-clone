@@ -27,7 +27,6 @@ const Header = () => {
 
   const {guestMode, setGuestMode} = useContext(KeyboardContext);
 
-  const [delay, setDelay] = useState(false);
 
   function handleTutorial() {
     showTutorial(!tutorial);

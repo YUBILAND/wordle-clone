@@ -4,13 +4,15 @@ import { KeyboardContext } from '../Contexts/KeyboardContext';
 
 const Tutorial = () => {
 
+    const {darkMode, setDarkMode} = useContext(KeyboardContext);
     const {tutorial, showTutorial} = useContext(KeyboardContext);
 
     function handleX () {
         showTutorial(!tutorial);
     }
   return (
-    <div className='absolute top-0 left-0 w-screen h-[1000px] z-10 bg-white '>
+
+    <div className={`absolute top-0 left-0 w-screen h-[1000px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
         <div className='w-[500px] mx-auto'>
             <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
