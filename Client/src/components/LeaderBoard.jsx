@@ -26,7 +26,6 @@ const LeaderBoard = () => {
 
   const {userID, setUserID} = useContext(KeyboardContext);
 
-
   function handleX() {
     showLeaderBoard(!leaderBoard);
     }
@@ -78,33 +77,6 @@ const LeaderBoard = () => {
     const [rankTwoImg, setRankTwoImg] = useState('');
     const [rankThreeImg, setRankThreeImg] = useState('');
 
-    
-
-
-    // const otherPfp = async (otherID) =>  {
-    //     console.log(otherID)
-    //     try {
-    //         const res = await axios.get('http://localhost:8081/getPfp', { params: { id : otherID } })
-    //         console.log(res.data.pfp);
-    //         const header = 'http://localhost:8081/uploads/'
-    //         return header + res.data.pfp
-    //     } catch(error) {
-    //         console.error('Error fetching data:', error);
-    //     }
-    // }
-
-    // function otherPfp(otherID) {
-    //     axios.get('http://localhost:8081/getPfp', { params: { id : otherID } })
-    //     .then(res => {
-    //         console.log(res.data.pfp);
-    //         const header = 'http://localhost:8081/uploads/'
-    //         return header + res.data.pfp
-    //     })
-    //     .catch(err => {
-    //         console.error('Error fetching data:', err);
-    //     }) 
-    // }
-
     useEffect(() => {
         if (displayed[0])
         axios.get('http://localhost:8081/getPfp', { params: { id : displayed[0].id } })
@@ -138,18 +110,12 @@ const LeaderBoard = () => {
     }, [displayed])
 
 
-    
-
-
-    
-
-
   return (
     <div className={`absolute top-0 left-0 w-screen h-[1000px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
         <div className='w-[500px] mx-auto'>
             <div className='flex justify-between font-bold tracking-widest uppercase my-2 bg-[]'>
                 <CloseIcon sx={{opacity: '0'}}/>
-                <span>LeaderBoard</span>
+                <button className='uppercase cursor-default'>Leaderboard</button>
                 <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
             </div>
 
@@ -159,27 +125,27 @@ const LeaderBoard = () => {
                 <button onClick={handlePlayCount} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${playedButton && 'bg-orange-200'}`}>Play Count</button>
             </div>
 
-            <div className='border-2 border-[#787c7e] rounded-md py-4 mb-2'>
+            <div className='border-2 border-[#787c7e] rounded-md pb-4 mb-2'>
                 <div className='text-center pb-4 '>
-                    <span className='bg-[gold] p-2 px-3 rounded-2xl font-bold tracking-widest'>TOP WORDLERS</span>
+                    <button className='w-full py-4 text-2xl cursor-default bg-[gold] font-bold tracking-widest'>TOP WORDLERS</button>
                 </div>
 
                 <div>
                     <div className='flex flex-col items-center'>
                         { displayed[0] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankOneImg} alt="" /> }
-                        <div className='font-bold tracking-widest'>{ displayed.length > 0 && displayed[0].username}</div>
+                        <button className='font-bold tracking-widest cursor-default'>{ displayed.length > 0 && displayed[0].username }</button>
                         {/* <div className='absolute top-[-70px] left-30 z-30'><WhatshotOutlinedIcon sx={{color: 'red', fontSize: '16rem'}}/></div> */}
                     </div>
 
                     <div className='flex justify-around'>
                         <div className=' flex flex-col items-center'>
-                            { displayed[1] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankTwoImg} alt="" /> }
-                            <div className='text-center font-bold tracking-widest'>{displayed.length > 0 && displayed[1].username}</div>
+                            { displayed[1] && <img className='w-[96px] h-[96px] border-2 border-[#787c7e] object-contain' src={rankTwoImg} alt="" /> }
+                            <button className='text-center font-bold tracking-widest cursor-default'>{displayed.length > 0 && displayed[1].username }</button>
                         </div>
 
                         <div className=' flex flex-col items-center'>
-                            { displayed[2] && <img className='w-[128px] h-[128px] border-2 border-[#787c7e] object-contain' src={rankThreeImg} alt="" /> }
-                            <div className='text-center font-bold tracking-widest'>{displayed.length > 0 && displayed[2].username}</div>
+                            { displayed[2] && <img className='w-[96px] h-[96px] border-2 border-[#787c7e] object-contain' src={rankThreeImg} alt="" /> }
+                            <button className='text-center font-bold tracking-widest cursor-default'>{displayed.length > 0 && displayed[2].username }</button>
                         </div>
                     </div>
                 </div>
@@ -188,7 +154,7 @@ const LeaderBoard = () => {
             <div className='border-2 border-[#787c7e] rounded-md py-4 '>
 
                 <div className='text-center font-bold text-xl uppercase tracking-widest p-2 mb-2'>
-                    <span className=''>Leaderboard</span>
+                    <button className='text-xl uppercase tracking-widest cursor-default'>Leaderboard</button>
                 </div>
                 <hr className='w-[90%] mx-auto mb-2'/>
                 <div>
@@ -221,46 +187,46 @@ const LeaderBoard = () => {
                         
                         {displayed.length > 0 && displayed.map((val, ind) => (
                             <>
-                                <div className={`col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${ 
+                                <button className={`cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${ 
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
                                     (val.id == userID.id) ? 'bg-white border-2 !border-black ' : 
                                     'bg-white !border-gray-300'}`}>
                                     {ind + 1}
-                                </div>
-                                <div className={`col-span-3 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
+                                </button>
+                                <button className={`cursor-default col-span-3 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
                                     (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
                                     'bg-white !border-gray-300'}`}>
                                     {val.username}
-                                </div>
-                                <div className={`col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
+                                </button>
+                                <button className={`cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
                                     (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
                                     'bg-white !border-gray-300'}`}>
                                     {val.streak}
-                                </div>
-                                <div className={`col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
+                                </button>
+                                <button className={`cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
                                     (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
                                     'bg-white !border-gray-300'}`}>
                                     {val.highest}
-                                </div>
-                                <div className={`col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
+                                </button>
+                                <button className={`cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && '!border-black'} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
                                     (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
                                     'bg-white !border-gray-300'}`}>
                                     {val.played}
-                                </div>
+                                </button>
                             </>
                         ))}
                     </div>

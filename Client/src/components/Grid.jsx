@@ -7,6 +7,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import './Grid.css'
 import Statistics from './Statistics';
 import axios from 'axios';
+import Zoom from '@mui/material/Zoom';
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
+
+
 
 const Grid = () => {
 
@@ -41,12 +45,11 @@ const Grid = () => {
 
     const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
 
-    const {clickLeaderBoard, setClickLeaderBoard} = useContext(KeyboardContext);
+    const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
 
-    const {clickProfile, setClickProfile} = useContext(KeyboardContext);
+    const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
 
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
-
 
 
     useEffect(() => {
@@ -466,9 +469,6 @@ const Grid = () => {
                 /* Code to run after 4 seconds */
                 // alert('wow you have brain')
                 setWinPage(true);
-                // const allExceptDiv = document.querySelectorAll("body > *:not(#stats):not(#stats *)");
-                // allExceptDiv.forEach(el => el.classList.add("unfocus"))
-
             }, 1000)
             
         }
@@ -498,17 +498,17 @@ const Grid = () => {
             }, 5000);
     }
 
-    if (clickLeaderBoard) {
+    if (clickDisabledLeaderBoard) {
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
-            setClickLeaderBoard(false);
+            setClickDisabledLeaderBoard(false);
             }, 2000);
     }
 
-    if (clickProfile) {
+    if (clickDisabledProfile) {
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
-            setClickProfile(false);
+            setClickDisabledProfile(false);
             }, 2000);
     }
 
@@ -537,6 +537,17 @@ const Grid = () => {
         "Phew"          
     ];
 
+    // const [delay, setDelay] = useState(false);
+    // const handleClickAway = () => {
+    //     setWinPage(false);
+        
+    //     setDelay(true);
+
+    //     setTimeout(function() {
+    //         setDelay(false);
+    //         }, 1000);
+    // }
+    
 
   return (
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
@@ -549,11 +560,44 @@ const Grid = () => {
 
         {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
 
-        {clickLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
+        {clickDisabledLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
 
-        {clickProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
+        {clickDisabledProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
 
-        {winPage && <Statistics /> }
+                
+        {/* {winPage && <div className=''> <Statistics /> </div>
+        } */}
+    {/* {winPage && 
+    <ClickAwayListener onClickAway={handleClickAway}> */}
+
+
+
+        {/* <Zoom in={winPage} timeout={500}>
+            <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
+                <Statistics /> 
+            </div>
+        </Zoom> */}
+
+
+
+       
+                {winPage && 
+                <>  
+                    <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
+                        <Statistics /> 
+                    </div>
+                    <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
+                     </div>
+                </>
+           
+                }
+
+            {/* </ClickAwayListener>
+
+    } */}
+
+        {/* {winPage && <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
+            </div> } */}
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 

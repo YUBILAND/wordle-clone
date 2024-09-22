@@ -39,12 +39,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-
-
-
-
-
-
 const authenticateToken = (req, res, next) => {
     const accessToken = req.cookies.accessToken; // Retrieve the auth cookie
     if (accessToken == null) return res.json({ auth: false , message : "Unauthorized" })
@@ -92,13 +86,13 @@ app.get('/check-auth', (req, res) => {
 
 
             // Proceed with the request
-            res.json({ message: 'Access token refreshed', accessToken: newAccessToken, user: user, id: user.id});
+            res.json({ message: 'Access token refreshed', accessToken: newAccessToken, username: user.username , id: user.id});
         })
     } else {
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid access token' });
 
-    res.json({ authenticated: true, user: user, id: user.id });
+    res.json({ authenticated: true, username: user.username, id: user.id });
     })
     }
 })
@@ -198,7 +192,7 @@ app.post('/login', (req, res) => {
                         res.cookie('accessToken', accessToken, { maxAge: 15 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
                         res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
                         
-                        return res.json({ message: 'Logged In Successfully!', id: userID})
+                        return res.json({ message: 'Logged In Successfully!', id: userID, username : req.body.username })
                     })
                 
                 // accessToken =  generateAccessToken(user)
@@ -220,7 +214,7 @@ app.post('/signup', (req, res) => {
     db.query(checkSql, [req.body.username, req.body.email], (err, result) => {
         if (err) return res.json(err);
         if (result.length > 0) {
-            console.log(result)
+            // console.log(result)
             //Found credentials so user already exists, can't sign up
             return res.json({ message: "Username or Email already exists" });
         }
@@ -228,7 +222,7 @@ app.post('/signup', (req, res) => {
         const salt = bcrypt.genSaltSync(10);
 
         const hashedPassword = bcrypt.hashSync(req.body.password[0], salt);
-        console.log(hashedPassword)
+        // console.log(hashedPassword)
         const insertUser = "INSERT INTO users ( `username`, `email`, `password`) Values (?)";
         const values = [
             req.body.username,
@@ -269,7 +263,7 @@ app.post('/signup', (req, res) => {
                     const insertPfp = "INSERT INTO pfp (id, img) VALUES (?,'')";
                     db.query(insertPfp, userID, (err, data) => {
                         if (err) return res.json(err);
-                        return res.json({ message: 'Registered Successfully!', id: userID })
+                        return res.json({ message: 'Registered Successfully!', id: userID, username: req.body.username})
 
                     })
                 })
@@ -330,7 +324,6 @@ app.post('/eraseGuestData', (req, res) => {
     })
     
 })
-
 
 app.listen(8081, () => {
     console.log('listening');

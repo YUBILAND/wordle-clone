@@ -23,7 +23,7 @@ function App() {
   const [login, setLogin] = useState(false);
   const [loginPage, showLoginPage] = useState(false);
   const [registerPage, showRegisterPage] = useState(false);
-  const [userID, setUserID] = useState({id: 0});
+  const [userID, setUserID] = useState({id: 0, username : ''});
   const [win, setWin] = useState(false);
   const [guessWon, setGuessWon] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
@@ -37,12 +37,12 @@ function App() {
   const [wrongWord, setWrongWord] = useState(false);
   const [leaderBoard, showLeaderBoard] = useState(false);
   const [accessLeaderBoard, setAccessLeaderBoard] = useState(false);
-  const [clickLeaderBoard, setClickLeaderBoard] = useState(false);
+  const [clickDisabledLeaderBoard, setClickDisabledLeaderBoard] = useState(false);
   const [userPfpPath, setUserPfpPath] = useState('');
 
   const [profilePage, showProfilePage] = useState(false);
   const [accessProfile, setAccessProfile] = useState(false);
-  const [clickProfile, setClickProfile] = useState(false);
+  const [clickDisabledProfile, setClickDisabledProfile] = useState(false);
 
 
 
@@ -51,7 +51,7 @@ function App() {
     .then(res => {
       setUserMode(true);
       setCheckingAuth(false);
-      setUserID({id: res.data.id})
+      setUserID({id: res.data.id, username : res.data.username})
     })
     .catch(err => {
       // setIsAuth(false);
@@ -80,7 +80,7 @@ function App() {
   return (
     <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickLeaderBoard, setClickLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickProfile, setClickProfile}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :

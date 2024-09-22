@@ -38,7 +38,7 @@ const Login = () => {
                 setWrongCred(false);
                 showLoginPage(false);
                 setUserMode(true) 
-                setUserID({id: res.data.id})
+                setUserID({id: res.data.id, username : res.data.username})
                 
             } else { 
                 console.log(res.data.message)

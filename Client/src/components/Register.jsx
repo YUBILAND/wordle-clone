@@ -35,7 +35,7 @@ const Register = () => {
                 console.log(res.data.message)
                 // console.log(res.data.id)
                 console.log(res.data.id)
-                setUserID({id : res.data.id})
+                setUserID({id : res.data.id, username : res.data.username})
                 setWrong(false);
                 setUserMode(true);
             } else { 
