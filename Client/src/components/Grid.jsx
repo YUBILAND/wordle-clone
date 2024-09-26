@@ -446,7 +446,7 @@ const Grid = () => {
 
         {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
 
-        {userMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest`}>{userID.username}</span> </div>}
+        {userMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
 
         {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
 
@@ -488,7 +488,7 @@ const Grid = () => {
 
     {/* } */}
 
-        {winPage && <div className={`absolute top-0 left-0 w-screen h-[1000px] ${darkMode ? 'bg-black/50' : 'bg-white/50'}  z-10`}>
+        {winPage && <div className={`absolute top-0 left-0 w-screen h-[930px] ${darkMode ? 'bg-black/50' : 'bg-white/50'}  z-10`}>
             </div> }
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}

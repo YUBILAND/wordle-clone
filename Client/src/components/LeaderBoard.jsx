@@ -30,7 +30,7 @@ const LeaderBoard = () => {
     showLeaderBoard(!leaderBoard);
     }
 
-    useEffect(() => {
+    useEffect(() => { // fetches leaderboard data namely highest streak
         axios.get('http://localhost:8081/highestStreak')
         .then(res => {
             setHighestStreak(res.data);
@@ -44,10 +44,10 @@ const LeaderBoard = () => {
 
     useEffect(() => {
         if (highestStreak.length > 0) {
-            setDisplayed(highestStreak);
+            setDisplayed(highestStreak); //default will show higheststreak on open
             setHighestButton(true);
-            setCurrentStreak([...highestStreak].sort((a , b) => b.streak - a.streak));
-            setPlayCount([...highestStreak].sort((a , b) => b.played - a.played))
+            setCurrentStreak([...highestStreak].sort((a , b) => b.streak - a.streak)); //sorted by current streak
+            setPlayCount([...highestStreak].sort((a , b) => b.played - a.played)) // sorted by play count
         }
     }, [highestStreak])
 
@@ -77,7 +77,7 @@ const LeaderBoard = () => {
     const [rankTwoImg, setRankTwoImg] = useState('');
     const [rankThreeImg, setRankThreeImg] = useState('');
 
-    useEffect(() => {
+    useEffect(() => { //fetch profile pics of top 3 wordlers
         if (displayed[0])
         axios.get('http://localhost:8081/getPfp', { params: { id : displayed[0].id } })
         .then(res => {
@@ -120,9 +120,9 @@ const LeaderBoard = () => {
             </div>
 
             <div className='flex justify-around font-bold tracking-widest p-2 border-2 border-[#787c7e] rounded-md mb-2'>
-                <button onClick={handleHighestStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${highestButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-orange-200')}`}>Top Streak</button>
-                <button onClick={handleCurrentStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${streakButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-orange-200')}`}>Current Streak</button>
-                <button onClick={handlePlayCount} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${playedButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-orange-200')}`}>Play Count</button>
+                <button onClick={handleHighestStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${highestButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-yellow-400')}`}>Top Streak</button>
+                <button onClick={handleCurrentStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${streakButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-yellow-400')}`}>Current Streak</button>
+                <button onClick={handlePlayCount} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer ${playedButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-yellow-400')}`}>Play Count</button>
             </div>
 
             <div className='border-2 border-[#787c7e] rounded-md pb-4 mb-2'>
@@ -159,27 +159,27 @@ const LeaderBoard = () => {
                 <hr className='w-[90%] mx-auto mb-2'/>
                 <div>
                     <div className='grid grid-cols-7 gap-2 px-2'>
-                        <div className='col-span-1 text-center rounded-md'>
+                        <div className={`opacity-70 col-span-1 text-center rounded-md`}>
                             <Tooltip title="Rank" arrow placement="top">
                                 <LeaderboardOutlinedIcon />
                             </Tooltip>
                         </div>
-                        <div className='col-span-3 text-center rounded-md'>
+                        <div className={`opacity-70 col-span-3 text-center rounded-md`}>
                             <Tooltip title="Username" arrow placement="top">
                                 <PersonOutlineOutlinedIcon />
                             </Tooltip>
                         </div>
-                        <div className='col-span-1 text-center rounded-md'>
-                            <Tooltip title="Streak" arrow placement="top">
-                                <WhatshotOutlinedIcon sx={{color: 'orange'}}/>
-                            </Tooltip>
-                        </div>
-                        <div className='col-span-1 text-center rounded-md'>
+                        <div className={`${!highestButton && 'opacity-70'} col-span-1 text-center rounded-md`}>
                             <Tooltip title="Highest" arrow placement="top">
                                 <WhatshotOutlinedIcon sx={{color: 'red'}}/>
                             </Tooltip>
                         </div>
-                        <div className='col-span-1 text-center rounded-md'>
+                        <div className={`${!streakButton && 'opacity-70'} col-span-1 text-center rounded-md`}>
+                            <Tooltip title="Streak" arrow placement="top">
+                                <WhatshotOutlinedIcon sx={{color: 'orange'}}/>
+                            </Tooltip>
+                        </div>
+                        <div className={`${!playedButton && 'opacity-70'} col-span-1 text-center rounded-md`}>
                             <Tooltip title="Play count" arrow placement="top">
                                 <GridOnIcon />
                             </Tooltip>
@@ -187,7 +187,7 @@ const LeaderBoard = () => {
                         
                         {displayed.length > 0 && displayed.map((val, ind) => (
                             <>
-                                <button className={`!text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${ 
+                                <button className={`opacity-70 !text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${ 
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
@@ -195,7 +195,7 @@ const LeaderBoard = () => {
                                     'bg-white !border-gray-300'}`}>
                                     {ind + 1}
                                 </button>
-                                <button className={`!text-black cursor-default col-span-3 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
+                                <button className={`opacity-70 !text-black cursor-default col-span-3 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
@@ -203,15 +203,7 @@ const LeaderBoard = () => {
                                     'bg-white !border-gray-300'}`}>
                                     {val.username}
                                 </button>
-                                <button className={`!text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
-                                    (ind + 1 == 1) ? 'bg-yellow-300' : 
-                                    (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
-                                    (ind + 1 == 3) ? 'bg-orange-400' : 
-                                    (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
-                                    'bg-white !border-gray-300 '}`}>
-                                    {val.streak}
-                                </button>
-                                <button className={`!text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
+                                <button className={`${ !highestButton && 'opacity-70' } !text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 
@@ -219,7 +211,16 @@ const LeaderBoard = () => {
                                     'bg-white !border-gray-300 '}`}>
                                     {val.highest}
                                 </button>
-                                <button className={`!text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
+                                <button className={`${ !streakButton && 'opacity-70' } !text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
+                                    (ind + 1 == 1) ? 'bg-yellow-300' : 
+                                    (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
+                                    (ind + 1 == 3) ? 'bg-orange-400' : 
+                                    (val.id == userID.id) ? 'bg-white border-2 !border-black' : 
+                                    'bg-white !border-gray-300 '}`}>
+                                    {val.streak}
+                                </button>
+                                
+                                <button className={`${ !playedButton && 'opacity-70' } !text-black cursor-default col-span-1 text-center font-bold rounded-md border-2 border-transparent ${(val.id == userID.id ) && (darkMode ? '!border-white' : '!border-black')} ${
                                     (ind + 1 == 1) ? 'bg-yellow-300' : 
                                     (ind + 1 == 2) ? 'bg-[#dce1e4]' : 
                                     (ind + 1 == 3) ? 'bg-orange-400' : 

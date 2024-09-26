@@ -71,7 +71,6 @@ const Header = () => {
   function handleProfile() {
     if (accessProfile) {
       showProfilePage(true);
-      console.log("HERE")
     }
     else {
       showProfilePage(false); 

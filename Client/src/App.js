@@ -88,9 +88,9 @@ function App() {
       
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
-        <Header />
-        <Grid />
-        <Keys />
+          <Header />
+          <Grid />
+          <Keys />
         </>
         }
 

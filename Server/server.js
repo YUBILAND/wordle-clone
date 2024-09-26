@@ -11,12 +11,21 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-app.use(express.json());
 app.use(cors({
     origin: ["http://localhost:3000"],
     credentials: true
 }));
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+app.use(express.json());
 app.use(cookieParser());
+
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -151,6 +160,20 @@ app.get('/getPfp', (req, res) => {
         if (err) return res.json(err);
         if (result.length == 0) return res.json({ message : 'No pfp' })
         if (result[0].img) return res.json({ message : 'Retrieved pfp', pfp : result[0].img})
+    })
+})
+
+app.post('/changeName', (req, res) => {
+    const changeNameSQL = "SELECT id FROM users WHERE username = ?";
+    db.query(changeNameSQL, [req.body.changedName] , (err, result) => {
+        if (err) return res.json(err);
+        // console.log(req.body.changedName)
+        if (result.length > 0) {
+            //username already exists
+            if (result[0].id == req.body.id) {
+                return res.json({message: 'Same username', taken : true, same : true})
+            } else return res.json({message: 'Username taken', taken : true, same : false})
+        } else return res.json({message : "Username changed succesfully", taken : false, same : false})
     })
 })
 
