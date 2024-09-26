@@ -15,31 +15,32 @@ const Keys = () => {
     const [buttonTheme, setButtonTheme] = useState([])
     const {kbColor} = useContext(KeyboardContext);
 
-    useEffect(() => {
-        if (kbColor) {
-            kbColor.map((res) => (
-                Object.keys(res).forEach((key) => {
-                    res[key] == "green" 
+    useEffect(() => { // break down guess into their color states by letter
+        console.log(kbColor)
+        if (kbColor.length) {
+            // kbColor.map((guess) => (
+                Object.entries(kbColor.at(-1)).forEach(([letter, color]) => {
+                    color == "green" 
                     ?
                     setGreen(prevKey => ([
                         ...prevKey,
-                        key.toLowerCase()
+                        letter.toLowerCase()
                     ]))
                     :
-                    res[key] == 'yellow'
+                    color == 'yellow'
                     ?
                     setYellow(prevKey => ([
                         ...prevKey,
-                        key.toLowerCase()
+                        letter.toLowerCase()
                     ]))
                     :
                     setGray(prevKey => ([
                         ...prevKey,
-                        key.toLowerCase()
+                        letter.toLowerCase()
                     ]))
                 })
                 // console.log(res)
-            ))
+            // ))
         }
     }, [kbColor])
 
@@ -47,29 +48,66 @@ const Keys = () => {
     const [yellowString, setYellowString] = useState('');
     const [grayString, setGrayString] = useState('');
 
-    useEffect(() => {
-        green && setGreenString(green.join(' '))
+    useEffect(() => { //overwrites previous inaccurate guess with updated color, ex. word is blimp, first guess is pupil, l is yellow, second guess plane, l is green , overwrite with green
+        
+        console.log(`green is ${[...new Set(green)]}`)
+        console.log(`yellow is ${[...new Set(yellow)]}`)
+        console.log(`gray is ${[...new Set(gray)]}`)
+
+        // whitespace is for the react keyboard readability
+
+        green && setGreenString(green.join(' ')) //green always should be displayed
+
+        const removeGreenfromYellow = yellow.filter((color) => !green.includes(color));
+        const removeGreenfromGray = gray.filter((color) => !green.includes(color));
+
+        const removeYellowfromGray = removeGreenfromGray.filter((color) => !removeGreenfromYellow.includes(color));
+
+        setYellowString(removeGreenfromYellow.join(' '));
+        setGrayString(removeYellowfromGray.join(' '));
+
+
+
+
         // if gray in yellow remove from gray
-        if (yellow && gray){
-            // console.log(gray)
-            const grayYellow = gray.filter((color) => !yellow.includes(color));
-            setGrayString(grayYellow.join(' '))
-        }
-            //if yellow in green remove from yellow
-        if ( green && yellow) {
-            const yellowGreen = yellow.filter((color) => !green.includes(color));
-            setYellowString(yellowGreen.join(' '))
-        }   
-        if (gray && !yellow) {
-            setGrayString(gray.join(' '))
-        }
-        if (yellow && !gray) {
-            setYellowString(yellow.join(' '))
-        }
+        // if ( yellow.length && gray.length ){
+        //     // console.log(gray)
+        //     const grayYellow = gray.filter((color) => !yellow.includes(color));
+        //     setGrayString(grayYellow.join(' '))
+        // }
+        //     //if yellow in green remove from yellow
+        // if ( green.length && yellow.length ) {
+
+        //     const yellowGreen = yellow.filter((color) => !green.includes(color));
+        //     setYellowString(yellowGreen.join(' '))
+        // }   
+        // if ( gray.length && !(yellow.length) ) {
+
+        //     setGrayString(gray.join(' '))
+        // }
+        // if ( yellow.length && !(gray.length) ) {
+
+        //     setYellowString(yellow.join(' '))
+        // }
+        
+        // setGreenString(green.join(' '))
+        // setGrayString(gray.join(' '))
+        // setYellowString(yellow.join(' '))
+
+
+        
     }, [green, yellow, gray])
 
+    // useEffect(() => { 
+    //     setGreenString(green.join(' '))
+    //     setGrayString(gray.join(' '))
+    //     setYellowString(yellow.join(' '))
+    // }, [green, yellow, gray])
+
 
     useEffect(() => {
+        
+
         setButtonTheme([
             {
                 class: "green",
@@ -88,7 +126,7 @@ const Keys = () => {
                 buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
             }
         ])
-    },[greenString, yellowString, grayString, buttonTheme])
+    },[greenString, yellowString, grayString])
 
     // useEffect(() => {
     //     if (buttonTheme.length > 0) {

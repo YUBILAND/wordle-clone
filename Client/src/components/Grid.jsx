@@ -15,7 +15,6 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 const Grid = () => {
 
     
-    // const [kbColor, setKbColor] = useState({});
     const {darkMode} = useContext(KeyboardContext);
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
@@ -31,20 +30,13 @@ const Grid = () => {
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
     const [guessResults, setGuessResults] = useState({first: [], second: [], third: [], fourth: [], fifth: [], sixth: []})
-    const firstRef = useRef(false);
-    const secondRef = useRef(false);
-    const thirdRef = useRef(false);
-    const fourthRef = useRef(false);
-    const fifthRef = useRef(false);
-    const sixthRef = useRef(false);
-
+    const refHash = useRef({first: false, second: false, third: false, fourth: false, fifth: false, sixth: false})
+    
     const [loading, setLoading] = useState(true);
     const [correctWord, setCorrectWord] = useState('');
 
     // const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
     const{guesses, setGuesses} = useContext(KeyboardContext);
-
-    const [dummyWords, setDummyWords] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
 
     const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
 
@@ -53,7 +45,7 @@ const Grid = () => {
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
 
 
-    useEffect(() => {
+    useEffect(() => { //loads wordle list
         const fetchWords = async () => { 
             const response = await fetch(raw);
             const text = await response.text();
@@ -63,16 +55,16 @@ const Grid = () => {
         fetchWords();
     }, []);
     
-    useEffect(() => {
+    useEffect(() => { //chooses random correct word from wordle list
         if (wordleList.length > 0) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
+        // setCorrectWord('BLIMP')
         console.log(wordleList);
         setLoading(false);
         }
     }, [wordleList])
 
-    useEffect(() => {
-        setDummyWords({first: correctWord})
+    useEffect(() => { //
         if( correctWord )
             console.log(correctWord)
     }, [correctWord])
@@ -222,16 +214,17 @@ const Grid = () => {
         }
     },[win, doneHash, canEnterHash])
     
-    const compareString = (str1, str2) => {
-        var indexMatch = '';
+    const compareString = (str1, str2) => { // arr of index of green
+        var indexMatch = [];
         for (let i = 0; i < str1.length; i++) {
             if (str1[i] == str2[i]) {
-                indexMatch += i;
+                indexMatch.push(i);
             }
         } return indexMatch;
     }
     
     useEffect(() => {
+        // console.log(guesses.first)
         if (!doneHash.firstDone) {
             if (guesses.first.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, firstCanEnter: true}));
             else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, firstCanEnter: false}));
@@ -259,7 +252,7 @@ const Grid = () => {
     }, [guesses])
 
     const greenLetter = (dummyWord, guessedWord) => {
-        const greenIndex = compareString(correctWord, guessedWord);
+        const greenIndex = compareString(correctWord, guessedWord); // arry of green index
         var offset = 0;
         for (let i = 0; i < greenIndex.length; i++) {
             dummyWord = dummyWord.slice(0, [parseInt(greenIndex[i]) - offset]) + dummyWord.slice(parseInt(greenIndex[i]) + 1 - offset);
@@ -291,163 +284,52 @@ const Grid = () => {
     }
 
     useEffect(() => {
-        if (doneHash.firstDone && !firstRef.current) { //player has made first guess
-            cheatVar = greenLetter(correctWord, guesses.first)
-            const colorGuess = guesses.first.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                first: [...prevResults.first, ...colorGuess]
-            }));
-            let newKbColor = guesses.first.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
-            }, {});
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess1');
-            }
-            firstRef.current = true;
-        }
-        if (doneHash.secondDone && !secondRef.current) { //player has made second guess
-            cheatVar = greenLetter(correctWord, guesses.second)
-            const colorGuess = guesses.second.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                second: [...prevResults.second, ...colorGuess]
-            }));
-            let newKbColor = guesses.second.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
-            }, {});
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess2');
-            }
-            secondRef.current = true;
-        }
-        if (doneHash.thirdDone && !thirdRef.current) { //player has made first guess
-            cheatVar = greenLetter(correctWord, guesses.third)
-            const colorGuess = guesses.third.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                third: [...prevResults.third, ...colorGuess]
-            }));
-            let newKbColor = guesses.third.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
-            }, {});
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess3');
-            }
-            thirdRef.current = true;
-        }
-        if (doneHash.fourthDone && !fourthRef.current) { //player has made first guess
-            cheatVar = greenLetter(correctWord, guesses.fourth)
-            const colorGuess = guesses.fourth.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                fourth: [...prevResults.fourth, ...colorGuess]
-            }));
-            let newKbColor = guesses.fourth.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
-            }, {});
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess4');
-            }
-            fourthRef.current = true;
-        }
-        if (doneHash.fifthDone && !fifthRef.current) { //player has made first guess
-            cheatVar = greenLetter(correctWord, guesses.fifth)
-            const colorGuess = guesses.fifth.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                fifth: [...prevResults.fifth, ...colorGuess]
-            }));
 
-            let newKbColor = guesses.fifth.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
+        let whichguessacc = 1
+        Object.entries(doneHash).map(([ key, value ]) => {
+            const place = key.split('Done')[0] // removes Done from key like firstDone leaving first to access value of other hashmap
+            if (value && !refHash.current[place]) { //player has made first guess
                 
-            }, {});
+                cheatVar = greenLetter(correctWord, guesses[place])
+                const colorGuess = guesses[place].split('').map((res, ind) => ( // gets color mapping for each letter guess
+                    evaluteGuess(res, ind)
+                ))
+                setGuessResults(prevResults => ({
+                    ...prevResults,
+                    [place] : [...prevResults[place], ...colorGuess]
+                }));
+                // console.log(colorGuess)
+                // console.log(guesses.first)
+                let newKbColor = guesses[place].split('').reduce((acc, res, ind) => { //removes duplicates to map to keyboard (ex. plump) only one color for p.
+                    if ( acc[res] == 'green' || acc[res] == 'yellow') {
+                        
+                            // green and yellow get priority over gray so don't overwrite. 
+                            // (ex blimp and guess is booby, first b is green so don't overwrite with second b which is gray.)
+                            // (ex blimp and guess is poppy, first p is yellow so don't overwrite with second or third p which is gray.)
+                        
+                    } else 
+                    acc[res] = colorGuess[ind];
+                    return acc;
+                }, {});
+                // console.log(newKbColor)
+                setKbColor(prevResults => [
+                    ...prevResults,
+                    { ...newKbColor }
+                ])
+                const set = new Set(Object.values(newKbColor))
+                const first = [...set][0]
+                if (set.size == 1 && first == 'green') {
+                    setWin(true);
+                    setGuessWon('guess' + String(whichguessacc));
+                } else if ( place == "sixth" ){
+                    showAnswer(true);
+                }
+                whichguessacc += 1
 
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess5');
+                refHash.current[place] = true;
             }
-            fifthRef.current = true;
-        }
-        if (doneHash.sixthDone && !sixthRef.current) { //player has made final guess
-            cheatVar = greenLetter(correctWord, guesses.sixth)
-            const colorGuess = guesses.sixth.split('').map((res, ind) => (
-                evaluteGuess(res, ind)
-            ))
-            setGuessResults(prevResults => ({
-                ...prevResults,
-                sixth: [...prevResults.sixth, ...colorGuess]
-            }));
-            let newKbColor = guesses.sixth.split('').reduce((acc, res, ind) => {
-                acc[res] = colorGuess[ind];
-                return acc;
-            }, {});
-            setKbColor(prevResults => [
-                ...prevResults,
-                { ...newKbColor }
-            ])
-            const set = new Set(Object.values(newKbColor))
-            const first = [...set][0]
-            if (set.size == 1 && first == 'green') {
-                setWin(true);
-                setGuessWon('guess6');
-
-            } else {
-                showAnswer(true);
-            }
-            sixthRef.current = true;
-        }
-        // Repeat this pattern for the remaining guesses (third, fourth, etc.)
+        })
+       
     }, [doneHash]);
 
     useEffect(() => {
@@ -592,8 +474,6 @@ const Grid = () => {
         }
 
 
-
-       
                 {/* {winPage && 
                 <>  
                     <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
@@ -615,151 +495,35 @@ const Grid = () => {
 
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 
-            { (doneHash.firstDone && firstRef.current) ? 
-            <>
-                {guessResults.first.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses['first'][ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['first'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['first'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
+            { 
+            Object.entries(doneHash).map(([key, value]) => (
+                (value) ? 
+                <>
+                    {guessResults[key.split('Done')[0]].map((res, ind) => (
+                        <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                            {guesses[key.split('Done')[0]][ind] || ''}
+                        </div>
+                    ))}
+                </>
+                :   
+                <>
+                    {[0,1,2,3,4].map((res) => (
+                        guesses[key.split('Done')[0]][res]
+                        ? 
+                        <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            {guesses[key.split('Done')[0]][res]}
+                        </div>
+                        : 
+                        <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                        </div>
                     
-                    // <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    //     {guesses['first'][res] || ''}
-                    // </div>
-                ))}
-            </>
-            }
-
-            { doneHash.secondDone ? 
-            <>
-                {guessResults.second.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses['second'][ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['second'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['second'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
-                ))}
-            </>
-            }
-
-            { doneHash.thirdDone ? 
-            <>
-                {guessResults.third.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses.third[ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['third'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['third'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
-                ))}
-            </>
-            }
-            { doneHash.fourthDone ? 
-            <>
-                {guessResults.fourth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses.fourth[ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['fourth'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['fourth'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
-                ))}
-            </>
-            }
-            { doneHash.fifthDone ? 
-            <>
-                {guessResults.fifth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses.fifth[ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['fifth'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['fifth'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
-                ))}
-            </>
-            }
-            { doneHash.sixthDone ? 
-            <>
-                {guessResults.sixth.map((res, ind) => (
-                    <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                        {guesses.sixth[ind] || ''}
-                    </div>
-                ))}
-            </>
-            :   
-            <>
-                {[0,1,2,3,4].map((res) => (
-                    guesses['sixth'][res]
-                    ? 
-                    <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        {guesses['sixth'][res]}
-                    </div>
-                    : 
-                    <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                    </div>
-                ))}
-            </>
-            }
+                    ))}
+                </>
+            ))
+        }
+        
         </div>
-         
-        
-
-        
-
-        
+    
     </div>
   )
 }

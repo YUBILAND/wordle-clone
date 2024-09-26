@@ -6,6 +6,66 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
+const GreenSwitch = styled((props) => (
+  <Switch {...props} />
+))(({ theme }) => ({
+  width: 42,
+  height: 26,
+  padding: 0,
+  '& .MuiSwitch-switchBase': {
+    padding: 0,
+    margin: 2,
+    transitionDuration: '300ms',
+    '&.Mui-checked': {
+      transform: 'translateX(16px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        backgroundColor: '#65C466',
+        opacity: 1,
+        border: 0,
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#2ECA45',
+        }),
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5,
+      },
+    },
+    '&.Mui-focusVisible .MuiSwitch-thumb': {
+      color: '#33cf4d',
+      border: '6px solid #fff',
+    },
+    '&.Mui-disabled .MuiSwitch-thumb': {
+      color: theme.palette.grey[100],
+      ...theme.applyStyles('dark', {
+        color: theme.palette.grey[600],
+      }),
+    },
+    '&.Mui-disabled + .MuiSwitch-track': {
+      opacity: 0.7,
+      ...theme.applyStyles('dark', {
+        opacity: 0.3,
+      }),
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
+    width: 22,
+    height: 22,
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 26 / 2,
+    backgroundColor: '#878a8c',
+    opacity: 1,
+    transition: theme.transitions.create(['background-color'], {
+      duration: 500,
+    }),
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#39393D',
+    }),
+  },
+}));
+
 const Settings = () => {
 
     const {settings, showSettings} = useContext(KeyboardContext);
@@ -17,70 +77,11 @@ const Settings = () => {
     const {userID, setUserID} = useContext(KeyboardContext);
 
 
-
     function handleX() {
         showSettings(!settings);
     }
     
-    const GreenSwitch = styled((props) => (
-        <Switch checked={darkMode} onChange={handleDark} focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-      ))(({ theme }) => ({
-        width: 42,
-        height: 26,
-        padding: 0,
-        '& .MuiSwitch-switchBase': {
-          padding: 0,
-          margin: 2,
-          transitionDuration: '300ms',
-          '&.Mui-checked': {
-            transform: 'translateX(16px)',
-            color: '#fff',
-            '& + .MuiSwitch-track': {
-              backgroundColor: '#65C466',
-              opacity: 1,
-              border: 0,
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#2ECA45',
-              }),
-            },
-            '&.Mui-disabled + .MuiSwitch-track': {
-              opacity: 0.5,
-            },
-          },
-          '&.Mui-focusVisible .MuiSwitch-thumb': {
-            color: '#33cf4d',
-            border: '6px solid #fff',
-          },
-          '&.Mui-disabled .MuiSwitch-thumb': {
-            color: theme.palette.grey[100],
-            ...theme.applyStyles('dark', {
-              color: theme.palette.grey[600],
-            }),
-          },
-          '&.Mui-disabled + .MuiSwitch-track': {
-            opacity: 0.7,
-            ...theme.applyStyles('dark', {
-              opacity: 0.3,
-            }),
-          },
-        },
-        '& .MuiSwitch-thumb': {
-          boxSizing: 'border-box',
-          width: 22,
-          height: 22,
-        },
-        '& .MuiSwitch-track': {
-          borderRadius: 26 / 2,
-          backgroundColor: '#878a8c',
-          opacity: 1,
-          transition: theme.transitions.create(['background-color'], {
-            duration: 500,
-          }),
-          ...theme.applyStyles('dark', {
-            backgroundColor: '#39393D',
-          }),
-        },
-      }));
+    
 
     const OrangeSwitch = styled((props) => (
         <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -141,6 +142,11 @@ const Settings = () => {
           }),
         },
       }));
+
+
+    const renderGreen = () => {
+
+    }
 
     function handleDark() {
       setDarkMode(!darkMode);
@@ -216,7 +222,14 @@ const Settings = () => {
                 
                 <div className='text-lg'>Dark Theme</div>
                     
-                <FormControlLabel className='!mx-0' control={<GreenSwitch sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
+                <FormControlLabel className='!mx-0' control={
+                  <GreenSwitch 
+                  checked={darkMode} 
+                  onChange={handleDark} 
+                  focusVisibleClassName=".Mui-focusVisible" 
+                  disableRipple
+                  sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
+                
                 
             </div>
 
@@ -231,6 +244,7 @@ const Settings = () => {
                 </div>
                 <div className='flex basis-1/5 items-center justify-end'>
                     <FormControlLabel className='!mx-0'control={<OrangeSwitch sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
+
                 </div>
             </div>
 

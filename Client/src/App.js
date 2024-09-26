@@ -28,7 +28,7 @@ function App() {
   const [guessWon, setGuessWon] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
+  const [guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
   const [guessLength, setGuessLength] = useState(0);
   const [doneHash, setDoneHash] = useState({firstDone: false, secondDone: false, thirdDone: false, fourthDone: false, fifthDone: false, sixthDone: false})
   const [canEnterHash, setCanEnterHash] = useState({firstCanEnter: false, secondCanEnter: false, thirdCanEnter: false, fourthCanEnter: false, fifthCanEnter: false, sixthCanEnter: false})
