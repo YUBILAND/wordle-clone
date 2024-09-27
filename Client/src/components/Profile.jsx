@@ -137,7 +137,7 @@ const Profile = () => {
             </div>
         }
         {/* Change Name pop up */}
-        <Zoom in={changeName}> 
+        <Zoom in={changeName} > 
             <div className={`text-base absolute w-64 top-[30%] left-[43.5%] border-8 ${darkMode ? 'bg-[#121213] border-gray-400' : 'bg-white border-gray-200'} rounded-md z-30 pb-2`}>
                 <div className='flex justify-between items-center tracking-wide pb-1'>
                     <CloseIcon sx={{opacity: '0'}}/>
@@ -154,7 +154,7 @@ const Profile = () => {
                             <button type='submit' className=' border-4 border-gray-400 px-2 mt-3 rounded-md font-bold tracking-widest'>
                                 Change
                             </button>
-                        </form>
+                        </form>  
                     </div>
             </div> 
         </Zoom>

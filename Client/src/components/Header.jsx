@@ -88,19 +88,19 @@ const Header = () => {
 
   return (
     <>
-    <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={500}>
+    <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
       <div> <LeaderBoard /> </div>
     </Slide>
 
-    <Slide direction="up" in={tutorial} mountOnEnter unmountOnExit timeout={500}>
+    <Slide direction="up" in={tutorial} mountOnEnter unmountOnExit timeout={300}>
       <div> <Tutorial /> </div>
     </Slide>
 
-    <Slide direction="up" in={settings} mountOnEnter unmountOnExit timeout={500}>
+    <Slide direction="up" in={settings} mountOnEnter unmountOnExit timeout={300}>
       <div> <Settings /> </div>
     </Slide>
 
-    <Slide direction="up" in={profilePage} mountOnEnter unmountOnExit timeout={500}>
+    <Slide direction="up" in={profilePage} mountOnEnter unmountOnExit timeout={300}>
       <div> <Profile /> </div>
     </Slide>
 

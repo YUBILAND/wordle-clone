@@ -46,10 +46,15 @@ function App() {
 
   const [delay, setDelay] = useState(false);
 
+  const [colorBlind, setColorBlind] = useState(false);
+  const [answer, showAnswer] = useState(false);
 
 
 
-  useEffect(() => {
+
+
+
+  useEffect(() => { //check token when refreshing
     axios.get('http://localhost:8081/check-auth', { withCredentials: true })
     .then(res => {
       setUserMode(true);
@@ -64,7 +69,7 @@ function App() {
     })
   }, [])
 
-  useEffect(() => {
+  useEffect(() => { //get user pfp
     if(userID.id) { //if not 0 ie guest mode
       axios.get('http://localhost:8081/getPfp', { params: { ...userID } })
       .then(res => {
@@ -83,14 +88,18 @@ function App() {
   return (
     <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer}}>
       
       
         {!(guestMode || userMode) ? <LandingPage /> :
         <>
+          <div className={`absolute top-0 left-0 w-full z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } h-[946px]`}/>
+
+          
           <Header />
           <Grid />
           <Keys />
+
         </>
         }
 

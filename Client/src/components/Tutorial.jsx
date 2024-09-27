@@ -6,6 +6,8 @@ const Tutorial = () => {
 
     const {darkMode, setDarkMode} = useContext(KeyboardContext);
     const {tutorial, showTutorial} = useContext(KeyboardContext);
+    const {colorBlind, setColorBlind} = useContext(KeyboardContext);
+
 
     function handleX () {
         showTutorial(!tutorial);
@@ -29,7 +31,7 @@ const Tutorial = () => {
                 <div className='my-2'>
                     <div className='font-bold my-4'>Examples</div>
                     <div className='grid grid-cols-5 w-[47%] gap-1 my-2'>
-                        <div className='green text-center w-[40px] h-[40px] text-4xl font-bold'>G</div>
+                        <div className={` ${ colorBlind ? 'CBgreen' : 'green' } text-center w-[40px] h-[40px] text-4xl font-bold`}>G</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>A</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>M</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>E</div>
@@ -38,7 +40,7 @@ const Tutorial = () => {
                     <p className='flex mt-2 mb-4'>The letter&nbsp;<p className='font-bold'>G</p>&nbsp;is in the word and in the correct spot.</p>
                     <div className=' grid grid-cols-5 w-[47%] gap-1 my-2'>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>H</div>
-                        <div className='yellow text-center w-[40px] h-[40px] text-4xl font-bold'>O</div>
+                        <div className={` ${ colorBlind ? 'CByellow' : 'yellow' } text-center w-[40px] h-[40px] text-4xl font-bold`}>O</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>T</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>E</div>
                         <div className='border-2 border-gray-500 text-center w-[40px] h-[40px] text-4xl font-bold'>L</div>

@@ -14,6 +14,8 @@ const Keys = () => {
     const [gray, setGray] = useState([]);
     const [buttonTheme, setButtonTheme] = useState([])
     const {kbColor} = useContext(KeyboardContext);
+    const {colorBlind, setColorBlind} = useContext(KeyboardContext);
+
 
     useEffect(() => { // break down guess into their color states by letter
         console.log(kbColor)
@@ -65,56 +67,55 @@ const Keys = () => {
 
         setYellowString(removeGreenfromYellow.join(' '));
         setGrayString(removeYellowfromGray.join(' '));
-
-
-
-
-        // if gray in yellow remove from gray
-        // if ( yellow.length && gray.length ){
-        //     // console.log(gray)
-        //     const grayYellow = gray.filter((color) => !yellow.includes(color));
-        //     setGrayString(grayYellow.join(' '))
-        // }
-        //     //if yellow in green remove from yellow
-        // if ( green.length && yellow.length ) {
-
-        //     const yellowGreen = yellow.filter((color) => !green.includes(color));
-        //     setYellowString(yellowGreen.join(' '))
-        // }   
-        // if ( gray.length && !(yellow.length) ) {
-
-        //     setGrayString(gray.join(' '))
-        // }
-        // if ( yellow.length && !(gray.length) ) {
-
-        //     setYellowString(yellow.join(' '))
-        // }
-        
-        // setGreenString(green.join(' '))
-        // setGrayString(gray.join(' '))
-        // setYellowString(yellow.join(' '))
-
-
         
     }, [green, yellow, gray])
 
-    // useEffect(() => { 
-    //     setGreenString(green.join(' '))
-    //     setGrayString(gray.join(' '))
-    //     setYellowString(yellow.join(' '))
-    // }, [green, yellow, gray])
-
-
-    useEffect(() => {
-        
-
+    useEffect(() => { // switches color of button theme based on color blind mode
+        if (colorBlind) {
+            setButtonTheme(prevTheme => prevTheme.map(item => {
+                if (item.class === 'green') {
+                    return {
+                        ...item,
+                        class : 'CBgreen'
+                    }
+                } else if (item.class === 'yellow') {
+                    return {
+                        ...item,
+                        class : 'CByellow'
+                    }
+                } else {
+                    return item;
+                }
+            }) 
+            )
+        } else {
+            setButtonTheme(prevTheme => prevTheme.map(item => {
+                if (item.class === 'CBgreen') {
+                    return {
+                        ...item,
+                        class : 'green'
+                    }
+                } else if (item.class === 'CByellow') {
+                    return {
+                        ...item,
+                        class : 'yellow'
+                    }
+                } else {
+                    return item;
+                }
+            }) 
+            )
+        }
+    }, [colorBlind])
+    
+    useEffect(() => { //sets keyboard color on each guess rerender
         setButtonTheme([
             {
-                class: "green",
+                class: `${ colorBlind ? 'CBgreen': 'green' }`,
                 buttons: greenString || ' '
             },
             {
-                class: "yellow",
+                class: `${ colorBlind ? 'CByellow': 'yellow' }`,
                 buttons: yellowString  || ' '
             },
             {
@@ -122,7 +123,7 @@ const Keys = () => {
                 buttons: grayString || ' '
             },
             {
-                class: `buttons ${ darkMode && 'text-black'}`,
+                class: `buttons text-black`,
                 buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
             }
         ])

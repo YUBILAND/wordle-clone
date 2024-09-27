@@ -13,9 +13,13 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 
 
 const Grid = () => {
-
     
     const {darkMode} = useContext(KeyboardContext);
+    const {colorBlind, setColorBlind} = useContext(KeyboardContext);
+    const {profilePage, showProfilePage} = useContext(KeyboardContext);
+    const {tutorial, showTutorial} = useContext(KeyboardContext);
+    const {leaderBoard, showLeaderBoard} = useContext(KeyboardContext);
+    const {settings, showSettings} = useContext(KeyboardContext);
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
     const {setKbColor} = useContext(KeyboardContext);
@@ -23,7 +27,7 @@ const Grid = () => {
     const {guessWon, setGuessWon} = useContext(KeyboardContext);
     const [winCompliment, setWinCompliment] = useState(false);
     const {win, setWin} = useContext(KeyboardContext);
-    const [answer, showAnswer] = useState(false);
+    const {answer, showAnswer} = useContext(KeyboardContext);
     const {notEnough, setNotEnough} = useContext(KeyboardContext);
     const {wrongWord, setWrongWord} = useContext(KeyboardContext);
     const {wordleList, setWordleList} = useContext(KeyboardContext);
@@ -31,18 +35,14 @@ const Grid = () => {
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
     const [guessResults, setGuessResults] = useState({first: [], second: [], third: [], fourth: [], fifth: [], sixth: []})
     const refHash = useRef({first: false, second: false, third: false, fourth: false, fifth: false, sixth: false})
-    
     const [loading, setLoading] = useState(true);
     const [correctWord, setCorrectWord] = useState('');
-
-    // const[guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
     const{guesses, setGuesses} = useContext(KeyboardContext);
-
     const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
-
     const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
-
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
+    const {guessLength, setGuessLength} = useContext(KeyboardContext);
+
 
 
     useEffect(() => { //loads wordle list
@@ -64,16 +64,13 @@ const Grid = () => {
         }
     }, [wordleList])
 
-    useEffect(() => { //
+    useEffect(() => { // prints correctWord
         if( correctWord )
             console.log(correctWord)
     }, [correctWord])
 
-    const {guessLength, setGuessLength} = useContext(KeyboardContext);
 
-    // var guessLength = 0;
-
-    useEffect(() => {
+    useEffect(() => { //Register key press and save to state, del too
         const onPress = (event) => {
             if (event.key === 'Backspace') {
             if (!doneHash.firstDone && guessLength > 0) {
@@ -152,8 +149,7 @@ const Grid = () => {
         }
     }, [win, guessLength, doneHash]); // Depend only on the completion status
 
-
-    useEffect(() => {
+    useEffect(() => { // 'Enter' Key Functionality
         const onPress = (event) => {
             if (event.key === 'Enter') {
                 if (!doneHash.firstDone) {
@@ -214,7 +210,7 @@ const Grid = () => {
         }
     },[win, doneHash, canEnterHash])
     
-    const compareString = (str1, str2) => { // arr of index of green
+    const compareString = (str1, str2) => { // compare guess to correctword, return arr of index of green ( ex '135' so first third and fifth are green)
         var indexMatch = [];
         for (let i = 0; i < str1.length; i++) {
             if (str1[i] == str2[i]) {
@@ -223,7 +219,7 @@ const Grid = () => {
         } return indexMatch;
     }
     
-    useEffect(() => {
+    useEffect(() => { // evaluates whether user can press enter as a valid guess, length 5
         // console.log(guesses.first)
         if (!doneHash.firstDone) {
             if (guesses.first.length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, firstCanEnter: true}));
@@ -251,7 +247,7 @@ const Grid = () => {
         }
     }, [guesses])
 
-    const greenLetter = (dummyWord, guessedWord) => {
+    const greenLetter = (dummyWord, guessedWord) => { //looks for green first
         const greenIndex = compareString(correctWord, guessedWord); // arry of green index
         var offset = 0;
         for (let i = 0; i < greenIndex.length; i++) {
@@ -262,7 +258,7 @@ const Grid = () => {
         return dummyWord;
     }
 
-    const evalGuess = (dummyWord, letter, pos) => {
+    const evalGuess = (dummyWord, letter, pos) => { //assign letter green, yellow, or gray
         if (letter == correctWord[pos]) {
             return 'green';
         } else if (dummyWord.includes(letter)) {
@@ -274,16 +270,15 @@ const Grid = () => {
 
     var cheatVar;
 
-    const evaluteGuess = (res, ind) => {
+    const evaluteGuess = (res, ind) => { //helper func for evaluating guess
         if (guessResults.first) {
-            
             const newCheatVar = cheatVar;
             cheatVar = cheatVar.replace(res, '')
             return evalGuess(newCheatVar, res, ind) //check for green, yellow and gray
         }
     }
 
-    useEffect(() => {
+    useEffect(() => { // evaluates guess, sets when user wins or loses
 
         let whichguessacc = 1
         Object.entries(doneHash).map(([ key, value ]) => {
@@ -332,7 +327,7 @@ const Grid = () => {
        
     }, [doneHash]);
 
-    useEffect(() => {
+    useEffect(() => { // update stats after game finish
         if (win ^ answer) {
             console.log(userID.id)
             
@@ -344,8 +339,7 @@ const Grid = () => {
         }
     }, [win, answer])
 
-    useEffect(() => {
-
+    useEffect(() => { // 1 sec delay after win before stats is shown
         if (win) {
             setWinCompliment(true);
             setTimeout(() => {
@@ -353,19 +347,17 @@ const Grid = () => {
                 // alert('wow you have brain')
                 setWinPage(true);
             }, 1000)
-            
         }
-
     }, [win])
 
-    if(winCompliment) {
+    if(winCompliment) { // show win compliment and fade out
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setWinCompliment(false);
             }, 5000);
     }
 
-    if(notEnough) {
+    if(notEnough) { // show not enoguh letters prompt and fade out
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setNotEnough(false);
@@ -374,34 +366,34 @@ const Grid = () => {
 
     }
 
-    if (wrongWord) {
+    if (wrongWord) { // show wrong word prompt and fade out
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setWrongWord(false);
             }, 5000);
     }
 
-    if (clickDisabledLeaderBoard) {
+    if (clickDisabledLeaderBoard) { // show disabled leadeboard prompt and fade out
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setClickDisabledLeaderBoard(false);
             }, 2000);
     }
 
-    if (clickDisabledProfile) {
+    if (clickDisabledProfile) { // show disabled profile prompt and fade out
         setTimeout(function() {
             document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
             setClickDisabledProfile(false);
             }, 2000);
     }
 
-    if (answer) {
+    if (answer) { // 1 sec delay after loss before stats is shown
         setTimeout(function() {
             setWinPage(true);
         }, 1000);
     }
 
-    function whichCompliment() {
+    function whichCompliment() { // determines which compliment to give based on how many guesses player took
         const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
         // console.log(doneHash);
         // console.log(firstTrueIndex);
@@ -410,7 +402,7 @@ const Grid = () => {
         } else return 6;
     }
 
-    const compliments = [
+    const compliments = [ // compliment list
         "",               
         "Genius",        
         "Magnificent",   
@@ -442,11 +434,11 @@ const Grid = () => {
     
 
   return (
-    <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} z-0`}>
 
         {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
 
-        {userMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
+        {userMode && (!tutorial && !leaderBoard && !profilePage && !settings ) && <div className='absolute top-[60px] left-0 flex justify-center w-full z-0'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
 
         {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
 
@@ -496,11 +488,15 @@ const Grid = () => {
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 
             { 
-            Object.entries(doneHash).map(([key, value]) => (
+            Object.entries(doneHash).map(([key, value]) => ( //displays grid, simplified immensly
                 (value) ? 
                 <>
                     {guessResults[key.split('Done')[0]].map((res, ind) => (
-                        <div className= { `border-2  ${res == 'green' ? 'bg-[#6aaa64]' :  res == 'yellow' ? 'bg-[#c9b458]' : 'bg-[#787c7e]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                        <div className= { `border-2  ${
+                            res == 'green' ? ( colorBlind ? 'CBgreen' : 'green' ) :  
+                            res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
+                            'gray' } 
+                            flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                             {guesses[key.split('Done')[0]][ind] || ''}
                         </div>
                     ))}

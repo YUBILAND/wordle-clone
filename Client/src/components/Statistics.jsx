@@ -35,6 +35,9 @@ const Statistics = () => {
     }); 
     const [allZeros, setAllZeros] = useState(false);
     const {delay, setDelay} = useContext(KeyboardContext);
+    const {win, setWin} = useContext(KeyboardContext);
+    const {answer, showAnswer} = useContext(KeyboardContext);
+
 
 
     useEffect(() => {
@@ -95,7 +98,7 @@ const Statistics = () => {
 
   return (
     
-    <div className={`rounded-md ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} `}>
+    <div className={`rounded-md ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} pb-4 `}>
         <div className='text-right pt-4 pr-4'>
             <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
         </div>
@@ -145,22 +148,24 @@ const Statistics = () => {
 
         </div>
 
-        <div className='flex justify-around w-full mx-auto pb-10'>
-            <div className={`border-r ${darkMode ? 'border-white' : 'border-black'} pr-10`}>
+        { ( win || answer ) &&
+            <div className='flex justify-around w-full mx-auto pb-10'>
+                <div className={`border-r ${darkMode ? 'border-white' : 'border-black'} pr-10`}>
 
-                <button onClick={handleReplay} className='flex items-center green uppercase text-2xl px-2 rounded-md py-2'>
-                    Play again!
-                    <ReplayIcon/>
-                </button>
-            </div>
-            <div>
-                <button className='flex items-center gray uppercase  text-2xl px-2 rounded-md py-2'>
-                    Share
-                    <ShareIcon />
-                </button>
-            </div>
+                    <button onClick={handleReplay} className='flex items-center green uppercase text-2xl px-2 rounded-md py-2'>
+                        Play again!
+                        <ReplayIcon/>
+                    </button>
+                </div>
+                <div>
+                    <button className='flex items-center gray uppercase  text-2xl px-2 rounded-md py-2'>
+                        Share
+                        <ShareIcon />
+                    </button>
+                </div>
 
-        </div>
+            </div>
+        }
     </div>
     
   )
