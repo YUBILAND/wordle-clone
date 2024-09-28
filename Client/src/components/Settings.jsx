@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const GreenSwitch = styled((props) => (
   <Switch {...props} />
-))(({ theme, colorBlind }) => ({
+))(({ theme, colorblind }) => ({ // lowercase to avoid
   width: 42,
   height: 26,
   padding: 0,
@@ -20,7 +20,7 @@ const GreenSwitch = styled((props) => (
       transform: 'translateX(16px)',
       color: '#fff',
       '& + .MuiSwitch-track': {
-        backgroundColor: colorBlind ? '#f5793a' : '#65C466',
+        backgroundColor: colorblind ? '#f5793a' : '#65C466',
         opacity: 1,
         border: 0,
         ...theme.applyStyles('dark', {
@@ -222,7 +222,7 @@ const Settings = () => {
                     
                 <FormControlLabel className='!mx-0' control={
                   <GreenSwitch 
-                  colorBlind={colorBlind}
+                  colorblind={colorBlind ? 1 : 0} // weird that you can't use true and false bool you need either str or in for DOM
                   checked={darkMode} 
                   onChange={handleDark} 
                   focusVisibleClassName=".Mui-focusVisible" 

@@ -5,6 +5,18 @@
     height: 59px !important;
 }
 
+.DMbuttons {
+    background-color: #818384 !important;
+    text-transform: capitalize;
+    width: 43px !important;
+    height: 59px !important;
+}
+
+.DMgray {
+    color: white;
+    background-color: #3a3a3c !important;
+}
+
 .board {
     background-color: transparent !important;
 }

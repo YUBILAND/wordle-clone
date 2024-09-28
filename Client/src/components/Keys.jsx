@@ -18,7 +18,7 @@ const Keys = () => {
 
 
     useEffect(() => { // break down guess into their color states by letter
-        console.log(kbColor)
+        // console.log(kbColor)
         if (kbColor.length) {
             // kbColor.map((guess) => (
                 Object.entries(kbColor.at(-1)).forEach(([letter, color]) => {
@@ -52,9 +52,9 @@ const Keys = () => {
 
     useEffect(() => { //overwrites previous inaccurate guess with updated color, ex. word is blimp, first guess is pupil, l is yellow, second guess plane, l is green , overwrite with green
         
-        console.log(`green is ${[...new Set(green)]}`)
-        console.log(`yellow is ${[...new Set(yellow)]}`)
-        console.log(`gray is ${[...new Set(gray)]}`)
+        // console.log(`green is ${[...new Set(green)]}`)
+        // console.log(`yellow is ${[...new Set(yellow)]}`)
+        // console.log(`gray is ${[...new Set(gray)]}`)
 
         // whitespace is for the react keyboard readability
 
@@ -107,6 +107,44 @@ const Keys = () => {
             )
         }
     }, [colorBlind])
+
+    useEffect(() => {
+        if (darkMode) {
+            setButtonTheme(prevTheme => prevTheme.map(item => {
+                if (item.class === 'buttons') {
+                    return {
+                        ...item,
+                        class : 'DMbuttons'
+                    }
+                } else if (item.class === 'gray') {
+                    return {
+                        ...item,
+                        class : 'DMgray'
+                    }
+                }
+                else {
+                    return item;
+                }
+            }))
+        } else {
+            setButtonTheme(prevTheme => prevTheme.map(item => {
+                if (item.class === 'DMbuttons') {
+                    return {
+                        ...item,
+                        class : 'buttons'
+                    }
+                } else if (item.class === 'DMgray') {
+                    return {
+                        ...item,
+                        class : 'gray'
+                    }
+                }
+                else {
+                    return item;
+                }
+            }))
+        }
+    }, [darkMode])
     
     useEffect(() => { //sets keyboard color on each guess rerender
         setButtonTheme([
@@ -119,11 +157,11 @@ const Keys = () => {
                 buttons: yellowString  || ' '
             },
             {
-                class: "gray",
+                class: `${ darkMode ? 'DMgray': 'gray' }`,
                 buttons: grayString || ' '
             },
             {
-                class: `buttons text-black`,
+                class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
                 buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
             }
         ])

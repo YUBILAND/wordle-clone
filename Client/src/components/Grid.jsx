@@ -42,6 +42,7 @@ const Grid = () => {
     const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
     const {guessLength, setGuessLength} = useContext(KeyboardContext);
+    const [loss, setLoss] = useState(false);
 
 
 
@@ -59,14 +60,14 @@ const Grid = () => {
         if (wordleList.length > 0) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
         // setCorrectWord('BLIMP')
-        console.log(wordleList);
+        // console.log(wordleList);
         setLoading(false);
         }
     }, [wordleList])
 
     useEffect(() => { // prints correctWord
         if( correctWord )
-            console.log(correctWord)
+            console.log('The Correct Word is ' + correctWord)
     }, [correctWord])
 
 
@@ -252,7 +253,7 @@ const Grid = () => {
         var offset = 0;
         for (let i = 0; i < greenIndex.length; i++) {
             dummyWord = dummyWord.slice(0, [parseInt(greenIndex[i]) - offset]) + dummyWord.slice(parseInt(greenIndex[i]) + 1 - offset);
-            console.log(dummyWord)
+            // console.log(dummyWord)
             offset++;
         }
         return dummyWord;
@@ -278,9 +279,8 @@ const Grid = () => {
         }
     }
 
+    const whichguessacc = useRef(1); // use ref to keep track of variable between useEffect renders
     useEffect(() => { // evaluates guess, sets when user wins or loses
-
-        let whichguessacc = 1
         Object.entries(doneHash).map(([ key, value ]) => {
             const place = key.split('Done')[0] // removes Done from key like firstDone leaving first to access value of other hashmap
             if (value && !refHash.current[place]) { //player has made first guess
@@ -315,11 +315,12 @@ const Grid = () => {
                 const first = [...set][0]
                 if (set.size == 1 && first == 'green') {
                     setWin(true);
-                    setGuessWon('guess' + String(whichguessacc));
+                    setGuessWon('guess' + String(whichguessacc.current));
                 } else if ( place == "sixth" ){
                     showAnswer(true);
+                    setLoss(true);
                 }
-                whichguessacc += 1
+                whichguessacc.current += 1;
 
                 refHash.current[place] = true;
             }
@@ -329,8 +330,6 @@ const Grid = () => {
 
     useEffect(() => { // update stats after game finish
         if (win ^ answer) {
-            console.log(userID.id)
-            
             axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 console.log(res.data.message)
@@ -387,10 +386,12 @@ const Grid = () => {
             }, 2000);
     }
 
-    if (answer) { // 1 sec delay after loss before stats is shown
+    if (loss) { // 1 sec delay after loss before stats is shown
+        setLoss(false);
         setTimeout(function() {
             setWinPage(true);
         }, 1000);
+        
     }
 
     function whichCompliment() { // determines which compliment to give based on how many guesses player took
@@ -431,6 +432,8 @@ const Grid = () => {
                 }, 1000);
         }
     }, [winPage])
+
+    
     
 
   return (
@@ -487,12 +490,14 @@ const Grid = () => {
 
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
 
-            { 
-            Object.entries(doneHash).map(([key, value]) => ( //displays grid, simplified immensly
+            { //displays grid, simplified immensly
+            Object.entries(doneHash).map(([key, value]) => ( // maps how many rows
+
                 (value) ? 
                 <>
-                    {guessResults[key.split('Done')[0]].map((res, ind) => (
-                        <div className= { `border-2  ${
+
+                    {guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns
+                        <div  className= { `border-2  ${
                             res == 'green' ? ( colorBlind ? 'CBgreen' : 'green' ) :  
                             res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                             'gray' } 
@@ -506,11 +511,11 @@ const Grid = () => {
                     {[0,1,2,3,4].map((res) => (
                         guesses[key.split('Done')[0]][res]
                         ? 
-                        <div className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                        <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                             {guesses[key.split('Done')[0]][res]}
                         </div>
                         : 
-                        <div className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                        <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                         </div>
                     
                     ))}

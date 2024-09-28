@@ -37,6 +37,7 @@ const Statistics = () => {
     const {delay, setDelay} = useContext(KeyboardContext);
     const {win, setWin} = useContext(KeyboardContext);
     const {answer, showAnswer} = useContext(KeyboardContext);
+    const {guessWon, setGuessWon} = useContext(KeyboardContext);
 
 
 
@@ -76,7 +77,7 @@ const Statistics = () => {
 
 
     useEffect(() => {
-        if (statsDone) {
+        if (statsDone) { // if stats done updating
             Object.entries(width).map(([key]) => {
                 const guessMax = Math.max(stats.guess1, stats.guess2, stats.guess3, stats.guess4, stats.guess5, stats.guess6)
                 setWidth(prevWidth => ({
@@ -136,12 +137,12 @@ const Statistics = () => {
                 </>
                 :
                 <>
-                <h1 style={{ width: `${width.guess1}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess1}</h1>
-                <h1 style={{ width: `${width.guess2}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess2}</h1>
-                <h1 style={{ width: `${width.guess3}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess3}</h1>
-                <h1 style={{ width: `${width.guess4}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess4}</h1>
-                <h1 style={{ width: `${width.guess5}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess5}</h1>
-                <h1 style={{ width: `${width.guess6}%` }} className= 'gray text-right font-bold pr-2 mb-1'>{stats.guess6}</h1>
+                <h1 style={{ width: `${width.guess1}%` }} className= {` ${ guessWon === 'guess1' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess1}</h1>
+                <h1 style={{ width: `${width.guess2}%` }} className= {` ${ guessWon === 'guess2' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess2}</h1>
+                <h1 style={{ width: `${width.guess3}%` }} className= {` ${ guessWon === 'guess3' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess3}</h1>
+                <h1 style={{ width: `${width.guess4}%` }} className= {` ${ guessWon === 'guess4' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess4}</h1>
+                <h1 style={{ width: `${width.guess5}%` }} className= {` ${ guessWon === 'guess5' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess5}</h1>
+                <h1 style={{ width: `${width.guess6}%` }} className= {` ${ guessWon === 'guess6' ? 'green' : 'gray' } text-right font-bold pr-2 mb-1`}>{stats.guess6}</h1>
                 </>
                 }
             </div>
