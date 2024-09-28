@@ -414,6 +414,7 @@ const Grid = () => {
     ];
 
     const {delay, setDelay} = useContext(KeyboardContext);
+    
 
     // const handleClickAway = () => {
     //     setWinPage(false);
@@ -488,38 +489,51 @@ const Grid = () => {
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
-        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2 '>
+        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2'>
 
             { //displays grid, simplified immensly
             Object.entries(doneHash).map(([key, value]) => ( // maps how many rows
-
-                (value) ? 
-                <>
-
-                    {guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns
-                        <div  className= { `border-2  ${
-                            res == 'green' ? ( colorBlind ? 'CBgreen' : 'green' ) :  
-                            res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
-                            'gray' } 
-                            flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                            {guesses[key.split('Done')[0]][ind] || ''}
-                        </div>
-                    ))}
-                </>
-                :   
-                <>
-                    {[0,1,2,3,4].map((res) => (
-                        guesses[key.split('Done')[0]][res]
-                        ? 
-                        <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                            {guesses[key.split('Done')[0]][res]}
-                        </div>
-                        : 
-                        <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                        </div>
-                    
-                    ))}
-                </>
+                <div key={key}className='flex col-span-5 gap-2'>
+                    {value ? //through debuggin there is a time delay between which makes it so value is true but what is displayed is empty div because guessResults is not populated yet
+                    <>   {/* // The div the player guessed in would become 0 because while value == true, guessResults state hadn't updated and so it essentially rendered an empty div which cause the first div to shrink to h-0 and thus only the 2,3,4,5,6 divs rendered, thats why it looked like the bottom div disappeared.*/}
+                        {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
+                            (guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns (user input)
+                                <div  className= { `border-2  ${
+                                    res == 'green' ? ( colorBlind ? 'CBgreen' : 'green' ) :  
+                                    res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
+                                    'gray' } 
+                                    flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                                    {guesses[key.split('Done')[0]][ind] || ''}
+                                </div>
+                            )))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                                guesses[key.split('Done')[0]][res]
+                                ? 
+                                <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                    {guesses[key.split('Done')[0]][res]}
+                                </div>
+                                : 
+                                <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                </div>
+                            
+                            ))
+                            }
+                    </>
+                    :   
+                    <>
+                        {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                            guesses[key.split('Done')[0]][res]
+                            ? 
+                            <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                {guesses[key.split('Done')[0]][res]}
+                            </div>
+                            : 
+                            <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            </div>
+                        
+                        ))}
+                    </>
+                    }
+                </div>
             ))
         }
         
