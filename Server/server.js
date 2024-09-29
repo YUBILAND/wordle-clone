@@ -150,7 +150,7 @@ const authenticateToken = (req, res, next) => {
         const getPfp = 'SELECT img FROM pfp WHERE id = ?';
         db.query(getPfp, [req.query.id] ,(err, result) => {
             if (err) return res.json(err);
-            if (result.length == 0 || result[0].img === '0') return res.json({ message : 'No pfp' })
+            if (result.length == 0 || result[0].img === '0') return res.json({ message : 'No pfp'})
             return res.json({ message : 'Retrieved pfp', pfp : result[0].img})
         })
     })
@@ -369,7 +369,7 @@ const authenticateToken = (req, res, next) => {
             db.query(getHighest, req.body.id, (err, data) => {
                 if (err) return res.json(err);
                 const maxStreak = Math.max(data[0].streak + 1, data[0].highest);
-                const sql = `UPDATE stats SET ${req.body.guessWon} = ${req.body.guessWon} + 1, wins = wins + 1, played = played + 1, streak = streak + 1, highest = ? WHERE id = ?`;
+                const sql = `UPDATE stats SET guess${req.body.guessWon} = guess${req.body.guessWon} + 1, wins = wins + 1, played = played + 1, streak = streak + 1, highest = ? WHERE id = ?`;
                 // const sql = "SELECT * FROM STATS WHERE id = ?";
                 db.query(sql, [maxStreak, req.body.id], (err, data) => {
                     if (err) return res.json(err);

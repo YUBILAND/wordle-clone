@@ -78,35 +78,28 @@ const LeaderBoard = () => {
     const [rankThreeImg, setRankThreeImg] = useState('');
 
     useEffect(() => { //fetch profile pics of top 3 wordlers
-        if (displayed[0])
-        axios.get('http://localhost:8081/getPfp', { params: { id : displayed[0].id } })
-        .then(res => {
-            const header = 'http://localhost:8081/uploads/'
-            setRankOneImg(header + res.data.pfp)
+
+        [0,1,2].map((ind) => {
+            if (displayed[ind])
+                axios.get('http://localhost:8081/getPfp', { params: { id : displayed[ind].id } })
+                .then(res => {
+                    if (res.data.message === 'No pfp') {
+                        const defaultPfp = 'https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp';
+                        ind === 0 && setRankOneImg(defaultPfp);
+                        ind === 1 && setRankTwoImg(defaultPfp);
+                        ind === 2 && setRankThreeImg(defaultPfp);
+                    }
+                    else {
+                        const header = 'http://localhost:8081/uploads/'
+                        ind === 0 && setRankOneImg(header + res.data.pfp);
+                        ind === 1 && setRankTwoImg(header + res.data.pfp);
+                        ind === 2 && setRankThreeImg(header + res.data.pfp);
+                    }
+                })    
+                .catch(err => {
+                    console.error('Error fetching data:', err);
+                }) 
         })
-        .catch(err => {
-            console.error('Error fetching data:', err);
-        }) 
-
-        if (displayed[1])
-            axios.get('http://localhost:8081/getPfp', { params: { id : displayed[1].id } })
-            .then(res => {
-                const header = 'http://localhost:8081/uploads/'
-                setRankTwoImg(header + res.data.pfp)
-            })
-            .catch(err => {
-                console.error('Error fetching data:', err);
-            }) 
-
-        if (displayed[2])
-            axios.get('http://localhost:8081/getPfp', { params: { id : displayed[2].id } })
-            .then(res => {
-                const header = 'http://localhost:8081/uploads/'
-                setRankThreeImg(header + res.data.pfp)
-            })
-            .catch(err => {
-                console.error('Error fetching data:', err);
-            }) 
     }, [displayed])
 
 

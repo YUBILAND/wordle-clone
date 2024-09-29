@@ -31,7 +31,7 @@ function App() {
 });
   const [guessWon, setGuessWon] = useState(() => {
     const existingGuessWon = JSON.parse(localStorage.getItem('guessWon'));
-    return existingGuessWon || '';
+    return existingGuessWon || 0;
 });
 
 
@@ -42,8 +42,8 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [guesses, setGuesses] = useState(() => {
     // Load initial state from localStorage or default to the initial object
-    const existingguesses = JSON.parse(localStorage.getItem('guesses'));
-    return existingguesses || { 
+    const existingGuesses = JSON.parse(localStorage.getItem('guesses'));
+    return existingGuesses || { 
         first: '',
         second: '',
         third: '',
@@ -65,6 +65,7 @@ function App() {
             sixthDone: false,
         };
     });
+
   const [canEnterHash, setCanEnterHash] = useState({
             firstCanEnter: false, 
             secondCanEnter: false, 
@@ -127,7 +128,7 @@ function App() {
           setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp);
         }
         else {
-          setUserPfpPath('https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp');
+          setUserPfpPath('https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp'); //default pfp
         }
       })
 

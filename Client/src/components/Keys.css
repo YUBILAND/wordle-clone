@@ -1,5 +1,6 @@
 .buttons {
     background-color: #d3d6da !important;
+    border-color: #d3d6da !important;
     text-transform: capitalize;
     width: 43px !important;
     height: 59px !important;
@@ -7,6 +8,7 @@
 
 .DMbuttons {
     background-color: #818384 !important;
+    border-color: #818384 !important;
     text-transform: capitalize;
     width: 43px !important;
     height: 59px !important;
@@ -15,6 +17,7 @@
 .DMgray {
     color: white;
     background-color: #3a3a3c !important;
+    border-color: #3a3a3c !important;
 }
 
 .board {
@@ -34,8 +37,6 @@
 }
 .hg-rows > div:nth-child(2){
     width: 90%;
-
-    
 }
 
 .hg-rows > div:nth-child(3){
@@ -56,26 +57,32 @@
 .green {
     color: white;
     background-color: #6aaa64 !important;
+    border-color: #6aaa64 !important;
 }
 
 .CBgreen {
     color: white;
     background-color: #f5793a !important;
+    border-color: #f5793a !important;
 }
 
 .yellow {
     color: white;
     background-color: #c9b458 !important;
+    border-color: #c9b458 !important;
 }
 
 .CByellow {
     color: white;
     background-color: #85c0f9 !important;
+    border-color: #85c0f9 !important;
+
 }
 
 .gray {
     color: white;
     background-color: #787c7e !important;
+    border-color: #787c7e !important;
 }
 
 .white {

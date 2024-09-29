@@ -67,9 +67,9 @@ const Keys = () => {
         // console.log(`gray is ${[...new Set(gray)]}`)
 
         // whitespace is for the react keyboard readability
-        console.log('green is ', green)
-        console.log('yellow is ', yellow)
-        console.log('gray is ', new Set(gray))
+        // console.log('green is ', green)
+        // console.log('yellow is ', yellow)
+        // console.log('gray is ', new Set(gray))
 
         //green
         const existingGreen = JSON.parse(localStorage.getItem('green')) || [];

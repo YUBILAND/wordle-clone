@@ -301,8 +301,12 @@ const Grid = () => {
     const guessRow = useRef(1); // keep track of variable between useEffect renders
 
     useEffect(() => { // ref
-        const existingGuessRow = JSON.parse(localStorage.getItem('guessRow'));
+        const existingGuessRow = JSON.parse(localStorage.getItem('currentRow'));
         if (existingGuessRow) guessRow.current = existingGuessRow;
+    }, [])
+
+    useEffect(() => {
+        console.log(doneHash)
     }, [])
     
 
@@ -352,8 +356,8 @@ const Grid = () => {
                 if (set.size == 1 && first == 'green') {
                     setWin(true);
                     localStorage.setItem('win', JSON.stringify(true))
-                    setGuessWon('guess' + String(guessRow.current));
-                    localStorage.setItem('guessWon', JSON.stringify('guess' + String(guessRow.current)))
+                    setGuessWon(guessRow.current);
+                    localStorage.setItem('guessWon', JSON.stringify( guessRow.current))
                     return;
                 } else if ( place == "sixth" ){
                     showAnswer(true);
@@ -361,7 +365,7 @@ const Grid = () => {
                     return;
                 }
                 guessRow.current += 1;
-                localStorage.setItem('currentRow', 'guess' + String(guessRow.current)) // just display
+                localStorage.setItem('currentRow',JSON.stringify( guessRow.current)) // just display
 
                 refHash.current[place] = true;
             }
@@ -421,7 +425,7 @@ const Grid = () => {
         
     }, [kbColor])
 
-    const updated = useRef(false); // Solves: user can't refresh to gain infinite wins
+    const updated = useContext(KeyboardContext); // Solves: user can't refresh to gain infinite wins
     useEffect(() => { // ref
         const existingUpdated = JSON.parse(localStorage.getItem('updatedStats'));
         if (existingUpdated) updated.current = existingUpdated;
@@ -432,7 +436,7 @@ const Grid = () => {
             .then(res => {
                 console.log(res.data.message)
                 updated.current = true;
-                localStorage.setItem('updatedStats', JSON.stringify(updated))
+                localStorage.setItem('updatedStats', JSON.stringify(updated.current))
             })
             .catch(err => console.log(err));
         }
@@ -590,22 +594,22 @@ const Grid = () => {
                     <>   {/* // The div the player guessed in would become 0 because while value == true, guessResults state hadn't updated and so it essentially rendered an empty div which cause the first div to shrink to h-0 and thus only the 2,3,4,5,6 divs rendered, thats why it looked like the bottom div disappeared.*/}
                         {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
                             (guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns (user input)
-                                <div  className= { `border-2  ${
-                                    res == 'green' ? ( colorBlind ? 'CBgreen' : 'green' ) :  
+                                <button className= { `border-2 cursor-default ${
+                                    res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                     res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
-                                    'gray' } 
+                                    ( darkMode ? 'DMgray' : 'gray' ) } 
                                     flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                                     {guesses[key.split('Done')[0]][ind] || ''}
-                                </div>
+                                </button>
                             )))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
                                 guesses[key.split('Done')[0]][res]
                                 ? 
-                                <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                                     {guesses[key.split('Done')[0]][res]}
-                                </div>
+                                </button>
                                 : 
-                                <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                                </div>
+                                <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                </button>
                             
                             ))
                             }
@@ -615,11 +619,11 @@ const Grid = () => {
                         {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
                             guesses[key.split('Done')[0]][res]
                             ? 
-                            <div  className='border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            <div  className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                                 {guesses[key.split('Done')[0]][res]}
                             </div>
                             : 
-                            <div  className='border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold`}>
                             </div>
                         
                         ))}
