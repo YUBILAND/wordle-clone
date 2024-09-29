@@ -9,9 +9,18 @@ import { KeyboardContext } from '../Contexts/KeyboardContext';
 const Keys = () => {
 
     const {darkMode, setDarkMode} = useContext(KeyboardContext);
-    const [green, setGreen] = useState([]);
-    const [yellow, setYellow] = useState([]);
-    const [gray, setGray] = useState([]);
+    const [green, setGreen] = useState(() => {
+        const existingGreen = JSON.parse(localStorage.getItem('green'));
+        return existingGreen || [];
+    });
+    const [yellow, setYellow] = useState(() => {
+        const existingYellow = JSON.parse(localStorage.getItem('yellow'));
+        return existingYellow || [];
+    });
+    const [gray, setGray] = useState(() => {
+        const existingGray = JSON.parse(localStorage.getItem('gray'));
+        return existingGray || [];
+    });
     const [buttonTheme, setButtonTheme] = useState([])
     const {kbColor} = useContext(KeyboardContext);
     const {colorBlind, setColorBlind} = useContext(KeyboardContext);
@@ -20,6 +29,7 @@ const Keys = () => {
     useEffect(() => { // break down guess into their color states by letter
         // console.log(kbColor)
         if (kbColor.length) {
+            console.log(kbColor)
             // kbColor.map((guess) => (
                 Object.entries(kbColor.at(-1)).forEach(([letter, color]) => {
                     color == "green" 
@@ -57,6 +67,21 @@ const Keys = () => {
         // console.log(`gray is ${[...new Set(gray)]}`)
 
         // whitespace is for the react keyboard readability
+        console.log('green is ', green)
+        console.log('yellow is ', yellow)
+        console.log('gray is ', new Set(gray))
+
+        //green
+        const existingGreen = JSON.parse(localStorage.getItem('green')) || [];
+        if (JSON.stringify(existingGreen) !== JSON.stringify(green)) localStorage.setItem('green', JSON.stringify(Array.from(new Set(green))));
+
+        const existingYellow = JSON.parse(localStorage.getItem('yellow')) || [];
+        if (JSON.stringify(existingYellow) !== JSON.stringify(yellow)) localStorage.setItem('yellow', JSON.stringify(Array.from(new Set(yellow))));
+
+        const existingGray = JSON.parse(localStorage.getItem('gray')) || [];
+        if (JSON.stringify(existingGray) !== JSON.stringify(gray)) localStorage.setItem('gray', JSON.stringify(Array.from((new Set(gray)))));
+
+
 
         green && setGreenString(green.join(' ')) //green always should be displayed
 

@@ -12,26 +12,67 @@ import axios from 'axios';
 function App() {
   // const[ letterColor, setLetterColor] = useState([]);
 
-  const [kbColor, setKbColor] = useState([]);
+  const [kbColor, setKbColor] = useState(() => {
+    const existingKbColor = JSON.parse(localStorage.getItem('kbColor'));
+    return existingKbColor || [];
+});
   const [winPage, setWinPage] = useState(false)
   const [tutorial, showTutorial] = useState(false);
   const [settings, showSettings] = useState(false);
   const [guestMode, setGuestMode] = useState(false);
   const [userMode, setUserMode] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [token, setToken] = useState(false);
-  const [login, setLogin] = useState(false);
   const [loginPage, showLoginPage] = useState(false);
   const [registerPage, showRegisterPage] = useState(false);
   const [userID, setUserID] = useState({id: 0, username : ''});
-  const [win, setWin] = useState(false);
-  const [guessWon, setGuessWon] = useState(false);
+  const [win, setWin] = useState(() => {
+    const existingWin = JSON.parse(localStorage.getItem('win'));
+    return existingWin || false;
+});
+  const [guessWon, setGuessWon] = useState(() => {
+    const existingGuessWon = JSON.parse(localStorage.getItem('guessWon'));
+    return existingGuessWon || '';
+});
+
+
+
+
+
   const [isAuth, setIsAuth] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [guesses, setGuesses] = useState({first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''});
+  const [guesses, setGuesses] = useState(() => {
+    // Load initial state from localStorage or default to the initial object
+    const existingguesses = JSON.parse(localStorage.getItem('guesses'));
+    return existingguesses || { 
+        first: '',
+        second: '',
+        third: '',
+        fourth: '',
+        fifth: '',
+        sixth: '',
+    };
+});
   const [guessLength, setGuessLength] = useState(0);
-  const [doneHash, setDoneHash] = useState({firstDone: false, secondDone: false, thirdDone: false, fourthDone: false, fifthDone: false, sixthDone: false})
-  const [canEnterHash, setCanEnterHash] = useState({firstCanEnter: false, secondCanEnter: false, thirdCanEnter: false, fourthCanEnter: false, fifthCanEnter: false, sixthCanEnter: false})
+  const [doneHash, setDoneHash] = useState(() => {
+        // Load initial state from localStorage or default to the initial object
+        const existingDoneHash = JSON.parse(localStorage.getItem('doneHash'));
+        return existingDoneHash || {
+            firstDone: false,
+            secondDone: false,
+            thirdDone: false,
+            fourthDone: false,
+            fifthDone: false,
+            sixthDone: false,
+        };
+    });
+  const [canEnterHash, setCanEnterHash] = useState({
+            firstCanEnter: false, 
+            secondCanEnter: false, 
+            thirdCanEnter: false, 
+            fourthCanEnter: false, 
+            fifthCanEnter: false, 
+            sixthCanEnter: false
+          })
   const [wordleList, setWordleList] = useState([]);
   const [notEnough, setNotEnough] = useState(false);
   const [wrongWord, setWrongWord] = useState(false);
@@ -47,7 +88,10 @@ function App() {
   const [delay, setDelay] = useState(false);
 
   const [colorBlind, setColorBlind] = useState(false);
-  const [answer, showAnswer] = useState(false);
+  const [answer, showAnswer] = useState(() => {
+    const existingAnswer = JSON.parse(localStorage.getItem('answer'));
+    return existingAnswer || false;
+});
 
   const [settingsLoading, setSettingsLoading] = useState(true);
 

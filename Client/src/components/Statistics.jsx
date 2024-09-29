@@ -94,6 +94,7 @@ const Statistics = () => {
     }
 
     function handleReplay() {
+        localStorage.clear();
         window.location.reload();
     }
 

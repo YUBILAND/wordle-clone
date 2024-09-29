@@ -22,7 +22,7 @@ const Grid = () => {
     const {settings, showSettings} = useContext(KeyboardContext);
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
-    const {setKbColor} = useContext(KeyboardContext);
+    const {kbColor, setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
     const {guessWon, setGuessWon} = useContext(KeyboardContext);
     const [winCompliment, setWinCompliment] = useState(false);
@@ -33,16 +33,33 @@ const Grid = () => {
     const {wordleList, setWordleList} = useContext(KeyboardContext);
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
-    const [guessResults, setGuessResults] = useState({first: [], second: [], third: [], fourth: [], fifth: [], sixth: []})
+    const [guessResults, setGuessResults] = useState(() => {
+        const existingguessResults = JSON.parse(localStorage.getItem('guessResults'));
+        return existingguessResults || {
+            first: [], 
+            second: [], 
+            third: [], 
+            fourth: [], 
+            fifth: [], 
+            sixth: []
+        };
+    });
+
     const refHash = useRef({first: false, second: false, third: false, fourth: false, fifth: false, sixth: false})
     const [loading, setLoading] = useState(true);
-    const [correctWord, setCorrectWord] = useState('');
-    const{guesses, setGuesses} = useContext(KeyboardContext);
+    const [correctWord, setCorrectWord] = useState(() => {
+        const existingCorrectWord = JSON.parse(localStorage.getItem('correctWord'));
+        return existingCorrectWord || '';
+    });
+    const {guesses, setGuesses} = useContext(KeyboardContext);
     const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
     const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
     const {guestMode, setGuestMode} = useContext(KeyboardContext);
     const {guessLength, setGuessLength} = useContext(KeyboardContext);
-    const [loss, setLoss] = useState(false);
+    const [loss, setLoss] = useState(() => {
+        const existingLoss = JSON.parse(localStorage.getItem('loss'));
+        return existingLoss || false;
+    });
 
 
 
@@ -57,7 +74,7 @@ const Grid = () => {
     }, []);
     
     useEffect(() => { //chooses random correct word from wordle list
-        if (wordleList.length > 0) {
+        if (wordleList.length > 0 && !correctWord) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
         // setCorrectWord('BLIMP')
         // console.log(wordleList);
@@ -68,6 +85,8 @@ const Grid = () => {
     useEffect(() => { // prints correctWord
         if( correctWord )
             console.log('The Correct Word is ' + correctWord)
+            const existingCorrectWord = JSON.parse(localStorage.getItem('correctWord')) || '';
+            if (JSON.stringify(existingCorrectWord) !== JSON.stringify(correctWord)) localStorage.setItem('correctWord', JSON.stringify(correctWord));
     }, [correctWord])
 
 
@@ -279,11 +298,28 @@ const Grid = () => {
         }
     }
 
-    const whichguessacc = useRef(1); // use ref to keep track of variable between useEffect renders
+    const guessRow = useRef(1); // keep track of variable between useEffect renders
+
+    useEffect(() => { // ref
+        const existingGuessRow = JSON.parse(localStorage.getItem('guessRow'));
+        if (existingGuessRow) guessRow.current = existingGuessRow;
+    }, [])
+    
+
+    const firstTime = useRef(false);
     useEffect(() => { // evaluates guess, sets when user wins or loses
-        Object.entries(doneHash).map(([ key, value ]) => {
-            const place = key.split('Done')[0] // removes Done from key like firstDone leaving first to access value of other hashmap
-            if (value && !refHash.current[place]) { //player has made first guess
+        if (!firstTime.current) { //skip on mount
+            firstTime.current = true;
+            return;
+        }
+        const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
+            return value ? key : acc;
+        }, 0);
+
+        // Object.entries(doneHash).map(([ key, value ]) => {
+            
+            const place = lastTrueKey.split('Done')[0] // remove "Done" from "firstDone" to get 'first'; use for accessing hashmap
+            if ( lastTrueKey !== 0 && !refHash.current[place]) { //player has made first guess
                 
                 cheatVar = greenLetter(correctWord, guesses[place])
                 const colorGuess = guesses[place].split('').map((res, ind) => ( // gets color mapping for each letter guess
@@ -315,24 +351,88 @@ const Grid = () => {
                 const first = [...set][0]
                 if (set.size == 1 && first == 'green') {
                     setWin(true);
-                    setGuessWon('guess' + String(whichguessacc.current));
+                    localStorage.setItem('win', JSON.stringify(true))
+                    setGuessWon('guess' + String(guessRow.current));
+                    localStorage.setItem('guessWon', JSON.stringify('guess' + String(guessRow.current)))
+                    return;
                 } else if ( place == "sixth" ){
                     showAnswer(true);
                     setLoss(true);
+                    return;
                 }
-                whichguessacc.current += 1;
+                guessRow.current += 1;
+                localStorage.setItem('currentRow', 'guess' + String(guessRow.current)) // just display
 
                 refHash.current[place] = true;
             }
-        })
+        // })
        
     }, [doneHash]);
 
+    useEffect(() => {
+        localStorage.setItem('answer', JSON.stringify(answer))
+    }, [answer])
+
+    useEffect(() => {
+        localStorage.setItem('loss', JSON.stringify(loss))
+    }, [loss])
+
+
+    useEffect(() => {
+        const existingDoneHash = JSON.parse(localStorage.getItem('doneHash')) || {
+            firstDone: false, 
+            secondDone: false, 
+            thirdDone: false, 
+            fourthDone: false, 
+            fifthDone: false, 
+            sixthDone: false
+        };
+        if (JSON.stringify(existingDoneHash) !== JSON.stringify(doneHash)) localStorage.setItem('doneHash', JSON.stringify(doneHash));
+    }, [doneHash])
+
+    useEffect(() => {
+        const existingguessResults = JSON.parse(localStorage.getItem('guessResults')) || {
+            first: [], 
+            second: [], 
+            third: [], 
+            fourth: [], 
+            fifth: [], 
+            sixth: []
+        };
+        if (JSON.stringify(existingguessResults) !== JSON.stringify(guessResults)) localStorage.setItem('guessResults', JSON.stringify(guessResults));
+        
+        const existingguesses = JSON.parse(localStorage.getItem('guesses')) || {
+            first: '', 
+            second: '', 
+            third: '', 
+            fourth: '', 
+            fifth: '', 
+            sixth: ''
+        };
+        if (JSON.stringify(existingguesses) !== JSON.stringify(guesses)) localStorage.setItem('guesses', JSON.stringify(guesses));
+
+        console.log(guessResults)
+        
+    }, [guessResults])
+
+    useEffect(() => {
+        const existingKbColor = JSON.parse(localStorage.getItem('kbColor')) || [];
+        if (JSON.stringify(existingKbColor) !== JSON.stringify(kbColor)) localStorage.setItem('kbColor', JSON.stringify(kbColor));
+        
+    }, [kbColor])
+
+    const updated = useRef(false); // Solves: user can't refresh to gain infinite wins
+    useEffect(() => { // ref
+        const existingUpdated = JSON.parse(localStorage.getItem('updatedStats'));
+        if (existingUpdated) updated.current = existingUpdated;
+    }, [])
     useEffect(() => { // update stats after game finish
-        if (win ^ answer) {
+        if (( win ^ answer) && !updated.current) {
             axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 console.log(res.data.message)
+                updated.current = true;
+                localStorage.setItem('updatedStats', JSON.stringify(updated))
             })
             .catch(err => console.log(err));
         }
@@ -386,13 +486,16 @@ const Grid = () => {
             }, 2000);
     }
 
-    if (loss) { // 1 sec delay after loss before stats is shown
-        setLoss(false);
-        setTimeout(function() {
-            setWinPage(true);
-        }, 1000);
-        
-    }
+    useEffect(() => {
+        if (loss) { // 1 sec delay after loss before stats is shown
+            // setLoss(false);
+            setTimeout(function() {
+                setWinPage(true);
+            }, 1000);
+            
+        }
+    }, [loss])
+    
 
     function whichCompliment() { // determines which compliment to give based on how many guesses player took
         const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
@@ -414,17 +517,6 @@ const Grid = () => {
     ];
 
     const {delay, setDelay} = useContext(KeyboardContext);
-    
-
-    // const handleClickAway = () => {
-    //     setWinPage(false);
-    //     setDelay(true);
-        
-
-    //     setTimeout(function() {
-    //         setDelay(false);
-    //         }, 1000);
-    // }
     
     useEffect(() => {
         if (!winPage) {
