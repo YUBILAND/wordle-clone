@@ -115,6 +115,7 @@ const Profile = () => {
                         taken : false, 
                         same : false,
                     }));
+                    setUserID(prevUser => ({...prevUser, username : newName}))
                     setNewName(''); // clear state
                     document.getElementById('nameField').value = ''; // clear input field
                 }
@@ -175,7 +176,7 @@ const Profile = () => {
                 <div className='relative flex justify-center mt-[10px] pb-2'>
                     <form onSubmit={handleSubmit}>
                     <div className='flex justify-center items-center w-32 h-32 bg-gray-200  transition ease-in-out hover:brightness-75'>
-                        {userPfpPath ? <img className='w-32 h-32 object-contain' src={userPfpPath} alt=""/> : <img className='w-32 h-32 object-contain' src='https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp' alt="" />}
+                        <img className='w-32 h-32 object-contain' src={userPfpPath} alt=""/> 
                         {/* <img className='w-32 h-32 object-contain' src="/uploads/1726806169549.png" alt=""/> */}
                         <input onChange={handleChange} type="file" title="" className='absolute w-32 h-32 bg-gray-200 opacity-0 cursor-pointer'/>
                     </div>

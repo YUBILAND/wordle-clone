@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { KeyboardContext } from '../Contexts/KeyboardContext'
 import Login from './Login';
 import Register from './Register';
@@ -11,6 +11,8 @@ const LandingPage = () => {
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
     const {checkingAuth, setCheckingAuth} = useContext(KeyboardContext);
+    const {settingsLoading, setSettingsLoading} = useContext(KeyboardContext);
+    const {userMode, setUserMode} = useContext(KeyboardContext);
 
     function handleLogin() {
         showLoginPage(true);
@@ -25,6 +27,12 @@ const LandingPage = () => {
         setGuestMode(true);
         setUserID({id: 0})
     }
+    useEffect(() => {
+        if (!userMode) {
+            setSettingsLoading(false);
+        }
+    }, [userMode])
+    
 
 
   return (
@@ -38,7 +46,7 @@ const LandingPage = () => {
                 <h1 className='font-bold'>Wordle</h1>
             </div>
 
-            {checkingAuth ?
+            {checkingAuth || settingsLoading ?
             <div className='text-center mt-[300px]'>
                 <CircularProgress color="inherit" />
             </div>

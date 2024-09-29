@@ -49,53 +49,72 @@ function App() {
   const [colorBlind, setColorBlind] = useState(false);
   const [answer, showAnswer] = useState(false);
 
+  const [settingsLoading, setSettingsLoading] = useState(true);
 
 
 
+  const checkAuth = async () => {
+    try {
+      const res = await axios.get('http://localhost:8081/check-auth', { withCredentials: true });
 
-
-  useEffect(() => { //check token when refreshing
-    axios.get('http://localhost:8081/check-auth', { withCredentials: true })
-    .then(res => {
       setUserMode(true);
+      setSettingsLoading(true);
       setCheckingAuth(false);
       setUserID({id: res.data.id, username : res.data.username})
-    })
-    .catch(err => {
-      // setIsAuth(false);
+    }
+    catch (err) {
       setUserMode(false);
       setGuestMode(false);
       setCheckingAuth(false);
-    })
+      console.error('Authentication check failed');
+
+    }
+  }
+
+  useEffect(() => { //check token when refreshing
+    checkAuth();
   }, [])
 
   useEffect(() => { //get user pfp
     if(userID.id) { //if not 0 ie guest mode
       axios.get('http://localhost:8081/getPfp', { params: { ...userID } })
       .then(res => {
-        // console.log(userID)
-        // console.log(res.data.message)
-        // console.log(res.data.pfp)
-
-        if (res.data.message == "Retrieved pfp") setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp)
-
-
+        if (res.data.message == "Retrieved pfp") {
+          setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp);
+        }
+        else {
+          setUserPfpPath('https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp');
+        }
       })
+
+      axios.get('http://localhost:8081/fetchSettings', { params: { ...userID } }) //get user settings
+      .then(res => {
+        if (res.data.message == "Fetched settings") {
+          setDarkMode(res.data.dark === 1)
+          setColorBlind(res.data.color === 1);
+          setSettingsLoading(false);
+          // setDarkMode(res.data.dark)
+          // setDarkMode(res.data.dark)
+
+        }
+      })
+
+
     }
   }, [userID])
 
+ 
 
   return (
     <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading}}>
       
       
-        {!(guestMode || userMode) ? <LandingPage /> :
+        {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>
           <div className={`absolute top-0 left-0 w-full z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } h-[946px]`}/>
 
-          
           <Header />
           <Grid />
           <Keys />

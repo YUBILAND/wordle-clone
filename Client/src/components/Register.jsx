@@ -12,6 +12,8 @@ const Register = () => {
     })
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const[wrong, setWrong] = useState(false);
+    const {settingsLoading, setSettingsLoading} = useContext(KeyboardContext);
+
 
     function handleClose() {
         showRegisterPage(false);
@@ -21,9 +23,7 @@ const Register = () => {
         setRegAcc({...regAcc, [event.target.name] : [event.target.value]})
     }
     
-    const [token, setToken] = useState();
-
-    const {userID, setUserID} = useContext(KeyboardContext);
+    const {setUserID} = useContext(KeyboardContext);
 
 
     const handleSubmit = (event) => {
@@ -38,6 +38,7 @@ const Register = () => {
                 setUserID({id : res.data.id, username : res.data.username})
                 setWrong(false);
                 setUserMode(true);
+                setSettingsLoading(true);
             } else { 
                 setWrong(true);
             }

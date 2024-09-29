@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { KeyboardContext } from '../Contexts/KeyboardContext'
 import CloseIcon from '@mui/icons-material/Close';
 import Switch from '@mui/material/Switch';
@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
-const GreenSwitch = styled((props) => (
+const GreenSwitch = styled(({colorblind, ...props}) => (
   <Switch {...props} />
 ))(({ theme, colorblind }) => ({ // lowercase to avoid
   width: 42,
@@ -187,11 +187,40 @@ const Settings = () => {
         .catch(err => console.log(err));
     }
 
-    // useEffect(() => {
-    //   if (darkMode) {document.body.style.setProperty('background-color', 'black', 'important'); console.log("HELLO");}
-    //   else document.body.style.backgroundColor = '!white';
+    const mountRef1 = useRef(false);
+    const mountRef2 = useRef(false);
+    
+    
+
+
+    useEffect(() => {
+      if ( !mountRef1.current ) { // skip on initial mount
+          mountRef1.current = true;
+          return;
+      }
+        axios.post('http://localhost:8081/darkMode', {darkMode : [darkMode], id : userID.id})
+        .then(res => {
+          console.log(res.data.message);
+        })
+        .catch(err => {
+          console.log(err);
+        });
       
-    // }, [darkMode])
+    }, [darkMode])
+
+    useEffect(() => {
+      if ( !mountRef2.current ) { // skip on initial mount
+        mountRef2.current = true;
+        return;
+      }
+        axios.post('http://localhost:8081/colorMode', {colorBlind : [colorBlind], id : userID.id})
+        .then(res => {
+          console.log(res.data.message);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }, [colorBlind])
 
   return (
     <div className={`absolute top-0 left-0 w-screen h-[1000px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
@@ -222,7 +251,7 @@ const Settings = () => {
                     
                 <FormControlLabel className='!mx-0' control={
                   <GreenSwitch 
-                  colorblind={colorBlind ? 1 : 0} // weird that you can't use true and false bool you need either str or in for DOM
+                  colorblind={colorBlind} // weird that you can't use true and false bool you need either str or in for DOM
                   checked={darkMode} 
                   onChange={handleDark} 
                   focusVisibleClassName=".Mui-focusVisible" 

@@ -15,6 +15,8 @@ const Login = () => {
     const {userMode, setUserMode} = useContext(KeyboardContext);
     const[wrongCred, setWrongCred] = useState(false);
     const {userID, setUserID} = useContext(KeyboardContext);
+    const {settingsLoading, setSettingsLoading} = useContext(KeyboardContext);
+
 
 
     function handleClose() {
@@ -37,7 +39,8 @@ const Login = () => {
                 
                 setWrongCred(false);
                 showLoginPage(false);
-                setUserMode(true) 
+                setUserMode(true)
+                setSettingsLoading(true);
                 setUserID({id: res.data.id, username : res.data.username})
                 
             } else { 
