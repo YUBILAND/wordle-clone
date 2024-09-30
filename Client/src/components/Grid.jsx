@@ -90,72 +90,107 @@ const Grid = () => {
     }, [correctWord])
 
 
+    // useEffect(() => { //Register key press and save to state, del too
+    //     const onPress = (event) => {
+    //         if (event.key === 'Backspace') {
+    //         if (!doneHash.firstDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first.slice(0, prevGuess.first.length - 1))}))
+    //         } 
+    //         else if (!doneHash.secondDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second.slice(0, prevGuess.second.length - 1))}))
+    //         } 
+    //         else if (!doneHash.thirdDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third.slice(0, prevGuess.third.length - 1))}))
+    //         } 
+    //         else if (!doneHash.fourthDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth.slice(0, prevGuess.fourth.length - 1))}))
+    //         } 
+    //         else if (!doneHash.fifthDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth.slice(0, prevGuess.fifth.length - 1))}))
+    //         } 
+    //         else if (!doneHash.sixthDone && guessLength > 0) {
+    //             setGuessLength(prevGuessLen => prevGuessLen - 1);
+    //             // guessLength -= 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth.slice(0, prevGuess.sixth.length - 1))}))
+    //         } 
+    //         } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
+    //         if (!doneHash.firstDone && guessLength < 5) {
+
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             // console.log(guessLength);
+    //             setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first + event.key.toUpperCase())}))
+    //         }
+    //         else if (!doneHash.secondDone && guessLength < 5) {
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second + event.key.toUpperCase())}))
+    //         } 
+    //         else if (!doneHash.thirdDone && guessLength < 5) {
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third + event.key.toUpperCase())}))
+    //         } 
+    //         else if (!doneHash.fourthDone && guessLength < 5) {
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth + event.key.toUpperCase())}))
+    //         } 
+    //         else if (!doneHash.fifthDone && guessLength < 5) {
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth + event.key.toUpperCase())}))
+    //         } 
+    //         else if (!doneHash.sixthDone && guessLength < 5) {
+    //             setGuessLength(prevGuessLen => prevGuessLen + 1);
+    //             // guessLength += 1;
+    //             setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth + event.key.toUpperCase())}))
+    //         }
+    //         } 
+    //     };
+    //     if(!win) {
+    //         // Attach event listener
+    //         document.addEventListener('keydown', onPress);
+        
+    //         // Cleanup function to remove event listener
+    //         return () => {
+    //         document.removeEventListener('keydown', onPress);
+    //         };
+    //     }
+    // }, [win, guessLength, doneHash]); // Depend only on the completion status
+
     useEffect(() => { //Register key press and save to state, del too
         const onPress = (event) => {
             if (event.key === 'Backspace') {
-            if (!doneHash.firstDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first.slice(0, prevGuess.first.length - 1))}))
-            } 
-            else if (!doneHash.secondDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second.slice(0, prevGuess.second.length - 1))}))
-            } 
-            else if (!doneHash.thirdDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third.slice(0, prevGuess.third.length - 1))}))
-            } 
-            else if (!doneHash.fourthDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth.slice(0, prevGuess.fourth.length - 1))}))
-            } 
-            else if (!doneHash.fifthDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth.slice(0, prevGuess.fifth.length - 1))}))
-            } 
-            else if (!doneHash.sixthDone && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                // guessLength -= 1;
-                setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth.slice(0, prevGuess.sixth.length - 1))}))
-            } 
+                Object.entries(doneHash).some(([key,val]) => {
+                    if (!val && guessLength > 0) {
+                        const convertPlace = key.split('Done')[0];
+                        setGuessLength(prevGuessLen => prevGuessLen - 1);
+                        setGuesses( prevGuess => ({ ...prevGuess, [convertPlace]: (prevGuess[convertPlace].slice(0, prevGuess[convertPlace].length - 1))}))
+                        return true;
+                    }
+                    return false;
+                })
             } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
-            if (!doneHash.firstDone && guessLength < 5) {
-
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                // console.log(guessLength);
-                setGuesses( prevGuess => ({ ...prevGuess, first: (prevGuess.first + event.key.toUpperCase())}))
-            }
-            else if (!doneHash.secondDone && guessLength < 5) {
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                setGuesses( prevGuess => ({ ...prevGuess, second: (prevGuess.second + event.key.toUpperCase())}))
-            } 
-            else if (!doneHash.thirdDone && guessLength < 5) {
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                setGuesses( prevGuess => ({ ...prevGuess, third: (prevGuess.third + event.key.toUpperCase())}))
-            } 
-            else if (!doneHash.fourthDone && guessLength < 5) {
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                setGuesses( prevGuess => ({ ...prevGuess, fourth: (prevGuess.fourth + event.key.toUpperCase())}))
-            } 
-            else if (!doneHash.fifthDone && guessLength < 5) {
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                setGuesses( prevGuess => ({ ...prevGuess, fifth: (prevGuess.fifth + event.key.toUpperCase())}))
-            } 
-            else if (!doneHash.sixthDone && guessLength < 5) {
-                setGuessLength(prevGuessLen => prevGuessLen + 1);
-                // guessLength += 1;
-                setGuesses( prevGuess => ({ ...prevGuess, sixth: (prevGuess.sixth + event.key.toUpperCase())}))
-            }
+                Object.entries(doneHash).some(([key,val]) => {
+                    if (!val && guessLength < 5) {
+                        const convertPlace = key.split('Done')[0];
+                        setGuessLength(prevGuessLen => prevGuessLen + 1);
+                        setGuesses( prevGuess => ({ ...prevGuess, [convertPlace]: (prevGuess[convertPlace] + event.key.toUpperCase())}))
+                        return true;
+                    }
+                    return false;
+                })
             } 
         };
         if(!win) {
@@ -169,74 +204,35 @@ const Grid = () => {
         }
     }, [win, guessLength, doneHash]); // Depend only on the completion status
 
-    const enterPressed = useRef(false)
-    const [removeStyle, setRemoveStyle ]= useState(false);
+
+
+    const {enterPressed, setEnterPressed} = useContext(KeyboardContext);
+    const {removeStyle, setRemoveStyle} = useContext(KeyboardContext);
 
     useEffect(() => { // 'Enter' Key Functionality
         const onPress = (event) => {
             if (event.key === 'Enter') {
-                if (!doneHash.firstDone) {
-                    if (canEnterHash.firstCanEnter) {
-                        if (wordleList.includes(guesses.first.toLowerCase())) {
-                            enterPressed.current = true;
-                            setRemoveStyle(false);
-                            setDoneHash(prevDone => ({ ...prevDone, firstDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
-                else if (!doneHash.secondDone) {
-                    if (canEnterHash.secondCanEnter) {
-                        if (wordleList.includes(guesses.second.toLowerCase())) {
-                            enterPressed.current = true;
-                            setRemoveStyle(false);
+                Object.entries(doneHash).some(([key, val]) => {
+                    if (!val) {
+                        const convertCanEnter = key.split('Done')[0] + 'CanEnter' // changes firstDone to firstCanEnter
+                        if (canEnterHash[convertCanEnter]) {
+                            const convertPlace = key.split('Done')[0]  // changes firstDone to first
+                            console.log(convertPlace)
+                            if (wordleList.includes(guesses[convertPlace].toLowerCase())) {
+                                setEnterPressed(true);
+                                setRemoveStyle(false);
+                                setDoneHash(prevDone => ({ ...prevDone, [key]: true}));
+                                setGuessLength(0);
+                            } else setWrongWord(true); 
 
-                            setDoneHash(prevDone => ({ ...prevDone, secondDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
-                else if (!doneHash.thirdDone) {
-                    if (canEnterHash.thirdCanEnter) {
-                        if (wordleList.includes(guesses.third.toLowerCase())) {
-                            enterPressed.current = true;
-                            setRemoveStyle(false);
-
-                            setDoneHash(prevDone => ({ ...prevDone, thirdDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
-                else if (!doneHash.fourthDone) {
-                    if (canEnterHash.fourthCanEnter) {
-                        if (wordleList.includes(guesses.fourth.toLowerCase())) {
-                            enterPressed.current = true;
-                            setRemoveStyle(false);
-                            setDoneHash(prevDone => ({ ...prevDone, fourthDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
-                else if (!doneHash.fifthDone) {
-                    if (canEnterHash.fifthCanEnter) {
-                        if (wordleList.includes(guesses.fifth.toLowerCase())) {
-                            enterPressed.current = true;
-                            setDoneHash(prevDone => ({ ...prevDone, fifthDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
-                else if (!doneHash.sixthDone) {
-                    if (canEnterHash.sixthCanEnter) {
-                        if (wordleList.includes(guesses.sixth.toLowerCase())) {
-                            enterPressed.current = true;
-                            setDoneHash(prevDone => ({ ...prevDone, sixthDone: true}));
-                            setGuessLength(0);
-                        } else setWrongWord(true);
-                    } else setNotEnough(true);
-                }
+                        } else setNotEnough(true);
+                        return true;
+                    }
+                    return false;
+                })
             }
         }
+
         if (!win) {
             document.addEventListener('keydown', onPress);
             return () => {
@@ -319,19 +315,15 @@ const Grid = () => {
         const existingGuessRow = JSON.parse(localStorage.getItem('currentRow'));
         if (existingGuessRow) guessRow.current = existingGuessRow;
     }, [])
-
-    useEffect(() => {
-        console.log(doneHash)
-    }, [])
     
 
-    const firstTime = useRef(false);
+    const firstTime = useRef(true);
     useEffect(() => { // evaluates guess, sets when user wins or loses
-        if (!firstTime.current) { //skip on mount
-            firstTime.current = true;
+        if (firstTime.current) { //skip on mount
+            firstTime.current = false;
             return;
         }
-        if (!enterPressed.current) { //skip on mount
+        if (!enterPressed) { //skip on mount Solves? doubling the grid from 5 to 10 because of saving changes, if enter not pressed don't run this code again
             return;
         }
         const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
@@ -379,7 +371,9 @@ const Grid = () => {
                     return;
                 } else if ( place == "sixth" ){
                     showAnswer(true);
+                    localStorage.setItem('answer', JSON.stringify(answer))
                     setLoss(true);
+                    localStorage.setItem('loss', JSON.stringify(loss))
                     return;
                 }
                 guessRow.current += 1;
@@ -387,17 +381,7 @@ const Grid = () => {
 
                 refHash.current[place] = true;
             }
-        // })
-       
     }, [doneHash]);
-
-    useEffect(() => {
-        localStorage.setItem('answer', JSON.stringify(answer))
-    }, [answer])
-
-    useEffect(() => {
-        localStorage.setItem('loss', JSON.stringify(loss))
-    }, [loss])
 
 
     useEffect(() => {
@@ -467,7 +451,7 @@ const Grid = () => {
                 /* Code to run after 4 seconds */
                 // alert('wow you have brain')
                 setWinPage(true);
-            }, 6000)
+            }, 1000)
         }
     }, [win])
 
@@ -514,7 +498,6 @@ const Grid = () => {
             setTimeout(function() {
                 setWinPage(true);
             }, 1000);
-            
         }
     }, [loss])
     
@@ -548,13 +531,8 @@ const Grid = () => {
         }
     }, [winPage])
 
-    const backgroundColor = useRef('transparent');
-    const color = useRef('transparent');
-    const borderColor = useRef('transparent');
 
-    const style2 = 
-        removeStyle ? {} : { backgroundColor: 'transparent', color: 'transparent', borderColor: (darkMode ? '#3a3a3c' : '#d1d5db')}
-
+    
     function handleAnimationStart() {
         setTimeout(() => {
             setRemoveStyle(true);
@@ -563,10 +541,13 @@ const Grid = () => {
 
     }
 
+
     
-    
+    const guessesLoaded = useRef(false);
 
   return (
+
+    
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} z-0`}>
 
         {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
@@ -618,59 +599,102 @@ const Grid = () => {
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
+{console.log("HERE")}
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2'>
 
             { //displays grid, simplified immensly
-            Object.entries(doneHash).map(([key, value]) => ( // maps how many rows
-                <div key={key}className='flex col-span-5 gap-2'>
-                    {value ? //through debuggin there is a time delay between which makes it so value is true but what is displayed is empty div because guessResults is not populated yet
-                    <>   {/* // The div the player guessed in would become 0 because while value == true, guessResults state hadn't updated and so it essentially rendered an empty div which cause the first div to shrink to h-0 and thus only the 2,3,4,5,6 divs rendered, thats why it looked like the bottom div disappeared.*/}
-                        {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
-                            (guessResults[key.split('Done')[0]].map((res, ind) => { // maps how many columns (user input)
-                                const delay = ind * 100;
-                                const style1 = {
-                                    animationDelay: `${delay}ms`,
-                                };
-                                return (
+            Object.entries(doneHash).map(([key, value]) => { // maps how many rows
+
+                const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
+                    return value ? key : acc;
+                }, 0);
+
+
+                return ( 
+                    // on mount here
+                    <div key={key}className='flex col-span-5 gap-2'>
+                        
+                    { 
+                        ((value && !guessesLoaded.current) || (guessesLoaded.current && key === lastTrueKey)) ? 
+                        <>
+                            {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
+                                (guessResults[key.split('Done')[0]].map((res, ind) => { // maps how many columns (user input)
+                                    const delay = ind * 100;
+                                    key == lastTrueKey && (guessesLoaded.current = true);
+                                    const style1 = {
+                                        animationDelay: `${delay}ms`,
+                                    };
+                                    const style2 = removeStyle ? {} : { backgroundColor: 'transparent', color: 'transparent', borderColor: (darkMode ? '#3a3a3c' : '#d1d5db')}
+                                    return (
+                                        <button style={{ ...style1 , ...style2}} onAnimationStart={handleAnimationStart} className= { `flip border-2 cursor-default ${
+                                            res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
+                                            res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
+                                            ( darkMode ? 'DMgray' : 'gray' ) } 
+                                            flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                                            {guesses[key.split('Done')[0]][ind] || ''}
+                                        </button>
+                                    )
+                                }))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                                    guesses[key.split('Done')[0]][res]
+                                    ? 
+                                    <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                        {guesses[key.split('Done')[0]][res]}
+                                    </button>
+                                    : 
+                                    <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                    </button>
+                                
+                                ))
+                            }
+                        </>
+                        :   
+
+                        (guessesLoaded.current && key !== lastTrueKey && value) ? // previous guesses, after making guess they should have no animation
+                            <>
+                                {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
+                                    (guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns (user input)
+                                        
+                                        <button className= { `border-2 cursor-default ${
+                                            res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
+                                            res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
+                                            ( darkMode ? 'DMgray' : 'gray' ) } 
+                                            flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                                            {guesses[key.split('Done')[0]][ind] || ''}
+                                        </button>
+                                        
+                                    )))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                                        guesses[key.split('Done')[0]][res]
+                                        ? 
+                                        <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                            {guesses[key.split('Done')[0]][res]}
+                                        </button>
+                                        : 
+                                        <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                        </button>
                                     
-                                <button style={{ ...style1 , ...style2}} onAnimationStart={handleAnimationStart} className= { `flip border-2 cursor-default ${
-                                    res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
-                                    res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
-                                    ( darkMode ? 'DMgray' : 'gray' ) } 
-                                    flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
-                                    {guesses[key.split('Done')[0]][ind] || ''}
-                                </button>
-                                )
-                            }))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                                    ))
+                                }
+                            </>
+
+                        :
+
+                        <>
+                            {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
                                 guesses[key.split('Done')[0]][res]
                                 ? 
-                                <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                <div  className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
                                     {guesses[key.split('Done')[0]][res]}
-                                </button>
+                                </div>
                                 : 
-                                <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                                </button>
+                                <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold`}>
+                                </div>
                             
-                            ))
-                            }
-                    </>
-                    :   
-                    <>
-                        {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
-                            guesses[key.split('Done')[0]][res]
-                            ? 
-                            <div  className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
-                                {guesses[key.split('Done')[0]][res]}
-                            </div>
-                            : 
-                            <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold`}>
-                            </div>
-                        
-                        ))}
-                    </>
-                    }
-                </div>
-            ))
+                            ))}
+                        </>
+                        }
+                    </div>
+                )
+            })
         }
         
         </div>

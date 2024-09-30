@@ -217,7 +217,8 @@ const Keys = () => {
     const {notEnough, setNotEnough} = useContext(KeyboardContext);
     const {wrongWord, setWrongWord} = useContext(KeyboardContext);
     const {wordleList, setWordleList} = useContext(KeyboardContext);
-    
+    const {enterPressed, setEnterPressed} = useContext(KeyboardContext);
+    const {removeStyle, setRemoveStyle} = useContext(KeyboardContext);
 
     const onKeyPress = button => {
         // console.log("Button pressed", button);
@@ -232,6 +233,8 @@ const Keys = () => {
                 } else if (button == "ENTER") {
                     if (canEnterHash[canEnterKey]) {
                         if (wordleList.includes(guesses[doneKey].toLowerCase())) {
+                            setEnterPressed(true);
+                            setRemoveStyle(false);
                             setDoneHash(prevDone => ({ ...prevDone, [key]: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
