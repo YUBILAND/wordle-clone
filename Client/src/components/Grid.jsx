@@ -169,12 +169,17 @@ const Grid = () => {
         }
     }, [win, guessLength, doneHash]); // Depend only on the completion status
 
+    const enterPressed = useRef(false)
+    const [removeStyle, setRemoveStyle ]= useState(false);
+
     useEffect(() => { // 'Enter' Key Functionality
         const onPress = (event) => {
             if (event.key === 'Enter') {
                 if (!doneHash.firstDone) {
                     if (canEnterHash.firstCanEnter) {
                         if (wordleList.includes(guesses.first.toLowerCase())) {
+                            enterPressed.current = true;
+                            setRemoveStyle(false);
                             setDoneHash(prevDone => ({ ...prevDone, firstDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -183,6 +188,9 @@ const Grid = () => {
                 else if (!doneHash.secondDone) {
                     if (canEnterHash.secondCanEnter) {
                         if (wordleList.includes(guesses.second.toLowerCase())) {
+                            enterPressed.current = true;
+                            setRemoveStyle(false);
+
                             setDoneHash(prevDone => ({ ...prevDone, secondDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -191,6 +199,9 @@ const Grid = () => {
                 else if (!doneHash.thirdDone) {
                     if (canEnterHash.thirdCanEnter) {
                         if (wordleList.includes(guesses.third.toLowerCase())) {
+                            enterPressed.current = true;
+                            setRemoveStyle(false);
+
                             setDoneHash(prevDone => ({ ...prevDone, thirdDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -199,6 +210,8 @@ const Grid = () => {
                 else if (!doneHash.fourthDone) {
                     if (canEnterHash.fourthCanEnter) {
                         if (wordleList.includes(guesses.fourth.toLowerCase())) {
+                            enterPressed.current = true;
+                            setRemoveStyle(false);
                             setDoneHash(prevDone => ({ ...prevDone, fourthDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -207,6 +220,7 @@ const Grid = () => {
                 else if (!doneHash.fifthDone) {
                     if (canEnterHash.fifthCanEnter) {
                         if (wordleList.includes(guesses.fifth.toLowerCase())) {
+                            enterPressed.current = true;
                             setDoneHash(prevDone => ({ ...prevDone, fifthDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -215,6 +229,7 @@ const Grid = () => {
                 else if (!doneHash.sixthDone) {
                     if (canEnterHash.sixthCanEnter) {
                         if (wordleList.includes(guesses.sixth.toLowerCase())) {
+                            enterPressed.current = true;
                             setDoneHash(prevDone => ({ ...prevDone, sixthDone: true}));
                             setGuessLength(0);
                         } else setWrongWord(true);
@@ -314,6 +329,9 @@ const Grid = () => {
     useEffect(() => { // evaluates guess, sets when user wins or loses
         if (!firstTime.current) { //skip on mount
             firstTime.current = true;
+            return;
+        }
+        if (!enterPressed.current) { //skip on mount
             return;
         }
         const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
@@ -449,7 +467,7 @@ const Grid = () => {
                 /* Code to run after 4 seconds */
                 // alert('wow you have brain')
                 setWinPage(true);
-            }, 1000)
+            }, 6000)
         }
     }, [win])
 
@@ -530,6 +548,21 @@ const Grid = () => {
         }
     }, [winPage])
 
+    const backgroundColor = useRef('transparent');
+    const color = useRef('transparent');
+    const borderColor = useRef('transparent');
+
+    const style2 = 
+        removeStyle ? {} : { backgroundColor: 'transparent', color: 'transparent', borderColor: (darkMode ? '#3a3a3c' : '#d1d5db')}
+
+    function handleAnimationStart() {
+        setTimeout(() => {
+            setRemoveStyle(true);
+
+    }, 400)
+
+    }
+
     
     
 
@@ -593,15 +626,22 @@ const Grid = () => {
                     {value ? //through debuggin there is a time delay between which makes it so value is true but what is displayed is empty div because guessResults is not populated yet
                     <>   {/* // The div the player guessed in would become 0 because while value == true, guessResults state hadn't updated and so it essentially rendered an empty div which cause the first div to shrink to h-0 and thus only the 2,3,4,5,6 divs rendered, thats why it looked like the bottom div disappeared.*/}
                         {guessResults[key.split('Done')[0]] && guessResults[key.split('Done')[0]].length > 0 ?
-                            (guessResults[key.split('Done')[0]].map((res, ind) => ( // maps how many columns (user input)
-                                <button className= { `border-2 cursor-default ${
+                            (guessResults[key.split('Done')[0]].map((res, ind) => { // maps how many columns (user input)
+                                const delay = ind * 100;
+                                const style1 = {
+                                    animationDelay: `${delay}ms`,
+                                };
+                                return (
+                                    
+                                <button style={{ ...style1 , ...style2}} onAnimationStart={handleAnimationStart} className= { `flip border-2 cursor-default ${
                                     res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                     res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                     ( darkMode ? 'DMgray' : 'gray' ) } 
                                     flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
                                     {guesses[key.split('Done')[0]][ind] || ''}
                                 </button>
-                            )))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                                )
+                            }))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
                                 guesses[key.split('Done')[0]][res]
                                 ? 
                                 <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>

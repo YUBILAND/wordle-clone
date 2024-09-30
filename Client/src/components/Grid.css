@@ -35,3 +35,31 @@ div#waa {
 .unfocus {
     opacity: 90%;
 }
+
+@keyframes flip {
+    0% {
+        transform: scaleY(1);
+        color: transparent ;
+        background: transparent ;
+        border-color: #3a3a3c ;
+
+      }
+    
+    50% {
+        transform: scaleY(0);
+        color: transparent ;
+        background: transparent ;
+        border-color: #3a3a3c ;
+    }
+
+    100% {
+        transform: scaleY(1);
+        background: white !important;
+        
+    }
+}
+
+.flip {
+    animation: flip 700ms ease forwards;
+    
+  }
