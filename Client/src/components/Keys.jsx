@@ -98,15 +98,15 @@ const Keys = () => {
     useEffect(() => { // switches color of button theme based on color blind mode
         if (colorBlind) {
             setButtonTheme(prevTheme => prevTheme.map(item => {
-                if (item.class === 'green') {
+                if (item.class === 'KBgreen') {
                     return {
                         ...item,
-                        class : 'CBgreen'
+                        class : 'KBCBgreen'
                     }
-                } else if (item.class === 'yellow') {
+                } else if (item.class === 'KByellow') {
                     return {
                         ...item,
-                        class : 'CByellow'
+                        class : 'KBCByellow'
                     }
                 } else {
                     return item;
@@ -115,15 +115,15 @@ const Keys = () => {
             )
         } else {
             setButtonTheme(prevTheme => prevTheme.map(item => {
-                if (item.class === 'CBgreen') {
+                if (item.class === 'KBCBgreen') {
                     return {
                         ...item,
-                        class : 'green'
+                        class : 'KBgreen'
                     }
-                } else if (item.class === 'CByellow') {
+                } else if (item.class === 'KBCByellow') {
                     return {
                         ...item,
-                        class : 'yellow'
+                        class : 'KByellow'
                     }
                 } else {
                     return item;
@@ -141,10 +141,10 @@ const Keys = () => {
                         ...item,
                         class : 'DMbuttons'
                     }
-                } else if (item.class === 'gray') {
+                } else if (item.class === 'KBgray') {
                     return {
                         ...item,
-                        class : 'DMgray'
+                        class : 'KBDMgray'
                     }
                 }
                 else {
@@ -158,10 +158,10 @@ const Keys = () => {
                         ...item,
                         class : 'buttons'
                     }
-                } else if (item.class === 'DMgray') {
+                } else if (item.class === 'KBDMgray') {
                     return {
                         ...item,
-                        class : 'gray'
+                        class : 'KBgray'
                     }
                 }
                 else {
@@ -174,15 +174,15 @@ const Keys = () => {
     useEffect(() => { //sets keyboard color on each guess rerender
         setButtonTheme([
             {
-                class: `${ colorBlind ? 'CBgreen': 'green' }`,
+                class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
                 buttons: greenString || ' '
             },
             {
-                class: `${ colorBlind ? 'CByellow': 'yellow' }`,
+                class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
                 buttons: yellowString  || ' '
             },
             {
-                class: `${ darkMode ? 'DMgray': 'gray' }`,
+                class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
                 buttons: grayString || ' '
             },
             {

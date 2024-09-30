@@ -20,6 +20,12 @@
     border-color: #3a3a3c ;
 }
 
+.KBDMgray {
+    color: white;
+    background-color: #3a3a3c !important;
+    border-color: #3a3a3c !important;
+}
+
 .board {
     background-color: transparent !important;
 }
@@ -66,6 +72,16 @@
     border-color: #f5793a ;
 }
 
+.KBgreen {
+    background-color: #6aaa64 !important;
+    border-color: #6aaa64 !important;
+}
+
+.KBCBgreen {
+    background-color: #f5793a !important;
+    border-color: #f5793a !important;
+}
+
 .yellow {
     color: white;
     background-color: #c9b458 ;
@@ -76,13 +92,27 @@
     color: white;
     background-color: #85c0f9 ;
     border-color: #85c0f9 ;
+}
 
+.KByellow {
+    background-color: #c9b458 !important;
+    border-color: #c9b458 !important;
+}
+
+.KBCByellow {
+    background-color: #85c0f9 !important;
+    border-color: #85c0f9 !important;
 }
 
 .gray {
     color: white;
     background-color: #787c7e ;
     border-color: #787c7e ;
+}
+
+.KBgray {
+    background-color: #787c7e !important;
+    border-color: #787c7e !important;
 }
 
 .white {
