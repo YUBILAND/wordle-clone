@@ -218,6 +218,12 @@ const Grid = () => {
 
     const firstTime = useRef(true);
     useEffect(() => { // evaluates guess, sets when user wins or loses
+        if (!guessesLoaded.current) 
+            setTimeout(() => {
+                guessesLoaded.current = true;
+
+        }, 1000) // after refresh, set guessesloaded to true so animation won't appear for previous guesses. added timeout so set true right after animation finishes, solves removeStyle being false for split second after making guess causing flicker due to previous guesses showing transparent border and such
+
         if (firstTime.current) { //skip on mount
             firstTime.current = false;
             return;
@@ -226,7 +232,9 @@ const Grid = () => {
             return;
         }
 
-        if (!guessesLoaded.current) guessesLoaded.current = true;
+        
+
+
 
 
         const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
@@ -426,7 +434,13 @@ const Grid = () => {
             setRemoveStyle(true);
         }, 400)
     }
-    
+
+    const flipButtons = document.querySelectorAll('button.flip');
+    setTimeout(() => {
+        flipButtons.forEach(button => {
+            button.classList.remove('flip');  // 'flip' animation class caused it to appear above mui slide animation, so remove classname after animation finishes
+        });
+    }, 1000) 
     
 
   return (
@@ -533,7 +547,7 @@ const Grid = () => {
                         </>
                         :   
 
-                        (guessesLoaded.current && key !== lastTrueKey && value) ? // previous guesses, after making guess they should have no animation
+                        (guessesLoaded.current && (key !== lastTrueKey) && value) ? // previous guesses, after making guess they should have no animation
                             <>
                                 {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
                                     (guessResults[firstDonetoFirst].map((res, ind) => ( // maps how many columns (user input)

@@ -73,6 +73,7 @@
 }
 
 .KBgreen {
+    color: white;
     background-color: #6aaa64 !important;
     border-color: #6aaa64 !important;
 }
@@ -95,6 +96,7 @@
 }
 
 .KByellow {
+    color: white;
     background-color: #c9b458 !important;
     border-color: #c9b458 !important;
 }
@@ -111,6 +113,7 @@
 }
 
 .KBgray {
+    color: white;
     background-color: #787c7e !important;
     border-color: #787c7e !important;
 }
