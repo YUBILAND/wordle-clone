@@ -441,7 +441,27 @@ const Grid = () => {
             button.classList.remove('flip');  // 'flip' animation class caused it to appear above mui slide animation, so remove classname after animation finishes
         });
     }, 1000) 
+
+    const [clickedSettings, setClickedSettings] = useState(false);
+    const skipMount = useRef(false);
+    useEffect(() => {
+        
+        if (skipMount.current) {
+            setClickedSettings(true);
+            // setTimeout(() => {
+            //     setClickedSettings(false);
+
+            // }, 1000)
+        }
+        if (!skipMount.current) {
+            skipMount.current = true;
+        }
+
+    }, [settings])
     
+    useEffect(() => {
+        setClickedSettings(false);
+    }, [doneHash])
 
   return (
 
@@ -461,13 +481,6 @@ const Grid = () => {
 
         {clickDisabledProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
 
-                
-        {/* {winPage && <div className=''> <Statistics /> </div>
-        } */}
-    {/* {winPage || delay &&  */}
-
-    {/* <ClickAwayListener onClickAway={handleClickAway}> */}
-
         {(winPage || delay )&& 
         <Zoom in={winPage} timeout={500}>
             <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl z-20' >
@@ -476,45 +489,82 @@ const Grid = () => {
         </Zoom>
         }
 
-
-                {/* {winPage && 
-                <>  
-                    <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl bg-white z-20' >
-                        <Statistics /> 
-                    </div>
-                    <div className='absolute top-0 left-0 w-screen h-[1000px] bg-white/50 z-10'>
-                     </div>
-                </>
-                } */}
-
-        {/* </ClickAwayListener> */}
-
-    {/* } */}
-
         {winPage && <div className={`absolute top-0 left-0 w-screen h-[930px] ${darkMode ? 'bg-black/50' : 'bg-white/50'}  z-10`}>
             </div> }
 
         {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
-{console.log("HERE")}
         <div className='grid grid-cols-5 w-[340px] mx-auto gap-2'>
 
-            { //displays grid, simplified immensly
+        {clickedSettings && console.log("clicked settings")}
+
+        {clickedSettings 
+
+            ?
+            
+        Object.entries(doneHash).map(([key, value]) => { // maps how many rows
+            // const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
+            //     return value ? key : acc;
+            // }, 0);
+            const firstDonetoFirst = key.split('Done')[0];
+            return ( 
+                (guessesLoaded.current && value) ? 
+                <>
+                    {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
+                        (guessResults[firstDonetoFirst].map((res, ind) => ( // maps how many columns (user input)
+                            
+                            <button className= { `border-2 cursor-default ${
+                                res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
+                                res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
+                                ( darkMode ? 'DMgray' : 'gray' ) } 
+                                flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold text-white` }>
+                                {guesses[firstDonetoFirst][ind] || ''}
+                            </button>
+                            
+                        )))  : [0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                            guesses[firstDonetoFirst][res]
+                            ? 
+                            <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                                {guesses[firstDonetoFirst][res]}
+                            </button>
+                            : 
+                            <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            </button>
+                        
+                        ))
+                    }
+                </>
+                :
+                <>
+                    {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
+                        guesses[firstDonetoFirst][res]
+                        ? 
+                        <div  className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold'>
+                            {guesses[firstDonetoFirst][res]}
+                        </div>
+                        : 
+                        <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-4xl font-bold`}>
+                        </div>
+                    
+                    ))}
+                </>
+            )})
+
+            :
+
             Object.entries(doneHash).map(([key, value]) => { // maps how many rows
 
                 const lastTrueKey = Object.entries(doneHash).reduce((acc, [key, value]) => {
                     return value ? key : acc;
                 }, 0);
-
                 const firstDonetoFirst = key.split('Done')[0];
-
-
                 return ( 
+
                     // on mount here
                     <div key={key}className='flex col-span-5 gap-2'>
-                        
                     { 
-                        ((value && !guessesLoaded.current) || (guessesLoaded.current && key === lastTrueKey)) ?  // on first refresh need animation, on user guess need row animation
+                        ( 
+                            (value && !guessesLoaded.current) || (guessesLoaded.current && key === lastTrueKey)) ?  // on first refresh need animation, on user guess need row animation
                         <>
                             {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
                                 (guessResults[firstDonetoFirst].map((res, ind) => { // maps how many columns (user input)
@@ -546,7 +596,6 @@ const Grid = () => {
                             }
                         </>
                         :   
-
                         (guessesLoaded.current && (key !== lastTrueKey) && value) ? // previous guesses, after making guess they should have no animation
                             <>
                                 {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
@@ -573,9 +622,7 @@ const Grid = () => {
                                     ))
                                 }
                             </>
-
                         :
-
                         <>
                             {[0,1,2,3,4].map((res) => ( // maps how many columns (empty input)
                                 guesses[firstDonetoFirst][res]
@@ -594,6 +641,8 @@ const Grid = () => {
                 )
             })
         }
+
+    
         
         </div>
     
