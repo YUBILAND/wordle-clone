@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import Keyboard from 'react-simple-keyboard';
 import "react-simple-keyboard/build/css/index.css";
 import './Keys.css'
@@ -21,7 +21,9 @@ const Keys = () => {
         const existingGray = JSON.parse(localStorage.getItem('gray'));
         return existingGray || [];
     });
-    const [buttonTheme, setButtonTheme] = useState([])
+    const buttonTheme = useRef([{class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
+        buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'}])
+
     const {kbColor} = useContext(KeyboardContext);
     const {colorBlind, setColorBlind} = useContext(KeyboardContext);
 
@@ -60,6 +62,8 @@ const Keys = () => {
     const [yellowString, setYellowString] = useState('');
     const [grayString, setGrayString] = useState('');
 
+    const [update, setUpdate] = useState(false)
+
     useEffect(() => { //overwrites previous inaccurate guess with updated color, ex. word is blimp, first guess is pupil, l is yellow, second guess plane, l is green , overwrite with green
         
         // console.log(`green is ${[...new Set(green)]}`)
@@ -95,9 +99,9 @@ const Keys = () => {
         
     }, [green, yellow, gray])
 
-    useEffect(() => { // switches color of button theme based on color blind mode
+    useEffect(() => { // switches already guessed color of button theme based on color blind mode
         if (colorBlind) {
-            setButtonTheme(prevTheme => prevTheme.map(item => {
+            buttonTheme.current = buttonTheme.current.map(item => {
                 if (item.class === 'KBgreen') {
                     return {
                         ...item,
@@ -112,9 +116,9 @@ const Keys = () => {
                     return item;
                 }
             }) 
-            )
         } else {
-            setButtonTheme(prevTheme => prevTheme.map(item => {
+
+            buttonTheme.current = buttonTheme.current.map(item => {
                 if (item.class === 'KBCBgreen') {
                     return {
                         ...item,
@@ -129,13 +133,12 @@ const Keys = () => {
                     return item;
                 }
             }) 
-            )
         }
     }, [colorBlind])
 
     useEffect(() => {
         if (darkMode) {
-            setButtonTheme(prevTheme => prevTheme.map(item => {
+            buttonTheme.current = buttonTheme.current.map(item => {
                 if (item.class === 'buttons') {
                     return {
                         ...item,
@@ -150,9 +153,9 @@ const Keys = () => {
                 else {
                     return item;
                 }
-            }))
+            })
         } else {
-            setButtonTheme(prevTheme => prevTheme.map(item => {
+            buttonTheme.current = buttonTheme.current.map(item => {
                 if (item.class === 'DMbuttons') {
                     return {
                         ...item,
@@ -167,36 +170,111 @@ const Keys = () => {
                 else {
                     return item;
                 }
-            }))
+            })
         }
     }, [darkMode])
     
-    useEffect(() => { //sets keyboard color on each guess rerender
-        setButtonTheme([
-            {
-                class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
-                buttons: greenString || ' '
-            },
-            {
-                class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
-                buttons: yellowString  || ' '
-            },
-            {
-                class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
-                buttons: grayString || ' '
-            },
-            {
-                class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
-                buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
-            }
-        ])
-    },[greenString, yellowString, grayString])
+    useEffect(() => { //sets keyboard color on each guess rerender, new guesses as well as initial mount
+        
+        if (greenString.length + yellowString.length + grayString.length > 0) {
+            setTimeout(() => {
 
-    // useEffect(() => {
-    //     if (buttonTheme.length > 0) {
-    //     console.table(`buttonTheme=${buttonTheme[2]['buttons']}`)
-    //     }
-    // }, [buttonTheme])
+                buttonTheme.current = [
+                    {
+                        class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
+                        // style: {
+                        //     backgroundColor: 'white',
+                        //     transition: `background-color 1s ease`},
+                        buttons: greenString || ' '
+                    },
+                    {
+                        class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
+                        buttons: yellowString  || ' '
+                    },
+                    {
+                        class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
+                        buttons: grayString || ' '
+                    },
+                    {
+                        class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
+                        buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
+                    }
+                ]
+
+                if (darkMode && colorBlind) {
+                    greenString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBCBgreen');
+                    })
+    
+                    yellowString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBCByellow');
+                    })
+    
+                    grayString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBDMgray');
+                    })
+                }
+                else if (darkMode) {
+                    greenString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBgreen');
+                    })
+    
+                    yellowString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KByellow');
+                    })
+    
+                    grayString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBDMgray');
+                    })
+                }
+                else if (colorBlind) {
+                    greenString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBCBgreen');
+                    })
+    
+                    yellowString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBCByellow');
+                    })
+    
+                    grayString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBgray');
+                    })
+                }
+                else {
+                    greenString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBgreen');
+                    })
+    
+                    yellowString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KByellow');
+                    })
+    
+                    grayString.split(' ').map((res, ind) => {
+                        const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.add('KBgray');
+                    })
+                }
+                
+            }, 1000)
+
+        }
+
+
+
+    },[greenString, yellowString, grayString, darkMode, colorBlind])
+
+    
     
     const{guesses, setGuesses} = useContext(KeyboardContext);
 
@@ -279,7 +357,7 @@ const Keys = () => {
             'ENTER z x c v b n m DEL'
             ]
         }}
-        buttonTheme={buttonTheme}
+        buttonTheme={buttonTheme.current}
         theme="hg-theme-default board"
         
         />

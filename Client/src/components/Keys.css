@@ -1,9 +1,16 @@
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
 .buttons {
     background-color: #d3d6da !important;
     border-color: #d3d6da !important;
     text-transform: capitalize;
     width: 43px !important;
     height: 59px !important;
+    transition: background-color 300ms ease, border-color 300ms ease;
+
 }
 
 .DMbuttons {
@@ -12,19 +19,9 @@
     text-transform: capitalize;
     width: 43px !important;
     height: 59px !important;
+    transition: background-color 300ms ease, border-color 300ms ease;
 }
 
-.DMgray {
-    color: white;
-    background-color: #3a3a3c ;
-    border-color: #3a3a3c ;
-}
-
-.KBDMgray {
-    color: white;
-    background-color: #3a3a3c !important;
-    border-color: #3a3a3c !important;
-}
 
 .board {
     background-color: transparent !important;
@@ -65,23 +62,23 @@
     background-color: #6aaa64 ;
     border-color: #6aaa64 ;
 }
-
-.CBgreen {
-    color: white;
-    background-color: #f5793a;
-    border-color: #f5793a ;
-}
-
-.KBgreen {
-    color: white;
-    background-color: #6aaa64 !important;
-    border-color: #6aaa64 !important;
-}
-
-.KBCBgreen {
-    background-color: #f5793a !important;
-    border-color: #f5793a !important;
-}
+    /* Why does KBgreen exist if we have green? because green without !important is necessary for flip animation, and KBgreen with !important makes it assume the color rather than pure white from hg-button so that we can see the color */
+    .KBgreen { 
+        color: white !important;
+        background-color: #6aaa64 !important;
+        border-color: #6aaa64 !important;
+    }
+        
+        .CBgreen {
+            color: white;
+            background-color: #f5793a;
+            border-color: #f5793a ;
+        }
+            .KBCBgreen {
+                color: white !important;
+                background-color: #f5793a !important;
+                border-color: #f5793a !important;
+            }
 
 .yellow {
     color: white;
@@ -89,22 +86,23 @@
     border-color: #c9b458 ;
 }
 
-.CByellow {
-    color: white;
-    background-color: #85c0f9 ;
-    border-color: #85c0f9 ;
-}
+    .KByellow {
+        color: white !important;
+        background-color: #c9b458 !important;
+        border-color: #c9b458 !important;
+    }
 
-.KByellow {
-    color: white;
-    background-color: #c9b458 !important;
-    border-color: #c9b458 !important;
-}
+        .CByellow {
+                color: white;
+                background-color: #85c0f9 ;
+                border-color: #85c0f9 ;
+        }
 
-.KBCByellow {
-    background-color: #85c0f9 !important;
-    border-color: #85c0f9 !important;
-}
+            .KBCByellow {
+                color: white !important;
+                background-color: #85c0f9 !important;
+                border-color: #85c0f9 !important;
+            }
 
 .gray {
     color: white;
@@ -112,11 +110,23 @@
     border-color: #787c7e ;
 }
 
-.KBgray {
-    color: white;
-    background-color: #787c7e !important;
-    border-color: #787c7e !important;
-}
+    .KBgray {
+        color: white !important;
+        background-color: #787c7e !important;
+        border-color: #787c7e !important;
+    }
+
+        .DMgray {
+            color: white;
+            background-color: #3a3a3c ;
+            border-color: #3a3a3c ;
+        }
+
+            .KBDMgray {
+                color: white !important;
+                background-color: #3a3a3c !important;
+                border-color: #3a3a3c !important;
+            }
 
 .white {
     background-color: #fff;
