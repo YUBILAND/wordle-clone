@@ -29,6 +29,7 @@ const Keys = () => {
 
 
     useEffect(() => { // break down guess into their color states by letter
+
         // console.log(kbColor)
         if (kbColor.length) {
             console.log(kbColor)
@@ -99,199 +100,298 @@ const Keys = () => {
         
     }, [green, yellow, gray])
 
-    useEffect(() => { // switches already guessed color of button theme based on color blind mode
-        if (colorBlind) {
-            buttonTheme.current = buttonTheme.current.map(item => {
-                if (item.class === 'KBgreen') {
-                    return {
-                        ...item,
-                        class : 'KBCBgreen'
-                    }
-                } else if (item.class === 'KByellow') {
-                    return {
-                        ...item,
-                        class : 'KBCByellow'
-                    }
-                } else {
-                    return item;
-                }
-            }) 
-        } else {
+    // useEffect(() => { // switches already guessed color of button theme based on color blind mode
+    //     if (colorBlind) {
+    //         buttonTheme.current = buttonTheme.current.map(item => {
+    //             if (item.class === 'KBgreen') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KBCBgreen'
+    //                 }
+    //             } else if (item.class === 'KByellow') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KBCByellow'
+    //                 }
+    //             } else {
+    //                 return item;
+    //             }
+    //         }) 
+    //     } else {
 
-            buttonTheme.current = buttonTheme.current.map(item => {
-                if (item.class === 'KBCBgreen') {
-                    return {
-                        ...item,
-                        class : 'KBgreen'
-                    }
-                } else if (item.class === 'KBCByellow') {
-                    return {
-                        ...item,
-                        class : 'KByellow'
-                    }
-                } else {
-                    return item;
-                }
-            }) 
+    //         buttonTheme.current = buttonTheme.current.map(item => {
+    //             if (item.class === 'KBCBgreen') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KBgreen'
+    //                 }
+    //             } else if (item.class === 'KBCByellow') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KByellow'
+    //                 }
+    //             } else {
+    //                 return item;
+    //             }
+    //         }) 
+    //     }
+    // }, [colorBlind])
+
+    // useEffect(() => {
+    //     if (darkMode) {
+    //         buttonTheme.current = buttonTheme.current.map(item => {
+    //             if (item.class === 'buttons') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'DMbuttons'
+    //                 }
+    //             } else if (item.class === 'KBgray') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KBDMgray'
+    //                 }
+    //             }
+    //             else {
+    //                 return item;
+    //             }
+    //         })
+    //     } else {
+    //         buttonTheme.current = buttonTheme.current.map(item => {
+    //             if (item.class === 'DMbuttons') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'buttons'
+    //                 }
+    //             } else if (item.class === 'KBDMgray') {
+    //                 return {
+    //                     ...item,
+    //                     class : 'KBgray'
+    //                 }
+    //             }
+    //             else {
+    //                 return item;
+    //             }
+    //         })
+    //     }
+    // }, [darkMode])
+
+   const {guessLength, setGuessLength} = useContext(KeyboardContext);
+
+    const {settings, showSettings} = useContext(KeyboardContext);
+
+    const [clickedSettings, setClickedSettings] = useState(false);
+    const skipMount = useRef(false);
+    useEffect(() => {
+
+        if (!skipMount.current) { //skip mount
+            skipMount.current = true;
+            return;
         }
-    }, [colorBlind])
+        
+        if (skipMount.current) {
+            setClickedSettings(true); // user clicked on settings
+        }
+
+    }, [settings, guessLength])
+
+    const {doneHash, setDoneHash} = useContext(KeyboardContext);
 
     useEffect(() => {
-        if (darkMode) {
-            buttonTheme.current = buttonTheme.current.map(item => {
-                if (item.class === 'buttons') {
-                    return {
-                        ...item,
-                        class : 'DMbuttons'
-                    }
-                } else if (item.class === 'KBgray') {
-                    return {
-                        ...item,
-                        class : 'KBDMgray'
-                    }
-                }
-                else {
-                    return item;
-                }
-            })
-        } else {
-            buttonTheme.current = buttonTheme.current.map(item => {
-                if (item.class === 'DMbuttons') {
-                    return {
-                        ...item,
-                        class : 'buttons'
-                    }
-                } else if (item.class === 'KBDMgray') {
-                    return {
-                        ...item,
-                        class : 'KBgray'
-                    }
-                }
-                else {
-                    return item;
-                }
-            })
-        }
-    }, [darkMode])
+        setClickedSettings(false); 
+    }, [doneHash])
     
+
     useEffect(() => { //sets keyboard color on each guess rerender, new guesses as well as initial mount
-        
-        if (greenString.length + yellowString.length + grayString.length > 0) {
-            setTimeout(() => {
-
-                buttonTheme.current = [
-                    {
-                        class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
-                        // style: {
-                        //     backgroundColor: 'white',
-                        //     transition: `background-color 1s ease`},
-                        buttons: greenString || ' '
-                    },
-                    {
-                        class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
-                        buttons: yellowString  || ' '
-                    },
-                    {
-                        class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
-                        buttons: grayString || ' '
-                    },
-                    {
-                        class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
-                        buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
-                    }
-                ]
-
+        buttonTheme.current = [
+            {
+                class: `${ darkMode ? 'DMbuttons' : 'buttons' }`,
+                buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
+            }
+        ]
+            if (clickedSettings) {
+                // if (greenString.length + yellowString.length + grayString.length > 0) {
+                //     buttonTheme.current = [
+                //         {
+                //             class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
+                //             buttons: greenString || ' '
+                //         },
+                //         {
+                //             class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
+                //             buttons: yellowString  || ' '
+                //         },
+                //         {
+                //             class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
+                //             buttons: grayString || ' '
+                //         },
+                //     ]
+                // }
                 if (darkMode && colorBlind) {
-                    greenString.split(' ').map((res, ind) => {
+                    greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBCBgreen');
                     })
-    
-                    yellowString.split(' ').map((res, ind) => {
+
+                    yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBCByellow');
                     })
-    
-                    grayString.split(' ').map((res, ind) => {
+
+                    grayString.length && grayString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBDMgray');
                     })
                 }
                 else if (darkMode) {
-                    greenString.split(' ').map((res, ind) => {
+                    greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBgreen');
                     })
-    
-                    yellowString.split(' ').map((res, ind) => {
+
+                    yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KByellow');
                     })
-    
-                    grayString.split(' ').map((res, ind) => {
+
+                    grayString.length && grayString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBDMgray');
                     })
                 }
                 else if (colorBlind) {
-                    greenString.split(' ').map((res, ind) => {
+                    greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBCBgreen');
                     })
-    
-                    yellowString.split(' ').map((res, ind) => {
+
+                    yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBCByellow');
                     })
-    
-                    grayString.split(' ').map((res, ind) => {
+
+                    grayString.length && grayString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.add('KBgray');
                     })
                 }
                 else {
-                    greenString.split(' ').map((res, ind) => {
+                    greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBCBgreen');
                         button.classList.add('KBgreen');
                     })
-    
-                    yellowString.split(' ').map((res, ind) => {
+
+                    yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBCBgreen');
                         button.classList.add('KByellow');
                     })
-    
-                    grayString.split(' ').map((res, ind) => {
+
+                    grayString.length && grayString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBDMgray');
                         button.classList.add('KBgray');
                     })
                 }
-                
-            }, 1000)
+            }
+            else {
+                setTimeout(() => {
+                    // if (greenString.length + yellowString.length + grayString.length > 0) {
+                    //     buttonTheme.current = [
+                    //         {
+                    //             class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
+                    //             buttons: greenString || ' '
+                    //         },
+                    //         {
+                    //             class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
+                    //             buttons: yellowString  || ' '
+                    //         },
+                    //         {
+                    //             class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
+                    //             buttons: grayString || ' '
+                    //         },
+                    //     ]
+                    // }
+                    if (darkMode && colorBlind) {
+                        greenString.length && greenString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBCBgreen');
+                        })
+        
+                        yellowString.length && yellowString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBCByellow');
+                        })
+        
+                        grayString.length && grayString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBDMgray');
+                        })
+                    }
+                    else if (darkMode) {
+                        greenString.length && greenString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBgreen');
+                        })
+        
+                        yellowString.length && yellowString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KByellow');
+                        })
+        
+                        grayString.length && grayString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBDMgray');
+                        })
+                    }
+                    else if (colorBlind) {
+                        greenString.length && greenString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBCBgreen');
+                        })
+        
+                        yellowString.length && yellowString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBCByellow');
+                        })
+        
+                        grayString.length && grayString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.add('KBgray');
+                        })
+                    }
+                    else {
+                        greenString.length && greenString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.remove('KBCBgreen');
+                            button.classList.add('KBgreen');
+                        })
+        
+                        yellowString.length && yellowString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.remove('KBCBgreen');
+                            button.classList.add('KByellow');
+                        })
+        
+                        grayString.length && grayString.split(' ').map((res, ind) => {
+                            const button = document.querySelector(`[data-skbtn="${res}"]`);
+                            button.classList.remove('KBDMgray');
+                            button.classList.add('KBgray');
+                        })
+                    }
+                }, 1000)
+            }
+    },[greenString, yellowString, grayString, darkMode, colorBlind, settings, guessLength])
 
-        }
-
-
-
-    },[greenString, yellowString, grayString, darkMode, colorBlind])
-
-    
+    // const kbChange = (input) => {
+    //     // if (input.slice(-1) == "L") {
+            
+    //     // } else {
+            
+    //     // }
+    // }
     
     const{guesses, setGuesses} = useContext(KeyboardContext);
-
-    const {guessLength, setGuessLength} = useContext(KeyboardContext);
-
-
-    const kbChange = (input) => {
-        // if (input.slice(-1) == "L") {
-            
-        // } else {
-            
-        // }
-    }
-
-    const {doneHash, setDoneHash} = useContext(KeyboardContext);
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
-
     const {notEnough, setNotEnough} = useContext(KeyboardContext);
     const {wrongWord, setWrongWord} = useContext(KeyboardContext);
     const {wordleList, setWordleList} = useContext(KeyboardContext);
@@ -300,12 +400,14 @@ const Keys = () => {
 
     const onKeyPress = button => {
         // console.log("Button pressed", button);
+        
+        
         Object.entries(doneHash).some(([key, value]) => {
             const doneKey = key.replace('Done', '')
             const canEnterKey = doneKey + 'CanEnter';
             
             if (!value) {
-                if (button == "DEL") {
+                if (button == "DEL" && guessLength > 0) {
                     setGuessLength(prevGuessLen => prevGuessLen - 1);
                     setGuesses( prevGuess => ({ ...prevGuess, [doneKey] : (prevGuess[doneKey].slice(0, prevGuess[doneKey].length - 1))}))
                 } else if (button == "ENTER") {
@@ -317,22 +419,17 @@ const Keys = () => {
                             setGuessLength(0);
                         } else setWrongWord(true);
                     } else setNotEnough(true);
-                } else {
+                } else if (button != "DEL" && guessLength < 5){
                     setGuessLength(prevGuessLen => prevGuessLen + 1)
                     setGuesses( prevGuess => ({ ...prevGuess, [doneKey]: (prevGuess[doneKey] + button.toUpperCase())}))
+                    setClickedSettings(true); 
                 }
                 return true;
             }
             return false;
-        })
-
-            
+        })    
     }
 
-    useEffect(() => {
-        // console.log(guesses.first)
-
-    }, [guesses])
 
 
     return (
@@ -340,9 +437,8 @@ const Keys = () => {
 
         <Keyboard 
         className="kibord w-full p-0"
-        onChange={kbChange}
+        // onChange={kbChange}
         onKeyPress={onKeyPress}
-            
         modules = {[inputMask]}
         inputMask ={{
             default: {

@@ -435,12 +435,12 @@ const Grid = () => {
         }, 400)
     }
 
-    const flipButtons = document.querySelectorAll('button.flip');
-    setTimeout(() => {
-        flipButtons.forEach(button => {
-            button.classList.remove('flip');  // 'flip' animation class caused it to appear above mui slide animation, so remove classname after animation finishes
-        });
-    }, 1000) 
+    // const flipButtons = document.querySelectorAll('button.flip');
+    // setTimeout(() => {
+    //     flipButtons.forEach(button => {
+    //         button.classList.remove('flip');  // 'flip' animation class caused it to appear above mui slide animation, so remove classname after animation finishes
+    //     });
+    // }, 1000) 
 
     const [clickedSettings, setClickedSettings] = useState(false);
     const skipMount = useRef(false);
