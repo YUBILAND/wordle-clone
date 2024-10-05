@@ -63,3 +63,41 @@ div#waa {
     animation: flip 700ms ease forwards;
     
   }
+
+@keyframes wiggle {
+    0% { transform: translateX(0); }
+    10% { transform: translateX(-10px); }
+    20% { transform: translateX(10px); }
+    30% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes deleteNothingWiggle {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }  /* Move left */
+       /* Almost back to center */
+    100% { transform: translateX(0); }      /* Return to original position */
+}
+
+@keyframes addNothingWiggle {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(10px); }  /* Move left */
+       /* Almost back to center */
+    100% { transform: translateX(0); }      /* Return to original position */
+}
+
+.wiggle {
+    animation: wiggle 700ms ease-in-out;
+}
+
+.deleteNothingWiggle {
+    animation: deleteNothingWiggle 100ms ease-in-out;
+}
+
+.addNothingWiggle {
+    animation: addNothingWiggle 100ms ease-in-out;
+}
+
+

@@ -209,22 +209,6 @@ const Keys = () => {
             }
         ]
             if (clickedSettings) {
-                // if (greenString.length + yellowString.length + grayString.length > 0) {
-                //     buttonTheme.current = [
-                //         {
-                //             class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
-                //             buttons: greenString || ' '
-                //         },
-                //         {
-                //             class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
-                //             buttons: yellowString  || ' '
-                //         },
-                //         {
-                //             class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
-                //             buttons: grayString || ' '
-                //         },
-                //     ]
-                // }
                 if (darkMode && colorBlind) {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
@@ -260,11 +244,13 @@ const Keys = () => {
                 else if (colorBlind) {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBgreen');
                         button.classList.add('KBCBgreen');
                     })
 
                     yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KByellow');
                         button.classList.add('KBCByellow');
                     })
 
@@ -295,22 +281,7 @@ const Keys = () => {
             }
             else {
                 setTimeout(() => {
-                    // if (greenString.length + yellowString.length + grayString.length > 0) {
-                    //     buttonTheme.current = [
-                    //         {
-                    //             class: `${ colorBlind ? 'KBCBgreen': 'KBgreen' }`,
-                    //             buttons: greenString || ' '
-                    //         },
-                    //         {
-                    //             class: `${ colorBlind ? 'KBCByellow': 'KByellow' }`,
-                    //             buttons: yellowString  || ' '
-                    //         },
-                    //         {
-                    //             class: `${ darkMode ? 'KBDMgray': 'KBgray' }`,
-                    //             buttons: grayString || ' '
-                    //         },
-                    //     ]
-                    // }
+                   
                     if (darkMode && colorBlind) {
                         greenString.length && greenString.split(' ').map((res, ind) => {
                             const button = document.querySelector(`[data-skbtn="${res}"]`);
