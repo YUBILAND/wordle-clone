@@ -33,11 +33,6 @@ function App() {
     const existingGuessWon = JSON.parse(localStorage.getItem('guessWon'));
     return existingGuessWon || 0;
 });
-
-
-
-
-
   const [isAuth, setIsAuth] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [guesses, setGuesses] = useState(() => {
@@ -98,9 +93,7 @@ function App() {
 
   const [enterPressed, setEnterPressed] = useState(false);
   const [removeStyle, setRemoveStyle] = useState(false);
-
-
-
+  const [hardMode, setHardMode] = useState(false);
 
   const checkAuth = async () => {
     try {
@@ -139,26 +132,19 @@ function App() {
       axios.get('http://localhost:8081/fetchSettings', { params: { ...userID } }) //get user settings
       .then(res => {
         if (res.data.message == "Fetched settings") {
-          setDarkMode(res.data.dark === 1)
+          setHardMode(res.data.hard === 1);
+          setDarkMode(res.data.dark === 1);
           setColorBlind(res.data.color === 1);
           setSettingsLoading(false);
-          // setDarkMode(res.data.dark)
-          // setDarkMode(res.data.dark)
-
         }
       })
-
-
     }
   }, [userID])
-
- 
 
   return (
     <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle}}>
-      
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle, hardMode, setHardMode}}>
       
         {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>

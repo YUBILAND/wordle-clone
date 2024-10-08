@@ -27,13 +27,8 @@ const Keys = () => {
     const {kbColor} = useContext(KeyboardContext);
     const {colorBlind, setColorBlind} = useContext(KeyboardContext);
 
-
     useEffect(() => { // break down guess into their color states by letter
-
-        // console.log(kbColor)
         if (kbColor.length) {
-            console.log(kbColor)
-            // kbColor.map((guess) => (
                 Object.entries(kbColor.at(-1)).forEach(([letter, color]) => {
                     color == "green" 
                     ?
@@ -54,8 +49,6 @@ const Keys = () => {
                         letter.toLowerCase()
                     ]))
                 })
-                // console.log(res)
-            // ))
         }
     }, [kbColor])
 

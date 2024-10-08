@@ -136,8 +136,8 @@ const Settings = () => {
     const {registerPage, showRegisterPage} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
     const {colorBlind, setColorBlind} = useContext(KeyboardContext);
-
-
+    const {hardMode, setHardMode} = useContext(KeyboardContext);
+    const {doneHash, setDoneHash} = useContext(KeyboardContext);
 
     function handleX() {
         showSettings(!settings);
@@ -145,6 +145,20 @@ const Settings = () => {
     
     function handleDark() {
       setDarkMode(!darkMode);
+    }
+
+    function handleHard() {
+      
+      
+      setHardMode(!hardMode);
+    }
+
+    const isDisabled = !hardMode && doneHash['firstDone'];
+
+    function handleClick() {
+      if (isDisabled) {
+        setHardModeDisabledClick(true);
+      }
     }
 
     function handleColorBlind() {
@@ -189,13 +203,25 @@ const Settings = () => {
 
     const mountRef1 = useRef(false);
     const mountRef2 = useRef(false);
-    
-    
-
+    const mountRef3 = useRef(false);
 
     useEffect(() => {
       if ( !mountRef1.current ) { // skip on initial mount
-          mountRef1.current = true;
+        mountRef1.current = true;
+        return;
+      }
+        axios.post('http://localhost:8081/hardMode', {hardMode : [hardMode], id : userID.id})
+        .then(res => {
+          console.log(res.data.message);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }, [hardMode])
+
+    useEffect(() => {
+      if ( !mountRef2.current ) { // skip on initial mount
+          mountRef2.current = true;
           return;
       }
         axios.post('http://localhost:8081/darkMode', {darkMode : [darkMode], id : userID.id})
@@ -209,8 +235,8 @@ const Settings = () => {
     }, [darkMode])
 
     useEffect(() => {
-      if ( !mountRef2.current ) { // skip on initial mount
-        mountRef2.current = true;
+      if ( !mountRef3.current ) { // skip on initial mount
+        mountRef3.current = true;
         return;
       }
         axios.post('http://localhost:8081/colorMode', {colorBlind : [colorBlind], id : userID.id})
@@ -222,8 +248,18 @@ const Settings = () => {
         });
     }, [colorBlind])
 
+    const [hardModeDisabledClick, setHardModeDisabledClick] = useState(false);
+
+    if(hardModeDisabledClick) { // show not enoguh letters prompt and fade out
+      setTimeout(function() {
+          document.getElementById('hidePls') && (document.getElementById('hidePls').id = 'waa');
+          setHardModeDisabledClick(false);
+          }, 1000);
+  }
+
   return (
     <div className={`absolute top-0 left-0 w-screen h-[1000px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+      {hardModeDisabledClick && <div id='hidePls' className='z-10 absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Hard mode can only be enabled at the start of a round</span> </div>}
         <div className='w-[500px] mx-auto'>
             <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                 <CloseIcon sx={{opacity: '0'}}/>
@@ -238,27 +274,30 @@ const Settings = () => {
                         <div className='text-gray-500 text-xs'>Any revealed hints must be used in subsequent guesses</div>
                     </div>
                 </div>
-                <div className='flex basis-1/5 items-center justify-end'>
-                    <FormControlLabel className='!mx-0'control={<GreenSwitch  sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
+                <div onClick={handleClick} className='flex basis-1/5 items-center justify-end cursor-default'>
+                      <GreenSwitch 
+                      disabled = {isDisabled}
+                      colorblind={colorBlind}
+                      checked={hardMode}
+                      onChange={handleHard}
+                      sx={{ m: 1, transform: 'scale(0.8)', opacity: isDisabled ? 0.5 : 1}}
+                      />
                 </div>
             </div>
 
             <hr/>
 
             <div className='flex justify-between items-center py-2'>
-                
                 <div className='text-lg'>Dark Theme</div>
-                    
-                <FormControlLabel className='!mx-0' control={
                   <GreenSwitch 
                   colorblind={colorBlind} // weird that you can't use true and false bool you need either str or in for DOM
                   checked={darkMode} 
                   onChange={handleDark} 
                   focusVisibleClassName=".Mui-focusVisible" 
                   disableRipple
-                  sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
-                
-                
+                  style={{ cursor: 'default' }}
+                  sx={{ m: 1, transform: 'scale(0.8)'}}
+                  />
             </div>
 
             <hr/>
@@ -271,14 +310,14 @@ const Settings = () => {
                     </div>
                 </div>
                 <div className='flex basis-1/5 items-center justify-end'>
-                  <FormControlLabel className='!mx-0' control={
                     <OrangeSwitch 
                     checked={colorBlind} 
                     onChange={handleColorBlind} 
                     focusVisibleClassName=".Mui-focusVisible" 
                     disableRipple
-                    sx={{ m: 1, transform: 'scale(0.8)'}}/>}/>
-
+                    style={{ cursor: 'default' }}
+                    sx={{ m: 1, transform: 'scale(0.8)'}}
+                    />
                 </div>
             </div>
 

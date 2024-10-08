@@ -175,6 +175,14 @@ const authenticateToken = (req, res, next) => {
         })
     })
 
+    app.post('/hardMode', (req, res) => {
+        const getHard = "UPDATE settings SET hard = ? WHERE id = ?"
+        db.query(getHard, [req.body.hardMode, req.body.id] , (err, result) => {
+            if (err) return res.json(err);
+            return res.json({ message : 'Changed Hard Mode'})
+        })
+    })
+
     app.post('/darkMode', (req, res) => {
         const getDark = "UPDATE settings SET dark = ? WHERE id = ?"
         db.query(getDark, [req.body.darkMode, req.body.id] , (err, result) => {
