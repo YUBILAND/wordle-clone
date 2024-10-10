@@ -52,11 +52,11 @@ const Profile = () => {
         formData.append('file', file); // Append the image file
         formData.append('id', userID.id); // Append the user ID (accessing the id property)
         
-        axios.post("http://localhost:8081/uploadPfp", formData)
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/uploadPfp`, formData)
         .then(res => {
             // console.log(res.data)
             // console.log(res.data.img)
-            setUserPfpPath('http://localhost:8081/uploads/' + res.data.img)
+            setUserPfpPath(`${process.env.REACT_APP_DATABASE_URL}/uploads/` + res.data.img)
             setImgSaved(true);
         })
         .catch(err => {
@@ -85,7 +85,7 @@ const Profile = () => {
             }));
         }
         else {
-            axios.post('http://localhost:8081/changeName', { id: userID.id, changedName : newName})
+            axios.post(`${process.env.REACT_APP_DATABASE_URL}/changeName`, { id: userID.id, changedName : newName})
             .then(res => {
                 console.log(res.data.message)
                 if (res.data.taken) { //name already exists

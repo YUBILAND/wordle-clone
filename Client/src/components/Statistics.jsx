@@ -53,7 +53,7 @@ const Statistics = () => {
 
     useEffect(() => {
         if(winPage) {
-            axios.get('http://localhost:8081/getStats', { params: { ...userID } })
+            axios.get(`${process.env.REACT_APP_DATABASE_URL}/getStats`, { params: { ...userID } })
             .then(res => {
                 setStats(prevStats => ({
                     ...prevStats, 

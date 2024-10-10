@@ -1,7 +1,5 @@
 require('dotenv').config()
 
-
-
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
@@ -26,12 +24,11 @@ app.use(function(req, res, next) {
 app.use(express.json());
 app.use(cookieParser());
 
-
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'wordle'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_DATABASE
 })
 
 const jwt = require('jsonwebtoken');

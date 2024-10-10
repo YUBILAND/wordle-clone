@@ -33,7 +33,7 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8081/login', logAcc)
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/login`, logAcc)
         .then(res => {
             if (res.data.message == "Logged In Successfully!") {
                 

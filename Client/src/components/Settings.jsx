@@ -167,7 +167,7 @@ const Settings = () => {
 
     function handleLogOut() {
       axios.defaults.withCredentials = true;
-      axios.post('http://localhost:8081/logout', { withCredentials: true })
+      axios.post(`${process.env.REACT_APP_DATABASE_URL}/logout`, { withCredentials: true })
         .then(res => {
           console.log(res.data.message);
           
@@ -194,7 +194,7 @@ const Settings = () => {
       showRegisterPage(true);
     }
     function handleEraseGuestData() {
-      axios.post('http://localhost:8081/eraseGuestData', userID)
+      axios.post(`${process.env.REACT_APP_DATABASE_URL}/eraseGuestData`, userID)
         .then(res => {
             console.log(res.data.message);
         })
@@ -210,7 +210,7 @@ const Settings = () => {
         mountRef1.current = true;
         return;
       }
-        axios.post('http://localhost:8081/hardMode', {hardMode : [hardMode], id : userID.id})
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/hardMode`, {hardMode : [hardMode], id : userID.id})
         .then(res => {
           console.log(res.data.message);
         })
@@ -224,7 +224,7 @@ const Settings = () => {
           mountRef2.current = true;
           return;
       }
-        axios.post('http://localhost:8081/darkMode', {darkMode : [darkMode], id : userID.id})
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/darkMode`, {darkMode : [darkMode], id : userID.id})
         .then(res => {
           console.log(res.data.message);
         })
@@ -239,7 +239,7 @@ const Settings = () => {
         mountRef3.current = true;
         return;
       }
-        axios.post('http://localhost:8081/colorMode', {colorBlind : [colorBlind], id : userID.id})
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/colorMode`, {colorBlind : [colorBlind], id : userID.id})
         .then(res => {
           console.log(res.data.message);
         })

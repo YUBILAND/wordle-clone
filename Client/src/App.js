@@ -97,7 +97,7 @@ function App() {
 
   const checkAuth = async () => {
     try {
-      const res = await axios.get('http://localhost:8081/check-auth', { withCredentials: true });
+      const res = await axios.get(`${process.env.REACT_APP_DATABASE_URL}/check-auth`, { withCredentials: true });
 
       setUserMode(true);
       setSettingsLoading(true);
@@ -119,7 +119,7 @@ function App() {
 
   useEffect(() => { //get user pfp
     if(userID.id) { //if not 0 ie guest mode
-      axios.get('http://localhost:8081/getPfp', { params: { ...userID } })
+      axios.get(`${process.env.REACT_APP_DATABASE_URL}/getPfp`, { params: { ...userID } })
       .then(res => {
         if (res.data.message == "Retrieved pfp") {
           setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp);
@@ -129,7 +129,7 @@ function App() {
         }
       })
 
-      axios.get('http://localhost:8081/fetchSettings', { params: { ...userID } }) //get user settings
+      axios.get(`${process.env.REACT_APP_DATABASE_URL}/fetchSettings`, { params: { ...userID } }) //get user settings
       .then(res => {
         if (res.data.message == "Fetched settings") {
           setHardMode(res.data.hard === 1);

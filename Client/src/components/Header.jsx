@@ -13,6 +13,8 @@ import Profile from './Profile';
 import Slide from '@mui/material/Slide';
 
 
+
+
 const Header = () => {
   const {winPage, setWinPage} = useContext(KeyboardContext);
   const {tutorial, showTutorial} = useContext(KeyboardContext);
@@ -27,7 +29,6 @@ const Header = () => {
 
   const {guestMode, setGuestMode} = useContext(KeyboardContext);
 
-
   function handleTutorial() {
     showTutorial(!tutorial);
   }
@@ -40,19 +41,16 @@ const Header = () => {
     setWinPage(!winPage);
   }
 
-
   useEffect(() => {
-    axios.get('http://localhost:8081/authorized', { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_DATABASE_URL}/authorized`, { withCredentials: true })
     .then(res => {
       if (res.data.auth) {
         setAccessLeaderBoard(true); 
         setAccessProfile(true);
-
       }
         else {
           setAccessLeaderBoard(false);
           setAccessProfile(false);
-
         }
     })
     .catch(err => {
@@ -77,14 +75,6 @@ const Header = () => {
       setClickDisabledProfile(true);
     }
   }
-
-  // useEffect(() => {
-  //   if (!profilePage) {
-  //     setTimeout(() => {
-  //       setDelay(true);
-  //   }, 100)
-  //   }
-  // }, [profilePage])
 
   return (
     <>

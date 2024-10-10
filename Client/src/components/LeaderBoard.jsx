@@ -31,7 +31,7 @@ const LeaderBoard = () => {
     }
 
     useEffect(() => { // fetches leaderboard data namely highest streak
-        axios.get('http://localhost:8081/highestStreak')
+        axios.get(`${process.env.REACT_APP_DATABASE_URL}/highestStreak`)
         .then(res => {
             setHighestStreak(res.data);
             // console.log(res.data)
@@ -81,7 +81,7 @@ const LeaderBoard = () => {
 
         [0,1,2].map((ind) => {
             if (displayed[ind])
-                axios.get('http://localhost:8081/getPfp', { params: { id : displayed[ind].id } })
+                axios.get(`${process.env.REACT_APP_DATABASE_URL}/getPfp`, { params: { id : displayed[ind].id } })
                 .then(res => {
                     if (res.data.message === 'No pfp') {
                         const defaultPfp = 'https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp';

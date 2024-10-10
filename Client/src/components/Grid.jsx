@@ -404,7 +404,7 @@ const Grid = () => {
     }, [])
     useEffect(() => { // update stats after game finish
         if (( win ^ answer) && !updated.current) {
-            axios.post('http://localhost:8081/updateStats', {...userID, win: win, guessWon: guessWon})
+            axios.post(`${process.env.REACT_APP_DATABASE_URL}/updateStats`, {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 updated.current = true;
                 localStorage.setItem('updatedStats', JSON.stringify(updated.current))

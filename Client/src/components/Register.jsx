@@ -29,7 +29,7 @@ const Register = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8081/signup', regAcc)
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}/signup`, regAcc)
         .then(res => {
             if (res.data.message == "Registered Successfully!") {
                 console.log(res.data.message)
