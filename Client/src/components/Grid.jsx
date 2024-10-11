@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import raw from '../assets/wordle-La.txt'
 import { KeyboardContext } from '../Contexts/KeyboardContext';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -71,7 +70,7 @@ const Grid = () => {
 
     useEffect(() => { //loads wordle list
         const fetchWords = async () => { 
-            const response = await fetch(raw);
+            const response = await fetch('/wordle-La.txt');
             const text = await response.text();
             const lines = text.split('\r\n').slice(0, 2315);
             setWordleList(lines)
@@ -79,11 +78,11 @@ const Grid = () => {
         fetchWords();
     }, []);
     useEffect(() => { //chooses random correct word from wordle list
+        console.log(wordleList)
 
         if (wordleList.length > 0 && !correctWord) {
         setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
         // setCorrectWord('COURT')
-        console.log(wordleList)
         setLoading(false);
         }
     }, [wordleList])
