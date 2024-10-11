@@ -72,7 +72,8 @@ const Grid = () => {
         const fetchWords = async () => { 
             const response = await fetch('/wordle-La.txt');
             const text = await response.text();
-            const lines = text.split('\r\n').slice(0, 2315);
+            const removeSpecial = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = removeSpecial.split('\n').slice(0, 2315);
             setWordleList(lines)
         };
         fetchWords();
