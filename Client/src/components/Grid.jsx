@@ -79,9 +79,11 @@ const Grid = () => {
         fetchWords();
     }, []);
     useEffect(() => { //chooses random correct word from wordle list
+
         if (wordleList.length > 0 && !correctWord) {
-        // setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
-        setCorrectWord('COURT')
+        setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
+        // setCorrectWord('COURT')
+        console.log(wordleList)
         setLoading(false);
         }
     }, [wordleList])
