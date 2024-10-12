@@ -8,7 +8,13 @@ const bcrypt = require('bcryptjs')
 const multer = require('multer');
 const path = require('path');
 
+
+
 const app = express();
+
+
+
+
 app.use(cors({
     origin: [`${process.env.SITE_URL}`],
     credentials: true
@@ -404,6 +410,25 @@ const authenticateToken = (req, res, next) => {
         
     })
 
+
+
+
+
+    const buildPath = path.join(__dirname, "../Client/build");
+
+app.use(express.static(buildPath));
+
+app.get("/*", function(req, res) {
+    res.sendFile(
+        path.join(buildPath, "index.html"),
+        function(err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    )
+})
+
 app.listen(process.env.PORT, () => {
-    console.log('listening');
+    console.log('listening on PORT', process.env.PORT);
 })
