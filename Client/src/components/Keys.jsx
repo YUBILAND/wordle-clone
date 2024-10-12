@@ -93,80 +93,6 @@ const Keys = () => {
         
     }, [green, yellow, gray])
 
-    // useEffect(() => { // switches already guessed color of button theme based on color blind mode
-    //     if (colorBlind) {
-    //         buttonTheme.current = buttonTheme.current.map(item => {
-    //             if (item.class === 'KBgreen') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KBCBgreen'
-    //                 }
-    //             } else if (item.class === 'KByellow') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KBCByellow'
-    //                 }
-    //             } else {
-    //                 return item;
-    //             }
-    //         }) 
-    //     } else {
-
-    //         buttonTheme.current = buttonTheme.current.map(item => {
-    //             if (item.class === 'KBCBgreen') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KBgreen'
-    //                 }
-    //             } else if (item.class === 'KBCByellow') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KByellow'
-    //                 }
-    //             } else {
-    //                 return item;
-    //             }
-    //         }) 
-    //     }
-    // }, [colorBlind])
-
-    // useEffect(() => {
-    //     if (darkMode) {
-    //         buttonTheme.current = buttonTheme.current.map(item => {
-    //             if (item.class === 'buttons') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'DMbuttons'
-    //                 }
-    //             } else if (item.class === 'KBgray') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KBDMgray'
-    //                 }
-    //             }
-    //             else {
-    //                 return item;
-    //             }
-    //         })
-    //     } else {
-    //         buttonTheme.current = buttonTheme.current.map(item => {
-    //             if (item.class === 'DMbuttons') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'buttons'
-    //                 }
-    //             } else if (item.class === 'KBDMgray') {
-    //                 return {
-    //                     ...item,
-    //                     class : 'KBgray'
-    //                 }
-    //             }
-    //             else {
-    //                 return item;
-    //             }
-    //         })
-    //     }
-    // }, [darkMode])
 
    const {guessLength, setGuessLength} = useContext(KeyboardContext);
 
@@ -261,7 +187,7 @@ const Keys = () => {
 
                     yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
-                        button.classList.remove('KBCBgreen');
+                        button.classList.remove('KBCByellow');
                         button.classList.add('KByellow');
                     })
 

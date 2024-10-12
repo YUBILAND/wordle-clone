@@ -98,7 +98,6 @@ function App() {
   const checkAuth = async () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_DATABASE_URL}/check-auth`, { withCredentials: true });
-
       setUserMode(true);
       setSettingsLoading(true);
       setCheckingAuth(false);
