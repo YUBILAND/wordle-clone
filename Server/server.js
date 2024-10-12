@@ -406,4 +406,4 @@ const authenticateToken = (req, res, next) => {
 
 app.listen(process.env.PORT, () => {
     console.log('listening');
-}) 
+})
