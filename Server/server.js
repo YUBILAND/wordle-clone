@@ -10,7 +10,7 @@ const path = require('path');
 
 const app = express();
 app.use(cors({
-    origin: ["http://localhost:3000"],
+    origin: [`${process.env.SITE_URL}`],
     credentials: true
 }));
 
@@ -404,6 +404,6 @@ const authenticateToken = (req, res, next) => {
         
     })
 
-app.listen(8081, () => {
+app.listen(process.env.PORT, () => {
     console.log('listening');
 })
