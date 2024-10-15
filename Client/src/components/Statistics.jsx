@@ -103,46 +103,46 @@ const Statistics = () => {
         <div className='w-full flex justify-end  pt-4 pr-4'>
             <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
         </div>
-        <button className='cursor-default text-center font-bold mb-2 uppercase tracking-[0.5px]'>Statistics</button>
+        <button className='cursor-default select-none text-center font-bold mb-2 uppercase tracking-[0.5px]'>Statistics</button>
         <div className='grid grid-cols-4 w-[250px] mx-auto text-center mb-2 gap-x-2'>
-            <button className='cursor-default text-4xl'>{stats.played}</button>
-            <button className='cursor-default text-4xl'>{Math.round(stats.wins / stats.played * 100) || 0}</button>
-            <button className='cursor-default text-4xl'>{stats.streak}</button>
-            <button className='cursor-default text-4xl'>{stats.highest}</button>
-            <button className='cursor-default text-xs'>Played</button>
-            <button className='cursor-default text-xs'>Win %</button>
-            <button className='cursor-default text-xs'>Current Streak</button>
-            <button className='cursor-default text-xs'>Max Streak</button>
+            <button className='cursor-default select-none text-4xl'>{stats.played}</button>
+            <button className='cursor-default select-none text-4xl'>{Math.round(stats.wins / stats.played * 100) || 0}</button>
+            <button className='cursor-default select-none text-4xl'>{stats.streak}</button>
+            <button className='cursor-default select-none text-4xl'>{stats.highest}</button>
+            <button className='cursor-default select-none text-xs'>Played</button>
+            <button className='cursor-default select-none text-xs'>Win %</button>
+            <button className='cursor-default select-none text-xs'>Current Streak</button>
+            <button className='cursor-default select-none text-xs'>Max Streak</button>
         </div>
-        <button className='cursor-default text-center font-bold mb-2 uppercase tracking-[0.5px]'>Guess Distribution</button>
+        <button className='cursor-default select-none text-center font-bold mb-2 uppercase tracking-[0.5px]'>Guess Distribution</button>
 
         <div className='flex w-[400px] mx-auto mb-2'>
             <div className='flex flex-col mr-1'>
-                <button className='cursor-default w-fit pb-[4px]'>1</button >
-                <button className='cursor-default w-fit pb-[4px]'>2</button >
-                <button className='cursor-default w-fit pb-[4px]'>3</button >
-                <button className='cursor-default w-fit pb-[4px]'>4</button >
-                <button className='cursor-default w-fit pb-[4px]'>5</button >
-                <button className='cursor-default w-fit pb-[4px]'>6</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>1</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>2</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>3</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>4</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>5</button >
+                <button className='cursor-default select-none w-fit pb-[4px]'>6</button >
             </div>
             <div className='flex flex-col w-full'>
                 {allZeros ? 
                 <>
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess1}</button >
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess2}</button >
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess3}</button >
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess4}</button >
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess5}</button >
-                <button className= 'cursor-default w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess6}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess1}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess2}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess3}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess4}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess5}</button >
+                <button className= 'cursor-default select-none w-[10%] pl-2 gray text-right font-bold pr-2 mb-1'>{stats.guess6}</button >
                 </>
                 :
                 <>
-                <button style={{ width: `${width.guess1}%` }} className= {` ${ guessWon === 1 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess1}</button>
-                <button style={{ width: `${width.guess2}%` }} className= {` ${ guessWon === 2 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess2}</button>
-                <button style={{ width: `${width.guess3}%` }} className= {` ${ guessWon === 3 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess3}</button>
-                <button style={{ width: `${width.guess4}%` }} className= {` ${ guessWon === 4 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess4}</button>
-                <button style={{ width: `${width.guess5}%` }} className= {` ${ guessWon === 5 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess5}</button>
-                <button style={{ width: `${width.guess6}%` }} className= {` ${ guessWon === 6 ? 'green' : 'gray' } cursor-default text-right font-bold pr-2 mb-1`}>{stats.guess6}</button>
+                <button style={{ width: `${width.guess1}%` }} className= {` ${ guessWon === 1 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess1}</button>
+                <button style={{ width: `${width.guess2}%` }} className= {` ${ guessWon === 2 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess2}</button>
+                <button style={{ width: `${width.guess3}%` }} className= {` ${ guessWon === 3 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess3}</button>
+                <button style={{ width: `${width.guess4}%` }} className= {` ${ guessWon === 4 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess4}</button>
+                <button style={{ width: `${width.guess5}%` }} className= {` ${ guessWon === 5 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess5}</button>
+                <button style={{ width: `${width.guess6}%` }} className= {` ${ guessWon === 6 ? 'green' : 'gray' } cursor-default select-none text-right font-bold pr-2 mb-1`}>{stats.guess6}</button>
                 </>
                 }
             </div>

@@ -8,20 +8,15 @@ const bcrypt = require('bcryptjs')
 const multer = require('multer');
 const path = require('path');
 
-
-
 const app = express();
 
-
-
-
 app.use(cors({
-    origin: [`${process.env.SITE_URL}`],
+    origin: [process.env.SITE_URL, 'http://18.117.175.135'],
     credentials: true
 }));
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Origin", process.env.SITE_URL);
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
@@ -264,13 +259,11 @@ const authenticateToken = (req, res, next) => {
         })
     })
     app.post('/signup', (req, res) => {
-
         // Check if credentials are already in database
         const checkSql = "SELECT * FROM users WHERE username = ? OR email = ?";
         db.query(checkSql, [req.body.username, req.body.email], (err, result) => {
             if (err) return res.json(err);
             if (result.length > 0) {
-                // console.log(result)
                 //Found credentials so user already exists, can't sign up
                 return res.json({ message: "Username or Email already exists" });
             }
@@ -414,20 +407,20 @@ const authenticateToken = (req, res, next) => {
 
 
 
-    const buildPath = path.join(__dirname, "../Client/build");
+//     const buildPath = path.join(__dirname, "../Client/build");
 
-app.use(express.static(buildPath));
+// app.use(express.static(buildPath));
 
-app.get("/*", function(req, res) {
-    res.sendFile(
-        path.join(buildPath, "index.html"),
-        function(err) {
-            if (err) {
-                res.status(500).send(err);
-            }
-        }
-    )
-})
+// app.get("/*", function(req, res) {
+//     res.sendFile(
+//         path.join(buildPath, "index.html"),
+//         function(err) {
+//             if (err) {
+//                 res.status(500).send(err);
+//             }
+//         }
+//     )
+// })
 
 app.listen(process.env.PORT, () => {
     console.log('listening on PORT', process.env.PORT);

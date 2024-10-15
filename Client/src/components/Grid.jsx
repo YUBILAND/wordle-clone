@@ -19,7 +19,6 @@ const Grid = () => {
     const {tutorial, showTutorial} = useContext(KeyboardContext);
     const {leaderBoard, showLeaderBoard} = useContext(KeyboardContext);
     const {settings, showSettings} = useContext(KeyboardContext);
-    const {userMode, setUserMode} = useContext(KeyboardContext);
     const {userID, setUserID} = useContext(KeyboardContext);
     const {kbColor, setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
@@ -93,35 +92,53 @@ const Grid = () => {
             const existingCorrectWord = JSON.parse(localStorage.getItem('correctWord')) || '';
             if (JSON.stringify(existingCorrectWord) !== JSON.stringify(correctWord)) localStorage.setItem('correctWord', JSON.stringify(correctWord));
     }, [correctWord])
+
+    const doneHashRef = useRef({});
+
+    const delayRef = useRef(true)
+
+    if (doneHash.firstDone) {
+        if (doneHashRef.current !== doneHash) {
+            delayRef.current = false
+            doneHashRef.current = doneHash;
+            setTimeout(() => {
+                delayRef.current = true
+            }, 1000)
+        }
+    }
     useEffect(() => { //Register key press and save to state, del too
-        const onPress = (event) => {
-            const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
-            if (event.key === 'Backspace') {
-                if (firstFalseKey && guessLength > 0) {
-                    const firstDonetoFirst = firstFalseKey.split('Done')[0];
-                    setGuessLength(prevGuessLen => prevGuessLen - 1);
-                    setGuesses( prevGuess => ({ ...prevGuess, [firstDonetoFirst]: (prevGuess[firstDonetoFirst].slice(0, prevGuess[firstDonetoFirst].length - 1))}))
-                }
-                else { //deleting nothing so do left wiggle animation
-                    setLeftWiggle(firstFalseKey);
-                    setTimeout(() => {
-                        setLeftWiggle('');
-                    }, 700)
-                }
-            } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
-                if (firstFalseKey && guessLength < 5) {
-                    const firstDonetoFirst = firstFalseKey.split('Done')[0];
-                    setGuessLength(prevGuessLen => prevGuessLen + 1);
-                    setGuesses( prevGuess => ({ ...prevGuess, [firstDonetoFirst]: (prevGuess[firstDonetoFirst] + event.key.toUpperCase())}))
-                }
-                else { //deleting nothing so do left wiggle animation
-                    setRightWiggle(firstFalseKey);
-                    setTimeout(() => {
-                        setRightWiggle('');
-                    }, 700)
-                }
-            } 
-        };
+        const onPress = async (event) => {
+            
+            if (delayRef.current) {
+
+                const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
+                if (event.key === 'Backspace') {
+                    if (firstFalseKey && guessLength > 0) {
+                        const firstDonetoFirst = firstFalseKey.split('Done')[0];
+                        setGuessLength(prevGuessLen => prevGuessLen - 1);
+                        setGuesses( prevGuess => ({ ...prevGuess, [firstDonetoFirst]: (prevGuess[firstDonetoFirst].slice(0, prevGuess[firstDonetoFirst].length - 1))}))
+                    }
+                    else { //deleting nothing so do left wiggle animation
+                        setLeftWiggle(firstFalseKey);
+                        setTimeout(() => {
+                            setLeftWiggle('');
+                        }, 700)
+                    }
+                } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
+                    if (firstFalseKey && guessLength < 5) {
+                        const firstDonetoFirst = firstFalseKey.split('Done')[0];
+                        setGuessLength(prevGuessLen => prevGuessLen + 1);
+                        setGuesses( prevGuess => ({ ...prevGuess, [firstDonetoFirst]: (prevGuess[firstDonetoFirst] + event.key.toUpperCase())}))
+                    }
+                    else { //deleting nothing so do left wiggle animation
+                        setRightWiggle(firstFalseKey);
+                        setTimeout(() => {
+                            setRightWiggle('');
+                        }, 700)
+                    }
+                } 
+            };
+        }
         if(!win) {
             // Attach event listener
             document.addEventListener('keydown', onPress);
@@ -147,6 +164,9 @@ const Grid = () => {
         const onPress = (event) => {
             if (event.key === 'Enter') {
                 const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
+                if (!firstFalseKey) {
+                    return;
+                }
                 const firstDonetoFirstCanEnter = firstFalseKey.split('Done')[0] + 'CanEnter' // changes firstDone to firstCanEnter
                     if (canEnterHash[firstDonetoFirstCanEnter]) { // if user can enter, guessLength must be 5
                         const firstDonetoFirst = firstFalseKey.split('Done')[0]  // changes firstDone to first
@@ -226,23 +246,13 @@ const Grid = () => {
             useEffect(() => { // evaluates whether user can press enter as a valid guess, length 5
 
                 const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
-                const firstDonetoFirst = firstFalseKey.split('Done')[0] // 'firstDone' to 'first'
-                const firstDonetoFirstCanEnter = firstFalseKey.split('Done')[0] + 'CanEnter' // 'firstDone' to 'firstCanEnter'
-                if (guesses[firstDonetoFirst].length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: true}));
-                else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: false}));
-                    
-                
-                
-                // Object.entries(doneHash).some(([key, val]) => {
-                //     if (!val) {
-                //         const firstDonetoFirst = key.split('Done')[0] // 'firstDone' to 'first'
-                //         const firstDonetoFirstCanEnter = key.split('Done')[0] + 'CanEnter' // 'firstDone' to 'firstCanEnter'
-                //         if (guesses[firstDonetoFirst].length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: true}));
-                //         else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: false}));
-                //         return true;
-                //     }
-                //     return false;
-                // })
+                if (firstFalseKey) {
+                    const firstDonetoFirst = firstFalseKey.split('Done')[0] // 'firstDone' to 'first'
+                    const firstDonetoFirstCanEnter = firstFalseKey.split('Done')[0] + 'CanEnter' // 'firstDone' to 'firstCanEnter'
+                    if (guesses[firstDonetoFirst].length == 5) setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: true}));
+                    else setCanEnterHash(prevCanEnter => ({ ...prevCanEnter, [firstDonetoFirstCanEnter]: false}));   
+                }
+                   
             }, [guesses])
 
             const greenLetter = (dummyWord, guessedWord) => { //looks for green first
@@ -347,9 +357,9 @@ const Grid = () => {
                     return;
                 } else if ( firstDonetoFirst == "sixth" ){
                     showAnswer(true);
-                    localStorage.setItem('answer', JSON.stringify(answer))
+                    localStorage.setItem('answer', JSON.stringify(true))
                     setLoss(true);
-                    localStorage.setItem('loss', JSON.stringify(loss))
+                    localStorage.setItem('loss', JSON.stringify(true))
                     return;
                 }
                 guessRow.current += 1;
@@ -555,10 +565,8 @@ const Grid = () => {
 
   return (
 
-    <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} z-0`}>
-
-        {guestMode && <div className='absolute top-[60px] left-0 flex justify-center w-full'> <span className='text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
-        {userMode && (!tutorial && !leaderBoard && !profilePage && !settings ) && <div className='absolute top-[60px] left-0 flex justify-center w-full z-0'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
+    <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+        
         {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
         {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>}
         {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
@@ -589,24 +597,24 @@ const Grid = () => {
                         ? // if there is a guess
                         (guessResults[firstDonetoFirst].map((res, ind) => ( // map each letter to a gridbox
                             
-                            <button className= { `border-2 cursor-default ${ // using buttons and cursor-default to make it unclickable and unhighlightable
+                            <div className= { `border-2 select-none ${ // using buttons and cursor-default to make it unclickable and unhighlightable
                                 res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                 res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                 ( darkMode ? 'DMgray' : 'gray' ) } 
                                 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold text-white` }>
                                 {guesses[firstDonetoFirst][ind] || ''}
-                            </button>
+                            </div>
                             
                         )))  
                         : [0,1,2,3,4].map((res) => ( // this prevents row from disappearing, im assuming that doneHash updates but guessResults hasn't so there is a missing row that won't be accounted for thus it would disappear for a split second causing Keys to shift up, this takes care of that scenario by keeping an empty row there until guessResults updates in which case it will show the guessed gridbox
                             guesses[firstDonetoFirst][res] 
                             ? 
-                            <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'> 
+                            <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'> 
                                 {guesses[firstDonetoFirst][res]} 
-                            </button>
+                            </div>
                             : 
-                            <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
-                            </button>
+                            <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
+                            </div>
                         
                         ))
                     }
@@ -638,11 +646,11 @@ const Grid = () => {
                 return ( 
 
                     // on mount here
-                    <div key={key}className='flex col-span-5 gap-2'>
+                    <div key={key} className='flex col-span-5 gap-2'>
                     { 
                         ((value && !guessesLoaded.current) || (guessesLoaded.current && key === lastTrueKey)) ?  // on first refresh need animation, on user guess need row animation
                             <>
-                                {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
+                                {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ? // for previous guesses
                                     (guessResults[firstDonetoFirst].map((res, ind) => { 
                                         const delay = ind * 100;                //animation stuff
                                         const style1 = {
@@ -650,23 +658,23 @@ const Grid = () => {
                                         };
                                         const style2 = removeStyle ? {} : { backgroundColor: 'transparent', color: 'transparent', borderColor: (darkMode ? '#3a3a3c' : '#d1d5db')}
                                         return (
-                                            <button style={{ ...style1 , ...style2}} onAnimationStart={handleAnimationStart} className= { `flip border-2 cursor-default ${ // guesses with animation
+                                            <div style={{ ...style1 , ...style2}} onAnimationStart={handleAnimationStart} className= { `flip border-2 select-none ${ // guesses with animation
                                                 res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                                 res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                                 ( darkMode ? 'DMgray' : 'gray' ) } 
                                                 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold text-white` }>
                                                 {guesses[firstDonetoFirst][ind] || ''}
-                                            </button>
+                                            </div>
                                         )
-                                    }))  : [0,1,2,3,4].map((res) => ( // unguessed user input gridboxes
+                                    }))  : [0,1,2,3,4].map((res) => ( // unguessed user input gridboxes ,,, this actually fixes the glitch of a row missing for a split second
                                         guesses[firstDonetoFirst][res]
                                         ? 
-                                        <button className='cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
+                                        <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
                                             {guesses[firstDonetoFirst][res]}
-                                        </button>
+                                        </div>
                                         : 
-                                        <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
-                                        </button>
+                                        <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
+                                        </div>
                                     
                                     ))
                                 }
@@ -677,23 +685,23 @@ const Grid = () => {
                                 {guessResults[firstDonetoFirst] && guessResults[firstDonetoFirst].length > 0 ?
                                     (guessResults[firstDonetoFirst].map((res, ind) => ( 
                                         
-                                        <button className= { `border-2 cursor-default ${
+                                        <div className= { `border-2 select-none ${
                                             res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                             res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                             ( darkMode ? 'DMgray' : 'gray' ) } 
                                             flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold text-white  `}>
                                             {guesses[firstDonetoFirst][ind] || ''}
-                                        </button>
+                                        </div>
                                         
                                     )))  : [0,1,2,3,4].map((res) => (
                                         guesses[firstDonetoFirst][res]
                                         ? 
-                                        <button className={` cursor-default border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                                        <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
                                             {guesses[firstDonetoFirst][res]}
-                                        </button>
+                                        </div>
                                         : 
-                                        <button className='cursor-default border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
-                                        </button>
+                                        <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
+                                        </div>
                                     
                                     ))
                                 }
@@ -703,7 +711,7 @@ const Grid = () => {
                                 {[0,1,2,3,4].map((res) => ( // creates empty rows, unguessed
                                     guesses[firstDonetoFirst][res]
                                     ? 
-                                    <div className={` ${ (notEnough || wrongWord) && 'wiggle'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                                    <div className={` ${ (notEnough || wrongWord) && 'wiggle'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
                                         {guesses[firstDonetoFirst][res]}
                                     </div>
                                     :

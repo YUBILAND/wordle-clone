@@ -35,18 +35,7 @@ function App() {
 });
   const [isAuth, setIsAuth] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [guesses, setGuesses] = useState(() => {
-    // Load initial state from localStorage or default to the initial object
-    const existingGuesses = JSON.parse(localStorage.getItem('guesses'));
-    return existingGuesses || { 
-        first: '',
-        second: '',
-        third: '',
-        fourth: '',
-        fifth: '',
-        sixth: '',
-    };
-});
+  
   const [guessLength, setGuessLength] = useState(0);
   const [doneHash, setDoneHash] = useState(() => {
         // Load initial state from localStorage or default to the initial object
@@ -61,6 +50,28 @@ function App() {
         };
     });
 
+    const [guesses, setGuesses] = useState(() => {
+      // Load initial state from localStorage or default to the initial object
+      const existingGuesses = JSON.parse(localStorage.getItem('guesses'));
+      if (existingGuesses) { // makes it so that when you refresh, the unguessed input is not in local storage.
+        console.log(doneHash)
+        const firstFalseDone = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
+        if (firstFalseDone) {
+          const firstDonetoFirst = firstFalseDone.split('Done')[0];
+          existingGuesses[firstDonetoFirst] = '';
+        }
+      }
+
+      return existingGuesses || { 
+          first: '',
+          second: '',
+          third: '',
+          fourth: '',
+          fifth: '',
+          sixth: '',
+      };
+  });
+
   const [canEnterHash, setCanEnterHash] = useState({
             firstCanEnter: false, 
             secondCanEnter: false, 
@@ -69,6 +80,7 @@ function App() {
             fifthCanEnter: false, 
             sixthCanEnter: false
           })
+  
   const [wordleList, setWordleList] = useState([]);
   const [notEnough, setNotEnough] = useState(false);
   const [wrongWord, setWrongWord] = useState(false);
@@ -87,7 +99,7 @@ function App() {
   const [answer, showAnswer] = useState(() => {
     const existingAnswer = JSON.parse(localStorage.getItem('answer'));
     return existingAnswer || false;
-});
+  });
 
   const [settingsLoading, setSettingsLoading] = useState(true);
 
@@ -148,11 +160,9 @@ function App() {
         {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>
           <div className={`absolute top-0 left-0 w-full z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } h-[946px]`}/>
-
-          <Header />
-          <Grid />
-          <Keys />
-
+            <Header />
+            <Grid />
+            <Keys />
         </>
         }
 

@@ -28,6 +28,11 @@ const Header = () => {
   const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
 
   const {guestMode, setGuestMode} = useContext(KeyboardContext);
+  const {userMode, setUserMode} = useContext(KeyboardContext);
+
+  const {darkMode} = useContext(KeyboardContext);
+  const {userID, setUserID} = useContext(KeyboardContext);
+
 
   function handleTutorial() {
     showTutorial(!tutorial);
@@ -78,6 +83,11 @@ const Header = () => {
 
   return (
     <>
+    {guestMode && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <span className=' text-green-600 text-2xl rounded-md p-1 font-bold tracking-widest'>Guest Mode</span> </div>}
+
+    {userMode && (!tutorial && !leaderBoard && !profilePage && !settings ) && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
+        
+
     <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
       <div> <LeaderBoard /> </div>
     </Slide>
@@ -101,7 +111,7 @@ const Header = () => {
             <LeaderboardOutlinedIcon onClick={handleLeaderBoard} className={ guestMode ? 'text-gray-200' : 'text-gray-400 cursor-pointer' }/>
         </div>
         <div className='basis-[70%] pl-6'>
-            <button className='pl-7 cursor-default text-right font-bold uppercase text-3xl tracking-[0.2rem] pr-4'>Wordle Clone</button>
+            <div className='pl-7 select-none text-right font-bold uppercase text-3xl tracking-[0.2rem] pr-4'>Wordle Clone</div>
         </div>
         <div className='basis-[20%] flex justify-between'>
             <AccountBoxOutlinedIcon onClick={handleProfile} className={ guestMode ? 'text-gray-200' : 'text-gray-400 cursor-pointer' }/>

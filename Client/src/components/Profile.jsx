@@ -18,9 +18,6 @@ const Profile = () => {
     const [changeName, showChangeName] = useState(false);
     const [newName, setNewName] = useState('');
     const [incorrectMsg, setIncorrectMsg] = useState({short : false, taken: false, same: false})
-    
-
-
 
     function handleX() { //close Profile page
         showProfilePage(false);
@@ -164,10 +161,10 @@ const Profile = () => {
             <div className=' w-[500px] mx-auto'>
                 <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
-                    <button className='uppercase tracking-[0.5px] font-bold cursor-default'>Profile</button>
+                    <button className='uppercase tracking-[0.5px] font-bold cursor-default select-none'>Profile</button>
                     <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
                 </div>
-                <div  className='relative  flex justify-center'>
+                <div  className='relative flex justify-center'>
                     <div className={`${!imgSaved && 'opacity-0'} bg-green-200 rounded-md border-2 border-green-700 p-2`}>Profile picture saved</div>
                     <div className={`absolute ${!nameSaved && 'opacity-0'} bg-green-200 rounded-md border-2 border-green-700 p-2`}>Changed name</div>
 
@@ -176,7 +173,7 @@ const Profile = () => {
                 <div className='relative flex justify-center mt-[10px] pb-2'>
                     <form onSubmit={handleSubmit}>
                     <div className='flex justify-center items-center w-32 h-32 bg-gray-200  transition ease-in-out hover:brightness-75'>
-                        <img className='w-32 h-32 object-contain' src={userPfpPath} alt=""/> 
+                        <img className='w-32 h-32 object-contain select-none' src={userPfpPath} alt=""/> 
                         {/* <img className='w-32 h-32 object-contain' src="/uploads/1726806169549.png" alt=""/> */}
                         <input onChange={handleChange} type="file" title="" className='absolute w-32 h-32 bg-gray-200 opacity-0 cursor-pointer'/>
                     </div>
@@ -186,7 +183,7 @@ const Profile = () => {
                 <div className='relative w-fit mx-auto flex justify-between items-center font-bold text-2xl tracking-widest uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
                     <Tooltip title="Copy name" arrow placement="top">
-                        <button className={`${darkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-200' } px-2 rounded-md`}>{userID.username}</button>
+                        <button className={`${darkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-200' } px-2 rounded-md select-none`}>{userID.username}</button>
                     </Tooltip>
                     <Tooltip title="Change Name" arrow placement="right">
                         <BrushOutlinedIcon className='cursor-pointer pl-2' onClick={handleClickChangeName} sx={{color: '#787c7e'}}/>
