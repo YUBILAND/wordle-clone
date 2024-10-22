@@ -182,17 +182,20 @@ function App() {
       
         {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>
-          <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } xl:w-full xl:h-[400px]`}/>
-            <Header className='xl:w-full xl:h-[20px]'/>
+          <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } `}/>
+          <div className='w-screen h-screen flex flex-col justify-between'>
+            <Header/>
             <Grid />
             <Keys />
+          </div>
         </>
         }
-
 
       </KeyboardContext.Provider>
 
     </div>
+
+    
   );
 }
 

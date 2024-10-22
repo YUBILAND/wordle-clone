@@ -547,7 +547,7 @@ const Grid = () => {
 
   return (
 
-    <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`mx-auto w-[500px] opacity-100 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
         <div className='grid grid-cols-5 w-max mx-auto gap-2'>
         {clickedSettings 
             ?

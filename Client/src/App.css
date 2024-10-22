@@ -2,4 +2,20 @@
     background-color: #121213 !important;
     color: white;
 } */
- 
+ html, body {
+    height: 100%;
+    margin: 0;
+ }
+
+@media (max-width: 800px) {
+    p {
+        background-color: orange;
+    }
+}
+
+
+@media (max-width: 736px) {
+    p {
+        background-color: blue;
+    }
+}
