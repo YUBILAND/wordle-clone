@@ -101,3 +101,20 @@ div#waa {
 }
 
 
+@keyframes pop {
+    0% { transform: scale(1.2); }
+    10% { transform: scale(1.175); }
+    20% { transform: scale(1.150); }
+    30% { transform: scale(1.125); }
+    40% { transform: scale(1.1); }
+    50% { transform: scale(1.075); }
+    60% { transform: scale(1.05); }
+    70% { transform: scale(1.025); }
+    80% { transform: scale(1.012); }
+    90% { transform: scale(1.006); }
+    100% { transform: scale(1.0); }
+}
+
+.pop {
+    animation: pop 50ms ease-in-out;
+}

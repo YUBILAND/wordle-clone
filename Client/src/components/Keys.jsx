@@ -56,7 +56,7 @@ const Keys = () => {
     const [yellowString, setYellowString] = useState('');
     const [grayString, setGrayString] = useState('');
 
-    const [update, setUpdate] = useState(false)
+    const [update, setUpdate] = useState(false);
 
     useEffect(() => { //overwrites previous inaccurate guess with updated color, ex. word is blimp, first guess is pupil, l is yellow, second guess plane, l is green , overwrite with green
         
@@ -79,11 +79,10 @@ const Keys = () => {
         const existingGray = JSON.parse(localStorage.getItem('gray')) || [];
         if (JSON.stringify(existingGray) !== JSON.stringify(gray)) localStorage.setItem('gray', JSON.stringify(Array.from((new Set(gray)))));
 
-
-
         green && setGreenString(green.join(' ')) //green always should be displayed
 
         const removeGreenfromYellow = yellow.filter((color) => !green.includes(color));
+        console.log(removeGreenfromYellow)
         const removeGreenfromGray = gray.filter((color) => !green.includes(color));
 
         const removeYellowfromGray = removeGreenfromGray.filter((color) => !removeGreenfromYellow.includes(color));
@@ -128,8 +127,8 @@ const Keys = () => {
                 buttons: 'q w e r t y u i o p a s d f g h j k l ENTER z x c v b n m DEL'
             }
         ]
-        if (clickedSettings || random !== randomRef.current) {
-            if (random !== randomRef.current) randomRef.current = random;
+        if (clickedSettings || random !== randomRef.current) { // once you click ui element, style button, 
+            if (random !== randomRef.current) randomRef.current = random; //if random changes that means that game is finished
             if (darkMode && colorBlind) {
                 greenString.length && greenString.split(' ').map((res, ind) => {
                     const button = document.querySelector(`[data-skbtn="${res}"]`);
@@ -209,6 +208,7 @@ const Keys = () => {
                 if (darkMode && colorBlind) {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBCByellow');
                         button.classList.add('KBCBgreen');
                     })
     
@@ -225,6 +225,7 @@ const Keys = () => {
                 else if (darkMode) {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KByellow');
                         button.classList.add('KBgreen');
                     })
     
@@ -241,6 +242,7 @@ const Keys = () => {
                 else if (colorBlind) {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
+                        button.classList.remove('KBCByellow');
                         button.classList.add('KBCBgreen');
                     })
     
@@ -258,12 +260,13 @@ const Keys = () => {
                     greenString.length && greenString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
                         button.classList.remove('KBCBgreen');
+                        button.classList.remove('KByellow');
                         button.classList.add('KBgreen');
                     })
     
                     yellowString.length && yellowString.split(' ').map((res, ind) => {
                         const button = document.querySelector(`[data-skbtn="${res}"]`);
-                        button.classList.remove('KBCBgreen');
+                        button.classList.remove('KBCByellow');
                         button.classList.add('KByellow');
                     })
     
@@ -274,8 +277,9 @@ const Keys = () => {
                     })
                 }
             }, 1000)
-        }
 
+            //so when a letter changes from yellow to green we need to remove yellow from the class. only applies for yellow -> green b/c gray and green will never change color.
+        }
 
     },[greenString, yellowString, grayString, darkMode, colorBlind, settings, guessLength, random])
 
@@ -304,7 +308,6 @@ const Keys = () => {
     const onKeyPress = button => {
 
         if (delayRef.current) {
-        
             const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0]
             if (!firstFalseKey || win) {
                 setRandom(!random)

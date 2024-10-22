@@ -258,7 +258,7 @@ const Settings = () => {
   }
 
   return (
-    <div className={`absolute top-0 left-0 w-screen h-[1000px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`absolute top-0 left-0 w-screen h-[930px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       {hardModeDisabledClick && <div id='hidePls' className='z-10 absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Hard mode can only be enabled at the start of a round</span> </div>}
         <div className='w-[500px] mx-auto'>
             <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>

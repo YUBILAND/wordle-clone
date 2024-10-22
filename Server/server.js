@@ -357,7 +357,7 @@ const authenticateToken = (req, res, next) => {
         })
     })
     app.get('/getStats', (req, res) => {
-        const sql = "SELECT * FROM STATS WHERE id = ?";
+        const sql = "SELECT * FROM stats WHERE id = ?";
         db.query(sql, [req.query.id], (err, data) => {
             if (err) return res.json(err);
             if (data.length == 1) {
@@ -407,20 +407,20 @@ const authenticateToken = (req, res, next) => {
 
 
 
-//     const buildPath = path.join(__dirname, "../Client/build");
+    const buildPath = path.join(__dirname, "../Client/build");
 
-// app.use(express.static(buildPath));
+app.use(express.static(buildPath));
 
-// app.get("/*", function(req, res) {
-//     res.sendFile(
-//         path.join(buildPath, "index.html"),
-//         function(err) {
-//             if (err) {
-//                 res.status(500).send(err);
-//             }
-//         }
-//     )
-// })
+app.get("/*", function(req, res) {
+    res.sendFile(
+        path.join(buildPath, "index.html"),
+        function(err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    )
+})
 
 app.listen(process.env.PORT, () => {
     console.log('listening on PORT', process.env.PORT);

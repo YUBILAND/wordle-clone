@@ -9,7 +9,7 @@ const Statistics = () => {
 
     const {darkMode, setDarkMode} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
-    const {userID} = useContext(KeyboardContext);
+    const {userID, setUserID} = useContext(KeyboardContext);
     const [statsDone, setStatsDone] = useState(false);
     const [stats, setStats] = useState(
         {
@@ -87,6 +87,10 @@ const Statistics = () => {
         }
     }, [statsDone])
 
+    const {guestMode, setGuestMode} = useContext(KeyboardContext);
+    const {userMode, setUserMode} = useContext(KeyboardContext);
+
+
     function handleX() {
         setWinPage(false);
         setDelay(true);
@@ -94,6 +98,7 @@ const Statistics = () => {
 
     function handleReplay() {
         localStorage.clear();
+        if (guestMode) localStorage.setItem('guestMode', JSON.stringify('true'));
         window.location.reload();
     }
 

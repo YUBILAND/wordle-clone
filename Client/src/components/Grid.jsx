@@ -4,9 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ShareIcon from '@mui/icons-material/Share';
 import './Grid.css'
-import Statistics from './Statistics';
 import axios from 'axios';
-import Zoom from '@mui/material/Zoom';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 
 
@@ -23,7 +21,7 @@ const Grid = () => {
     const {kbColor, setKbColor} = useContext(KeyboardContext);
     const {winPage, setWinPage} = useContext(KeyboardContext);
     const {guessWon, setGuessWon} = useContext(KeyboardContext);
-    const [winCompliment, setWinCompliment] = useState(false);
+    const {winCompliment, setWinCompliment} = useContext(KeyboardContext);
     const {win, setWin} = useContext(KeyboardContext);
     const {answer, showAnswer} = useContext(KeyboardContext);
     const {notEnough, setNotEnough} = useContext(KeyboardContext);
@@ -44,10 +42,7 @@ const Grid = () => {
     });
     const refHash = useRef({first: false, second: false, third: false, fourth: false, fifth: false, sixth: false})
     const [loading, setLoading] = useState(true);
-    const [correctWord, setCorrectWord] = useState(() => {
-        const existingCorrectWord = JSON.parse(localStorage.getItem('correctWord'));
-        return existingCorrectWord || '';
-    });
+    const {correctWord, setCorrectWord} = useContext(KeyboardContext)
     const {guesses, setGuesses} = useContext(KeyboardContext);
     const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
     const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
@@ -67,6 +62,10 @@ const Grid = () => {
     const hardGreen = useRef(['', '', '', '', '']);
     const hardYellow = useRef([]);
 
+
+
+
+
     useEffect(() => { //loads wordle list
         const fetchWords = async () => { 
             const response = await fetch('/wordle-La.txt');
@@ -81,8 +80,8 @@ const Grid = () => {
         console.log(wordleList)
 
         if (wordleList.length > 0 && !correctWord) {
-        setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
-        // setCorrectWord('COURT')
+        // setCorrectWord(wordleList[Math.floor(Math.random() * 2315)].toUpperCase());
+        setCorrectWord('MAMMA')
         setLoading(false);
         }
     }, [wordleList])
@@ -94,7 +93,6 @@ const Grid = () => {
     }, [correctWord])
 
     const doneHashRef = useRef({});
-
     const delayRef = useRef(true)
 
     if (doneHash.firstDone) {
@@ -122,7 +120,7 @@ const Grid = () => {
                         setLeftWiggle(firstFalseKey);
                         setTimeout(() => {
                             setLeftWiggle('');
-                        }, 700)
+                        }, 100)
                     }
                 } else if (event.key.match(/[a-zA-Z]/) && event.key.length === 1) {
                     if (firstFalseKey && guessLength < 5) {
@@ -130,11 +128,11 @@ const Grid = () => {
                         setGuessLength(prevGuessLen => prevGuessLen + 1);
                         setGuesses( prevGuess => ({ ...prevGuess, [firstDonetoFirst]: (prevGuess[firstDonetoFirst] + event.key.toUpperCase())}))
                     }
-                    else { //deleting nothing so do left wiggle animation
+                    else { //adding nothing so do right wiggle animation
                         setRightWiggle(firstFalseKey);
                         setTimeout(() => {
                             setRightWiggle('');
-                        }, 700)
+                        }, 100)
                     }
                 } 
             };
@@ -153,8 +151,8 @@ const Grid = () => {
     const missingGreenRef = useRef(false);
     const missingYellowRef = useRef(false);
 
-    const [missingGreen, setMissingGreen] = useState(false);
-    const [missingYellow, setMissingYellow] = useState(false)
+    const {missingGreen, setMissingGreen} = useContext(KeyboardContext);
+    const {missingYellow, setMissingYellow} = useContext(KeyboardContext);
 
     const missingGreenHash = useRef({});
     const missingYellowArr = useRef([]);
@@ -162,53 +160,55 @@ const Grid = () => {
 
     useEffect(() => { // 'Enter' Key Functionality
         const onPress = (event) => {
-            if (event.key === 'Enter') {
-                const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
-                if (!firstFalseKey) {
-                    return;
-                }
-                const firstDonetoFirstCanEnter = firstFalseKey.split('Done')[0] + 'CanEnter' // changes firstDone to firstCanEnter
-                    if (canEnterHash[firstDonetoFirstCanEnter]) { // if user can enter, guessLength must be 5
-                        const firstDonetoFirst = firstFalseKey.split('Done')[0]  // changes firstDone to first
-                        if (wordleList.includes(guesses[firstDonetoFirst].toLowerCase())) { // if guess is valid word
-                            if (hardMode) { // hard mode is toggled
-                                hardGreen.current.map((letter, index) => { // go throguh each green letter
-                                    if (letter && guesses[firstDonetoFirst][index] !== letter) { // if letter at index in users guess is not green
-                                        missingGreenHash.current = {...missingGreenHash.current, [index] : letter}
-                                        missingGreenRef.current = true;
+            if (delayRef.current) {
+                if (event.key === 'Enter') {
+                    const firstFalseKey = Object.entries(doneHash).find(([key, value]) => !value)?.[0];
+                    if (!firstFalseKey) {
+                        return;
+                    }
+                    const firstDonetoFirstCanEnter = firstFalseKey.split('Done')[0] + 'CanEnter' // changes firstDone to firstCanEnter
+                        if (canEnterHash[firstDonetoFirstCanEnter]) { // if user can enter, guessLength must be 5
+                            const firstDonetoFirst = firstFalseKey.split('Done')[0]  // changes firstDone to first
+                            if (wordleList.includes(guesses[firstDonetoFirst].toLowerCase())) { // if guess is valid word
+                                if (hardMode) { // hard mode is toggled
+                                    hardGreen.current.map((letter, index) => { // go throguh each green letter
+                                        if (letter && guesses[firstDonetoFirst][index] !== letter) { // if letter at index in users guess is not green
+                                            missingGreenHash.current = {...missingGreenHash.current, [index] : letter}
+                                            missingGreenRef.current = true;
+                                        }
+                                    })
+                                    hardYellow.current.map((letter, index) => {
+                                        if (!guesses[firstDonetoFirst].includes(letter)) { // if letter at index in users guess is not green
+                                            missingYellowArr.current = [...missingYellowArr.current, letter]
+                                            // console.log('whats missing from yellow letter is ',missingYellowArr.current)
+                                            missingYellowRef.current = true;
+                                        }
+                                    })
+                                    // console.log('is there a missing green? ',missingGreenRef.current)
+                                    // console.log('is there a missing yellow? ',missingYellowRef.current)
+                                    if (!missingGreenRef.current && !missingYellowRef.current) {
+                                        setEnterPressed(true);
+                                        setRemoveStyle(false);
+                                        setDoneHash(prevDone => ({ ...prevDone, [firstFalseKey]: true}));
+                                        setGuessLength(0);
                                     }
-                                })
-                                hardYellow.current.map((letter, index) => {
-                                    if (!guesses[firstDonetoFirst].includes(letter)) { // if letter at index in users guess is not green
-                                        missingYellowArr.current = [...missingYellowArr.current, letter]
-                                        // console.log('whats missing from yellow letter is ',missingYellowArr.current)
-                                        missingYellowRef.current = true;
+                                    else {
+                                        if (missingGreenRef.current) setMissingGreen(true);
+                                        if (missingYellowRef.current) setMissingYellow(true);
                                     }
-                                })
-                                // console.log('is there a missing green? ',missingGreenRef.current)
-                                // console.log('is there a missing yellow? ',missingYellowRef.current)
-                                if (!missingGreenRef.current && !missingYellowRef.current) {
+                                }
+                                else {
                                     setEnterPressed(true);
                                     setRemoveStyle(false);
                                     setDoneHash(prevDone => ({ ...prevDone, [firstFalseKey]: true}));
                                     setGuessLength(0);
                                 }
-                                else {
-                                    if (missingGreenRef.current) setMissingGreen(true);
-                                    if (missingYellowRef.current) setMissingYellow(true);
-                                }
-                            }
-                            else {
-                                setEnterPressed(true);
-                                setRemoveStyle(false);
-                                setDoneHash(prevDone => ({ ...prevDone, [firstFalseKey]: true}));
-                                setGuessLength(0);
-                            }
-                        } else { // else if not valid word
-                            setWrongWord(true)
-                        }; 
-                    }
-                    else setNotEnough(true); //else if if user can't enter, guessLength less than 5
+                            } else { // else if not valid word
+                                setWrongWord(true)
+                            }; 
+                        }
+                        else setNotEnough(true); //else if if user can't enter, guessLength less than 5
+                }
             }
         }
         if (!win) {
@@ -219,8 +219,8 @@ const Grid = () => {
         }
     },[win, doneHash, canEnterHash])
 
-    const [missingGreenLetter, setMissingGreenLetter] = useState('');
-    const [missingYellowLetter, setMissingYellowLetter] = useState('');
+    const {missingGreenLetter, setMissingGreenLetter} = useContext(KeyboardContext);
+    const {missingYellowLetter, setMissingYellowLetter} = useContext(KeyboardContext);
 
     
     if ((missingGreenRef.current && missingYellowRef.current) || missingGreenRef.current) {
@@ -233,7 +233,6 @@ const Grid = () => {
         missingYellowRef.current = false;
 
     }
-    
             const compareString = (str1, str2) => { // compare guess to correctword, return arr of index of green ( ex '135' so first third and fifth are green)
                 var indexMatch = [];
                 for (let i = 0; i < str1.length; i++) {
@@ -409,13 +408,13 @@ const Grid = () => {
         
     }, [kbColor])
 
-    const updated = useContext(KeyboardContext); // Solves: user can't refresh to gain infinite wins
+    const updated = useRef(false); // Solves: user can't refresh to gain infinite wins
     useEffect(() => { // ref
         const existingUpdated = JSON.parse(localStorage.getItem('updatedStats'));
         if (existingUpdated) updated.current = existingUpdated;
     }, [])
     useEffect(() => { // update stats after game finish
-        if (( win ^ answer) && !updated.current) {
+        if ((win || loss) && !updated.current) {
             axios.post(`${process.env.REACT_APP_DATABASE_URL}/updateStats`, {...userID, win: win, guessWon: guessWon})
             .then(res => {
                 updated.current = true;
@@ -423,7 +422,7 @@ const Grid = () => {
             })
             .catch(err => console.log(err));
         }
-    }, [win, answer])
+    }, [win, loss])
 
     useEffect(() => { // 1 sec delay after win before stats is shown
         if (win) {
@@ -487,23 +486,6 @@ const Grid = () => {
             }, 1000);
         }
     }, [loss])
-    
-    function whichCompliment() { // determines which compliment to give based on how many guesses player took
-        const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
-        if (firstTrueIndex != -1) {
-            return firstTrueIndex;
-        } else return 6;
-    }
-
-    const compliments = [ // compliment list
-        "",               
-        "Genius",        
-        "Magnificent",   
-        "Impressive",    
-        "Splendid",     
-        "Great",        
-        "Phew"          
-    ];
 
     const {delay, setDelay} = useContext(KeyboardContext);
     
@@ -566,26 +548,7 @@ const Grid = () => {
   return (
 
     <div className={`mx-auto w-[500px] opacity-100 mb-[110px] ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
-        
-        {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
-        {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>}
-        {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
-        {clickDisabledLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
-        {clickDisabledProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
-        {missingGreen && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingGreenLetter}</span> </div>}
-        {!missingGreen && missingYellow && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingYellowLetter}</span> </div>}
-        {(winPage || delay )&& 
-        <Zoom in={winPage} timeout={500}>
-            <div className='absolute top-[250px] w-[500px] h-fit rounded-md shadow-xl z-20' >
-                <Statistics /> 
-            </div>
-        </Zoom>
-        }
-        {winPage && <div className={`absolute top-0 left-0 w-screen h-[930px] ${darkMode ? 'bg-black/50' : 'bg-white/50'}  z-10`}>
-            </div> }
-        {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
-
-        <div className='grid grid-cols-5 w-[340px] mx-auto gap-2'>
+        <div className='grid grid-cols-5 w-max mx-auto gap-2'>
         {clickedSettings 
             ?
         Object.entries(doneHash).map(([key, value]) => { // this removes flip animation after clicking on settings
@@ -621,14 +584,16 @@ const Grid = () => {
                 </>
                 :
                 <>
-                    {[0,1,2,3,4].map((res) => (  // else for the remaining unguessed gridboxes, 
+                    {[0,1,2,3,4].map((res) => (  // for each row of user current input 
                         guesses[firstDonetoFirst][res] // if the user typed in letters but didn't enter the guess
                         ?  //show letters in gridbox
-                        <div className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
-                            {guesses[firstDonetoFirst][res]}
+                        <div key={res} className={`${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} w-max`}>
+                            <div key={res} className='border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold'>
+                                {guesses[firstDonetoFirst][res]}
+                            </div>
                         </div>
                         : // else show nothing
-                        <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                        <div  key={res} className={`border-2 ${darkMode && 'border-[#3a3a3c]'} flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
                         </div>
                     ))}
                 </>
@@ -711,11 +676,15 @@ const Grid = () => {
                                 {[0,1,2,3,4].map((res) => ( // creates empty rows, unguessed
                                     guesses[firstDonetoFirst][res]
                                     ? 
-                                    <div className={` ${ (notEnough || wrongWord) && 'wiggle'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
-                                        {guesses[firstDonetoFirst][res]}
+                                    <div className={`${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} w-max`}>
+                                        <div key={res} className={`${guesses[firstDonetoFirst][res] && 'pop'} ${ (notEnough || wrongWord) && 'wiggle'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                                            {guesses[firstDonetoFirst][res]}
+                                        </div>
                                     </div>
+                                    
                                     :
-                                    <div  className={`border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                                    <div key={res} className={`select-none border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[64px] h-[64px] uppercase text-3xl font-bold`}>
+                                        
                                     </div>
                                 ))}
                             </>

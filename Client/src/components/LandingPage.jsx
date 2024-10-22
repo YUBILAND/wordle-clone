@@ -23,7 +23,6 @@ const LandingPage = () => {
     }
 
     function handleGuest() {
-        // setUserID(0);
         setGuestMode(true);
         setUserID({id: 0})
     }

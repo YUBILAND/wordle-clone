@@ -107,6 +107,20 @@ function App() {
   const [removeStyle, setRemoveStyle] = useState(false);
   const [hardMode, setHardMode] = useState(false);
 
+  const [winCompliment, setWinCompliment] = useState(false);
+
+  const [missingGreen, setMissingGreen] = useState(false);
+  const [missingYellow, setMissingYellow] = useState(false);
+  const [missingGreenLetter, setMissingGreenLetter] = useState('');
+  const [missingYellowLetter, setMissingYellowLetter] = useState('');
+
+  const [correctWord, setCorrectWord] = useState(() => {
+    const existingCorrectWord = JSON.parse(localStorage.getItem('correctWord'));
+    return existingCorrectWord || '';
+});
+
+
+
   const checkAuth = async () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_DATABASE_URL}/check-auth`, { withCredentials: true });
@@ -117,7 +131,11 @@ function App() {
     }
     catch (err) {
       setUserMode(false);
-      setGuestMode(false);
+      if (JSON.parse(localStorage.getItem('guestMode'))) {
+        localStorage.clear();
+        setGuestMode(true);
+        setUserID({id: 0})
+      } else setGuestMode(false);
       setCheckingAuth(false);
       console.error('Authentication check failed');
 
@@ -126,14 +144,19 @@ function App() {
 
   useEffect(() => { //check token when refreshing
     checkAuth();
+    
   }, [])
+  useEffect(() => {
+    console.log(guestMode)
+    console.log(userMode)
+  }, [guestMode, userMode])
 
   useEffect(() => { //get user pfp
     if(userID.id) { //if not 0 ie guest mode
       axios.get(`${process.env.REACT_APP_DATABASE_URL}/getPfp`, { params: { ...userID } })
       .then(res => {
         if (res.data.message == "Retrieved pfp") {
-          setUserPfpPath('http://localhost:8081/uploads/' + res.data.pfp);
+          setUserPfpPath(`${process.env.REACT_APP_DATABASE_URL}/uploads/` + res.data.pfp);
         }
         else {
           setUserPfpPath('https://nationalkidneypartners.com/wp-content/uploads/2023/05/headshot-placeholder.webp'); //default pfp
@@ -155,12 +178,12 @@ function App() {
   return (
     <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle, hardMode, setHardMode}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle, hardMode, setHardMode, winCompliment, setWinCompliment, missingGreen, setMissingGreen, missingYellow, setMissingYellow, missingGreenLetter, setMissingGreenLetter, missingYellowLetter, setMissingYellowLetter, correctWord, setCorrectWord}}>
       
         {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>
-          <div className={`absolute top-0 left-0 w-full z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } h-[946px]`}/>
-            <Header />
+          <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } xl:w-full xl:h-[400px]`}/>
+            <Header className='xl:w-full xl:h-[20px]'/>
             <Grid />
             <Keys />
         </>

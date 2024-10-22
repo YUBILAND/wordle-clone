@@ -90,7 +90,7 @@ const LeaderBoard = () => {
                         ind === 2 && setRankThreeImg(defaultPfp);
                     }
                     else {
-                        const header = 'http://localhost:8081/uploads/'
+                        const header = `${process.env.REACT_APP_DATABASE_URL}/uploads/`
                         ind === 0 && setRankOneImg(header + res.data.pfp);
                         ind === 1 && setRankTwoImg(header + res.data.pfp);
                         ind === 2 && setRankThreeImg(header + res.data.pfp);
