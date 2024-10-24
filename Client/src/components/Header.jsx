@@ -120,19 +120,38 @@ const Header = () => {
       "Phew"          
   ];
 
+  const [notifications, setNotifications] = useState([]);
+
+  const {clickNotEnough, setClickNotEnough} = useContext(KeyboardContext);
+
+
+  useEffect(() => {
+    const newNotification = { id: Date.now()}
+    setNotifications(prev => [...prev, newNotification]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(notification => notification.id !== newNotification.id))
+    }, 1000)
+
+  }, [clickNotEnough]);
+
   return (
     <div className='relative w-fit mx-auto'>
 
+      <div className='flex flex-col'>
+            
+
+            {/* {notEnough && <div id='notEN' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>} */}
+            {/* {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>} */}
+            {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
             {guestMode && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <span className={`${colorBlind ? 'text-[#f5793a]' : 'text-green-600'} text-2xl rounded-md p-1 font-bold tracking-widest`}>Guest Mode</span> </div>}
             {userMode && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
             {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
-            {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>}
-            {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
+            
             {clickDisabledLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
             {clickDisabledProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
             {missingGreen && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingGreenLetter}</span> </div>}
             {!missingGreen && missingYellow && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingYellowLetter}</span> </div>}
-
+      </div>
             {(winPage || delay )&& 
             <Zoom in={winPage} timeout={500}>
                 <div className='absolute top-[250px] left-0 mx-auto w-full h-fit rounded-md shadow-xl z-20' >
@@ -159,7 +178,7 @@ const Header = () => {
         <div className='fixed top-0 left-0'> <Profile /> </div>
       </Slide>
 
-      <div>
+      <div className='relative text-center'>
 
         <div className='flex items-center mx-auto w-[500px]  py-2 border-b border-b-gray-300'>
             <div className='basis-[14%] flex justify-between'>
@@ -176,8 +195,28 @@ const Header = () => {
             </div>
         </div>
 
-        <div className='min-h-[60px]'> </div>
+        <div className='min-h-[60px]'>
+
+        </div>
+
+        
       </div>
+
+      <div className='absolute left-0 right-0 mx-auto flex flex-col items-center z-20 '> 
+
+        {notifications.map((val) => {
+              return (
+              // <div className='absolute top-[120px] left-0 flex justify-center w-full'> 
+              //   <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>
+              //     Not enough letters</span> 
+              // </div>
+                <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px] mb-1`}>
+                  Not enough letters</span> 
+
+              )
+            })}
+        </div>
+
 
       {winPage && <div className={`fixed top-0 left-0 w-screen h-screen ${darkMode ? 'bg-black/50' : 'bg-white/50'} z-10`}>
               </div> }

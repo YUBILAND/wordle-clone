@@ -58,6 +58,9 @@ const Keys = () => {
 
     const [update, setUpdate] = useState(false);
 
+    const {leftWiggle, setLeftWiggle} = useContext(KeyboardContext);
+    const {rightWiggle, setRightWiggle} = useContext(KeyboardContext);
+
     useEffect(() => { //overwrites previous inaccurate guess with updated color, ex. word is blimp, first guess is pupil, l is yellow, second guess plane, l is green , overwrite with green
         
         // console.log(`green is ${[...new Set(green)]}`)
@@ -92,23 +95,18 @@ const Keys = () => {
     }, [green, yellow, gray])
 
 
-   const {guessLength, setGuessLength} = useContext(KeyboardContext);
-
+    const {guessLength, setGuessLength} = useContext(KeyboardContext);
     const {settings, showSettings} = useContext(KeyboardContext);
-
     const [clickedSettings, setClickedSettings] = useState(false);
     const skipMount = useRef(false);
     useEffect(() => {
-
         if (!skipMount.current) { //skip mount
             skipMount.current = true;
             return;
         }
-        
         if (skipMount.current) {
             setClickedSettings(true); // user clicked on settings
         }
-
     }, [settings, guessLength])
 
     const {doneHash, setDoneHash} = useContext(KeyboardContext);
@@ -281,7 +279,7 @@ const Keys = () => {
             //so when a letter changes from yellow to green we need to remove yellow from the class. only applies for yellow -> green b/c gray and green will never change color.
         }
 
-    },[greenString, yellowString, grayString, darkMode, colorBlind, settings, guessLength, random])
+    },[greenString, yellowString, grayString, darkMode, colorBlind, settings, guessLength, random, leftWiggle, rightWiggle])
 
     const{guesses, setGuesses} = useContext(KeyboardContext);
     const {canEnterHash, setCanEnterHash} = useContext(KeyboardContext);
@@ -316,22 +314,40 @@ const Keys = () => {
             const doneKey = firstFalseKey.replace('Done', '')
             const canEnterKey = doneKey + 'CanEnter';
             
-            if (button == "DEL" && guessLength > 0) {
-                setGuessLength(prevGuessLen => prevGuessLen - 1);
-                setGuesses( prevGuess => ({ ...prevGuess, [doneKey] : (prevGuess[doneKey].slice(0, prevGuess[doneKey].length - 1))}))
-            } else if (button == "ENTER") {
-                if (canEnterHash[canEnterKey]) {
-                    if (wordleList.includes(guesses[doneKey].toLowerCase())) {
+            if (button == "DEL") { // if press delete key
+                if (guessLength > 0) { // if guess is not empty delete that character
+                    setGuessLength(prevGuessLen => prevGuessLen - 1);
+                    setGuesses( prevGuess => ({ ...prevGuess, [doneKey] : (prevGuess[doneKey].slice(0, prevGuess[doneKey].length - 1))}))
+                }
+                else { // else if it is empty, show left wiggle to indicate no char to delete
+                    setLeftWiggle(firstFalseKey);
+                    setClickedSettings(true); //basically doesn't cause the timeout slide animation
+                    setTimeout(() => {
+                        setLeftWiggle('');
+                    }, 100)
+                }
+            } else if (button == "ENTER") { // else if button is "ENTER"
+                if (canEnterHash[canEnterKey]) { // if canEnter is true
+                    if (wordleList.includes(guesses[doneKey].toLowerCase())) { // if word is a valid word
                         setEnterPressed(true);
                         setRemoveStyle(false);
                         setDoneHash(prevDone => ({ ...prevDone, [firstFalseKey]: true}));
                         setGuessLength(0);
-                    } else setWrongWord(true);
-                } else setNotEnough(true);
-            } else if (button != "DEL" && guessLength < 5){
-                setGuessLength(prevGuessLen => prevGuessLen + 1)
-                setGuesses( prevGuess => ({ ...prevGuess, [doneKey]: (prevGuess[doneKey] + button.toUpperCase())}))
-                setClickedSettings(true); 
+                    } else setWrongWord(true); // else if word not valid show wrong word banner
+                } else setNotEnough(true); // else if canEnter is false, means there is not enough chars
+            } else { // else if letter is pressed (button pressed is not "del" or 'enter', then it must be a letter)
+                if (guessLength < 5) { // if guess is not full add letter to guess
+                    setGuessLength(prevGuessLen => prevGuessLen + 1)
+                    setGuesses( prevGuess => ({ ...prevGuess, [doneKey]: (prevGuess[doneKey] + button.toUpperCase())}))
+                    setClickedSettings(true); 
+                } else if (guessLength === 5) { // else if it is full, produce right wiggle to indicate you can't add anymore
+                    setRightWiggle(firstFalseKey);
+                    setClickedSettings(true); //basically doesn't cause the timeout slide animation
+
+                    setTimeout(() => {
+                        setRightWiggle('');
+                    }, 100)
+                }
             }
         }
     }
