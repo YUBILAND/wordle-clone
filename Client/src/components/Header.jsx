@@ -186,9 +186,9 @@ const Header = () => {
       
       {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
-      <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
+      {/* <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
         <div className='absolute top-0 left-0 z-20'> <LeaderBoard /> </div>
-      </Slide>
+      </Slide> */}
 
       <Slide direction="up" in={tutorial} mountOnEnter unmountOnExit timeout={300}>
         <div className='fixed top-0 left-0 z-20'> <Tutorial /> </div>

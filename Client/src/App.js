@@ -7,6 +7,8 @@ import { KeyboardContext } from './Contexts/KeyboardContext';
 import Login from './components/Login';
 import LandingPage from './components/LandingPage';
 import axios from 'axios';
+import LeaderBoard from './components/LeaderBoard';
+import Slide from '@mui/material/Slide';
 
 
 function App() {
@@ -189,6 +191,9 @@ function App() {
           <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } `}/>
           <div className='w-screen h-screen flex flex-col justify-between'>
             <Header />
+            <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
+              <div className='absolute top-0 w-screen bg-black left-0 z-20'> <LeaderBoard /> </div>
+            </Slide>
             <Grid />
             <Keys />
           </div>
