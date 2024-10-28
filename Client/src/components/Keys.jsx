@@ -302,6 +302,9 @@ const Keys = () => {
             }, 1000)
         }
     }
+
+    const {clickNotEnough, setClickNotEnough} = useContext(KeyboardContext);
+    const {clickWrongWord, setClickWrongWord} = useContext(KeyboardContext);
     
     const onKeyPress = button => {
 
@@ -333,8 +336,14 @@ const Keys = () => {
                         setRemoveStyle(false);
                         setDoneHash(prevDone => ({ ...prevDone, [firstFalseKey]: true}));
                         setGuessLength(0);
-                    } else setWrongWord(true); // else if word not valid show wrong word banner
-                } else setNotEnough(true); // else if canEnter is false, means there is not enough chars
+                    } else {
+                        setWrongWord(true); // else if word not valid show wrong word banner
+                        setClickWrongWord(prev => !prev)
+                    }
+                } else {
+                    setNotEnough(true); // else if canEnter is false, means there is not enough chars
+                    setClickNotEnough(prev => !prev)
+                }
             } else { // else if letter is pressed (button pressed is not "del" or 'enter', then it must be a letter)
                 if (guessLength < 5) { // if guess is not full add letter to guess
                     setGuessLength(prevGuessLen => prevGuessLen + 1)
@@ -355,30 +364,30 @@ const Keys = () => {
 
 
     return (
-        <div className='mx-auto w-[500px] h-[198px]'>
+        <div className='mx-auto w-[500px] sm:w-screen h-[198px]'>
 
-        <Keyboard 
-        className="kibord w-full p-0"
-        // onChange={kbChange}
-        onKeyPress={onKeyPress}
-        modules = {[inputMask]}
-        inputMask ={{
-            default: {
-            mask: '12345',
-            regex: /^[a-zA-Z0-9_-]*$/
-            }
-        }}
-        layout={{
-            default : [
-            'q w e r t y u i o p',
-            'a s d f g h j k l',
-            'ENTER z x c v b n m DEL'
-            ]
-        }}
-        buttonTheme={buttonTheme.current}
-        theme="hg-theme-default board"
-        
-        />
+            <Keyboard 
+            className="kibord w-full p-0"
+            // onChange={kbChange}
+            onKeyPress={onKeyPress}
+            modules = {[inputMask]}
+            inputMask ={{
+                default: {
+                mask: '12345',
+                regex: /^[a-zA-Z0-9_-]*$/
+                }
+            }}
+            layout={{
+                default : [
+                'q w e r t y u i o p',
+                'a s d f g h j k l',
+                'ENTER z x c v b n m DEL'
+                ]
+            }}
+            buttonTheme={buttonTheme.current}
+            theme="hg-theme-default board"
+            
+            />
         </div>
     )
 }

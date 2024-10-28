@@ -7,15 +7,15 @@
     margin: 0;
  }
 
-@media (max-width: 800px) {
-    p {
-        background-color: orange;
-    }
-}
 
-
-@media (max-width: 736px) {
-    p {
-        background-color: blue;
+/* @media (max-width: 500px) {
+    .Header {
+        width: 100vw;
     }
-}
+} */
+
+/* @media (max-width: 500px) {
+    .custom-width {
+        width: 100vw;
+    }
+} */

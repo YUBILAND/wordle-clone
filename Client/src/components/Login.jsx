@@ -36,12 +36,14 @@ const Login = () => {
         axios.post(`${process.env.REACT_APP_DATABASE_URL}/login`, logAcc)
         .then(res => {
             if (res.data.message == "Logged In Successfully!") {
-                
+                console.log("CLEARED HERE")
                 setWrongCred(false);
                 showLoginPage(false);
                 setUserMode(true)
                 setSettingsLoading(true);
                 setUserID({id: res.data.id, username : res.data.username})
+                localStorage.clear();
+                window.location.reload()
                 
             } else { 
                 console.log(res.data.message)

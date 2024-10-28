@@ -122,7 +122,7 @@ function App() {
   const [rightWiggle, setRightWiggle] = useState('');
 
   const [clickNotEnough, setClickNotEnough] = useState(false);
-
+  const [clickWrongWord, setClickWrongWord] = useState(false);
 
 
   const checkAuth = async () => {
@@ -180,15 +180,15 @@ function App() {
   }, [userID])
 
   return (
-    <div className={`App  ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`App ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
       
-      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle, hardMode, setHardMode, winCompliment, setWinCompliment, missingGreen, setMissingGreen, missingYellow, setMissingYellow, missingGreenLetter, setMissingGreenLetter, missingYellowLetter, setMissingYellowLetter, correctWord, setCorrectWord, leftWiggle, setLeftWiggle, rightWiggle, setRightWiggle, clickNotEnough, setClickNotEnough}}>
+      <KeyboardContext.Provider value={{kbColor, setKbColor, winPage, setWinPage, tutorial, showTutorial, settings, showSettings, guestMode, setGuestMode, userMode, setUserMode, darkMode, setDarkMode, loginPage, showLoginPage, registerPage, showRegisterPage, userID, setUserID, win, setWin, guessWon, setGuessWon, isAuth, setIsAuth, checkingAuth, setCheckingAuth, guesses, setGuesses, guessLength, setGuessLength, doneHash, setDoneHash, canEnterHash, setCanEnterHash, wordleList, setWordleList, notEnough, setNotEnough, wrongWord, setWrongWord, leaderBoard, showLeaderBoard, accessLeaderBoard, setAccessLeaderBoard, clickDisabledLeaderBoard, setClickDisabledLeaderBoard, profilePage, showProfilePage, userPfpPath, setUserPfpPath, accessProfile, setAccessProfile, clickDisabledProfile, setClickDisabledProfile, delay, setDelay, colorBlind, setColorBlind, answer, showAnswer, settingsLoading, setSettingsLoading, enterPressed, setEnterPressed, removeStyle, setRemoveStyle, hardMode, setHardMode, winCompliment, setWinCompliment, missingGreen, setMissingGreen, missingYellow, setMissingYellow, missingGreenLetter, setMissingGreenLetter, missingYellowLetter, setMissingYellowLetter, correctWord, setCorrectWord, leftWiggle, setLeftWiggle, rightWiggle, setRightWiggle, clickNotEnough, setClickNotEnough, clickWrongWord, setClickWrongWord}}>
       
         {!(guestMode || userMode) || settingsLoading ? <LandingPage /> : //settings loading defualt true so settings like dark mode are fetched hidden while spinning circle displayed.
         <>
           <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } `}/>
           <div className='w-screen h-screen flex flex-col justify-between'>
-            <Header/>
+            <Header />
             <Grid />
             <Keys />
           </div>

@@ -81,7 +81,7 @@ const Statistics = () => {
                 const guessMax = Math.max(stats.guess1, stats.guess2, stats.guess3, stats.guess4, stats.guess5, stats.guess6)
                 setWidth(prevWidth => ({
                     ...prevWidth,
-                    [key]: Math.round( guessMax ? (stats[key] / guessMax * 100) + 10 : 0)
+                    [key]: 10 + Math.round( guessMax ? (stats[key] / guessMax * 100) * (100 - 10) / 100 : 0)
                 })) 
             } )
         }

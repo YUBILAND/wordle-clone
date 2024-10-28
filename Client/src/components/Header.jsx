@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -19,49 +19,45 @@ import Statistics from './Statistics';
 
 
 const Header = () => {
+
+  // -------------------VARIABLES-------------------------------
+
   const {winPage, setWinPage} = useContext(KeyboardContext);
   const {tutorial, showTutorial} = useContext(KeyboardContext);
   const {settings, showSettings} = useContext(KeyboardContext);
   const {leaderBoard, showLeaderBoard} = useContext(KeyboardContext);
   const {accessLeaderBoard, setAccessLeaderBoard} = useContext(KeyboardContext);
   const {clickDisabledLeaderBoard, setClickDisabledLeaderBoard} = useContext(KeyboardContext);
-
   const {profilePage, showProfilePage} = useContext(KeyboardContext);
   const {accessProfile, setAccessProfile} = useContext(KeyboardContext);
   const {clickDisabledProfile, setClickDisabledProfile} = useContext(KeyboardContext);
-
   const {guestMode, setGuestMode} = useContext(KeyboardContext);
   const {userMode, setUserMode} = useContext(KeyboardContext);
-
   const {darkMode} = useContext(KeyboardContext);
   const {userID, setUserID} = useContext(KeyboardContext);
   const {colorBlind, setColorBlind} = useContext(KeyboardContext);
   const {winCompliment, setWinCompliment} = useContext(KeyboardContext);
-
   const {doneHash, setDoneHash} = useContext(KeyboardContext);
   const {notEnough, setNotEnough} = useContext(KeyboardContext);
   const {wrongWord, setWrongWord} = useContext(KeyboardContext);
-
   const {missingGreen, setMissingGreen} = useContext(KeyboardContext);
   const {missingYellow, setMissingYellow} = useContext(KeyboardContext);
   const {missingGreenLetter, setMissingGreenLetter} = useContext(KeyboardContext);
   const {missingYellowLetter, setMissingYellowLetter} = useContext(KeyboardContext);
-
   const {delay, setDelay} = useContext(KeyboardContext);
   const {answer, showAnswer} = useContext(KeyboardContext);
-
   const {correctWord, setCorrectWord} = useContext(KeyboardContext)
-  
+  const {hardMode, setHardMode} = useContext(KeyboardContext);
 
+
+  // -------------------FUNCTIONS-------------------------------
 
   function handleTutorial() {
     showTutorial(!tutorial);
   }
-
   function handleSettings() {
     showSettings(!settings);
   }
-
   function handleStats() {
     setWinPage(!winPage);
   }
@@ -88,6 +84,8 @@ const Header = () => {
     else {
       showLeaderBoard(false); 
       setClickDisabledLeaderBoard(true);
+      setClickDisableLeaderboard(!clickDisableLeaderboard);
+      
     }
   }
 
@@ -98,10 +96,9 @@ const Header = () => {
     else {
       showProfilePage(false); 
       setClickDisabledProfile(true);
+      setClickDisableProfile(!clickDisableProfile);
     }
   }
-
-  const {hardMode, setHardMode} = useContext(KeyboardContext);
 
   function whichCompliment() { // determines which compliment to give based on how many guesses player took
       const firstTrueIndex = Object.entries(doneHash).findIndex(([key, value]) => !value);
@@ -123,70 +120,97 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
 
   const {clickNotEnough, setClickNotEnough} = useContext(KeyboardContext);
+  const clickNotEnoughRef = useRef(false);
 
+  const {clickWrongWord, setClickWrongWord} = useContext(KeyboardContext);
+  const clickWrongWordRef = useRef(false);
 
+  const [clickDisableLeaderboard, setClickDisableLeaderboard] = useState(false);
+  const clickDisableLeaderboardRef = useRef(false);
+
+  const [clickDisableProfile, setClickDisableProfile] = useState(false);
+  const clickDisableProfileRef = useRef(false);
+
+  let newNotification = {}
   useEffect(() => {
-    const newNotification = { id: Date.now()}
+    if (!notEnough && !wrongWord && !clickDisableLeaderboard && !clickDisableProfile) {
+      return;
+    }
+
+    if (notEnough) {
+      // clickNotEnoughRef.current = clickNotEnough
+      newNotification = { id: Date.now(), message: 'Not enough letters'}
+    }
+    else if (wrongWord) {
+      // clickWrongWordRef.current = clickWrongWord
+      newNotification = { id: Date.now(), message: 'Not in word list'}
+    }
+    else if (clickDisabledLeaderBoard) {
+      // clickWrongWordRef.current = clickWrongWord
+      newNotification = { id: Date.now(), message: 'Login to access leaderboard'}
+    }
+    else if (clickDisabledProfile) {
+      // clickWrongWordRef.current = clickWrongWord
+      newNotification = { id: Date.now(), message: 'Login to access profile'}
+    }
+    // Login to access leaderboards
     setNotifications(prev => [...prev, newNotification]);
     setTimeout(() => {
       setNotifications(prev => prev.filter(notification => notification.id !== newNotification.id))
-    }, 1000)
+    }, 1500)
+    
+    
 
-  }, [clickNotEnough]);
+  }, [clickNotEnough, clickWrongWord, clickDisableLeaderboard, clickDisableProfile]);
 
   return (
     <div className='relative w-fit mx-auto'>
 
       <div className='flex flex-col'>
             
-
-            {/* {notEnough && <div id='notEN' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>} */}
-            {/* {notEnough && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Not enough letters</span> </div>} */}
-            {wrongWord && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Not in word list</span> </div>}
             {guestMode && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <span className={`${colorBlind ? 'text-[#f5793a]' : 'text-green-600'} text-2xl rounded-md p-1 font-bold tracking-widest`}>Guest Mode</span> </div>}
             {userMode && <div className='select-none absolute top-[60px] left-0 flex justify-center w-full'> <button className={` ${darkMode ?'text-gray-200' : 'text-gray-500' } text-2xl rounded-md p-1 font-bold tracking-widest cursor-default`}>{userID.username}</button> </div>}
             {winCompliment && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{compliments[whichCompliment()] || ''}</span> </div>}
             
-            {clickDisabledLeaderBoard && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access leaderboards</span> </div>}
-            {clickDisabledProfile && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>Login to access profile</span> </div>}
+            
             {missingGreen && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingGreenLetter}</span> </div>}
             {!missingGreen && missingYellow && <div id='hidePls' className='absolute top-[120px] left-0 flex justify-center w-full'> <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>Guess must contain {missingYellowLetter}</span> </div>}
       </div>
-            {(winPage || delay )&& 
-            <Zoom in={winPage} timeout={500}>
-                <div className='absolute top-[250px] left-0 mx-auto w-full h-fit rounded-md shadow-xl z-20' >
-                    <Statistics /> 
-                </div>
-            </Zoom>
-            }
-            
-            {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
+      {(winPage || delay )&& 
+      <Zoom in={winPage} timeout={500}>
+          <div className='absolute top-[250px] left-0 mx-auto w-full h-fit rounded-md shadow-xl z-20' >
+              <Statistics /> 
+          </div>
+      </Zoom>
+      }
+      
+      {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
       <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
-        <div className='fixed top-0 left-0'> <LeaderBoard /> </div>
+        <div className='absolute top-0 left-0 z-20'> <LeaderBoard /> </div>
       </Slide>
 
       <Slide direction="up" in={tutorial} mountOnEnter unmountOnExit timeout={300}>
-        <div className='fixed top-0 left-0'> <Tutorial /> </div>
+        <div className='fixed top-0 left-0 z-20'> <Tutorial /> </div>
       </Slide>
 
       <Slide direction="up" in={settings} mountOnEnter unmountOnExit timeout={300}>
-        <div className='fixed top-0 left-0'> <Settings /> </div>
+        <div className='fixed top-0 left-0 z-20'> <Settings /> </div>
       </Slide>
 
       <Slide direction="up" in={profilePage} mountOnEnter unmountOnExit timeout={300}>
-        <div className='fixed top-0 left-0'> <Profile /> </div>
+        <div className='fixed top-0 left-0 z-20'> <Profile /> </div>
       </Slide>
 
-      <div className='relative text-center'>
+      <div className='relative text-center z-0'>
 
-        <div className='flex items-center mx-auto w-[500px]  py-2 border-b border-b-gray-300'>
+        <div className='flex items-center mx-auto w-[500px] sm:w-screen py-2 border-b border-b-gray-300 sm:px-2'>
             <div className='basis-[14%] flex justify-between'>
                 <HelpOutlineIcon onClick={handleTutorial} className='text-gray-400 cursor-pointer'/>
                 <LeaderboardOutlinedIcon onClick={handleLeaderBoard} className={ guestMode ? (darkMode ? 'text-gray-600' : 'text-gray-200') : 'text-gray-400 cursor-pointer' }/>
             </div>
             <div className='basis-[70%] pl-6'>
-                <div className={`${hardMode && 'text-red-600'} pl-7 select-none text-right font-bold uppercase text-3xl tracking-[0.2rem] pr-4`}>Wordle Clone</div>
+                <div className={`${hardMode && 'text-red-600'} pl-7 select-none text-center font-bold uppercase text-3xl sm:text-[calc(100vw_/_40_*_1.875)] tracking-[0.2rem] pr-4`}>Wordle Clone</div>
             </div>
             <div className='basis-[20%] flex justify-between'>
                 <AccountBoxOutlinedIcon onClick={handleProfile} className={ guestMode ? (darkMode ? 'text-gray-600' : 'text-gray-200') : 'text-gray-400 cursor-pointer' }/>
@@ -196,25 +220,18 @@ const Header = () => {
         </div>
 
         <div className='min-h-[60px]'>
-
         </div>
-
         
       </div>
 
-      <div className='absolute left-0 right-0 mx-auto flex flex-col items-center z-20 '> 
+      <div className='absolute left-0 right-0 mx-auto flex flex-col-reverse items-center max-w-fit z-10'>
 
         {notifications.map((val) => {
-              return (
-              // <div className='absolute top-[120px] left-0 flex justify-center w-full'> 
-              //   <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px]`}>
-              //     Not enough letters</span> 
-              // </div>
-                <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md  p-3 font-bold tracking-[0.5px] mb-1`}>
-                  Not enough letters</span> 
-
-              )
-            })}
+            return (
+              <span className={`${darkMode ? 'bg-[#d7dadc] text-black' : 'bg-black text-white'} rounded-md p-3 font-bold tracking-[0.5px] mb-1`}>
+                {val.message}</span> 
+            )
+        })}
         </div>
 
 

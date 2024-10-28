@@ -39,6 +39,9 @@ const Register = () => {
                 setWrong(false);
                 setUserMode(true);
                 setSettingsLoading(true);
+                localStorage.clear();
+                window.location.reload()
+                
             } else { 
                 setWrong(true);
             }

@@ -158,7 +158,7 @@ const Profile = () => {
         </Zoom>
         
         <div className={`absolute top-0 left-0 w-screen h-[930px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
-            <div className=' w-[500px] mx-auto'>
+            <div className=' w-[500px] sm:w-screen mx-auto'>
                 <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
                     <button className='uppercase tracking-[0.5px] font-bold cursor-default select-none'>Profile</button>
