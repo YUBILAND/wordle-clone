@@ -13,7 +13,7 @@ const Tutorial = () => {
     }
   return (
     
-    <div className={`absolute top-0 left-0 w-screen h-[930px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`absolute top-0 left-0 w-screen h-screen z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
         <div className='w-[500px] sm:w-screen px-4 mx-auto select-none'>
             <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>

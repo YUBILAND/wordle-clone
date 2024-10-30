@@ -552,7 +552,7 @@ const Grid = () => {
 
   return (
 
-    <div className={`mx-auto w-[500px] sm:w-screen opacity-100 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+    <div className={`mx-auto w-[500px] sm:w-screen ${(window.innerHeight < window.innerWidth*2) && 'sm:h-[57vh]'} my-auto opacity-100 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
         <div className='grid grid-cols-5 w-max mx-auto gap-2'>
         {clickedSettings 
             ?
@@ -570,7 +570,7 @@ const Grid = () => {
                                 res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                 res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                 ( darkMode ? 'DMgray' : 'gray' ) } 
-                                flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold text-white` }>
+                                flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold text-white` }>
                                 {guesses[firstDonetoFirst][ind] || ''}
                             </div>
                             
@@ -578,11 +578,11 @@ const Grid = () => {
                         : [0,1,2,3,4].map((res) => ( // this prevents row from disappearing, im assuming that doneHash updates but guessResults hasn't so there is a missing row that won't be accounted for thus it would disappear for a split second causing Keys to shift up, this takes care of that scenario by keeping an empty row there until guessResults updates in which case it will show the guessed gridbox, WEIRDLY THIS GLITCH ONLY SHOWS AFTER clickedSettings, on mount doesn't show
                             guesses[firstDonetoFirst][res] 
                             ? 
-                            <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold'> 
+                            <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold'> 
                                 {guesses[firstDonetoFirst][res]} 
                             </div>
                             : 
-                            <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold'>
+                            <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold'>
                             </div>
                         
                         ))
@@ -594,12 +594,12 @@ const Grid = () => {
                         guesses[firstDonetoFirst][res] // if the user typed in letters but didn't enter the guess
                         ?  //show letters in gridbox
                         <div className={`${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} ${(notEnough || wrongWord) && 'wiggle'} w-max`}>
-                            <div key={res} className={`${guesses[firstDonetoFirst][res] && 'pop'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold`}>
+                            <div key={res} className={`${guesses[firstDonetoFirst][res] && 'pop'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold`}>
                                 {guesses[firstDonetoFirst][res]}
                             </div>
                         </div>
                         : // else show nothing
-                        <div key={res} className={`select-none border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold`}>
+                        <div key={res} className={`select-none border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold`}>
                         </div>
                     ))}
                 </>
@@ -631,18 +631,18 @@ const Grid = () => {
                                                 res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                                 res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                                 ( darkMode ? 'DMgray' : 'gray' ) } 
-                                                flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold text-white` }>
+                                                flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold text-white` }>
                                                 {guesses[firstDonetoFirst][ind] || ''}
                                             </div>
                                         )
                                     }))  : [0,1,2,3,4].map((res) => ( // FIX GLITCH OF MISSING ROW
                                         guesses[firstDonetoFirst][res]
                                         ? 
-                                        <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold'>
+                                        <div className='select-none border-2 border-gray-500 flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold'>
                                             {guesses[firstDonetoFirst][res]}
                                         </div>
                                         : 
-                                        <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold'>
+                                        <div className='select-none border-2 border-gray-300 flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold'>
                                         </div>
                                     
                                     ))
@@ -657,7 +657,7 @@ const Grid = () => {
                                             res == 'green' ? ( colorBlind ? 'CBgreen'  : 'green' ) :  
                                             res == 'yellow' ? ( colorBlind ? 'CByellow' : 'yellow' ) : 
                                             ( darkMode ? 'DMgray' : 'gray' ) } 
-                                            flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold text-white  `}>
+                                            flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold text-white  `}>
                                             {guesses[firstDonetoFirst][ind] || ''}
                                         </div>
                                     )))  
@@ -669,13 +669,13 @@ const Grid = () => {
                                     guesses[firstDonetoFirst][res]
                                     ? 
                                     <div className={`${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} ${(notEnough || wrongWord) && 'wiggle'} w-max`}>
-                                        <div key={res} className={`${guesses[firstDonetoFirst][res] && 'pop'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold`}>
+                                        <div key={res} className={`${guesses[firstDonetoFirst][res] && 'pop'} ${rightWiggle.length && key == rightWiggle && 'addNothingWiggle'} select-none border-2 border-[#565758] flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold`}>
                                             {guesses[firstDonetoFirst][res]}
                                         </div>
                                     </div>
                                     
                                     : // EMPTY ROWS
-                                    <div key={res} className={`select-none border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[64px] sm:w-[calc(100vw_/_500_*_64)] h-[64px] sm:h-[calc(100vw_/_500_*_64)] uppercase text-3xl font-bold`}>
+                                    <div key={res} className={`select-none border-2 ${darkMode && 'border-[#3a3a3c]'} ${key == firstFalseKey && (notEnough || wrongWord) && 'wiggle'} ${leftWiggle.length && key == leftWiggle && 'deleteNothingWiggle'} flex items-center justify-center w-[8vh] sm:w-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] h-[8vh] sm:h-[min(calc(100vw_/_500_*_64),calc(100vh_/_740_*_64))] uppercase text-3xl font-bold`}>
                                         
                                     </div>
                                 ))}

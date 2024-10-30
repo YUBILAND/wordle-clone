@@ -15,9 +15,6 @@ import Zoom from '@mui/material/Zoom';
 import Statistics from './Statistics';
 
 
-
-
-
 const Header = () => {
 
   // -------------------VARIABLES-------------------------------
@@ -186,10 +183,6 @@ const Header = () => {
       
       {answer && <div className='absolute top-[120px] left-0 flex justify-center w-full'> <span className='bg-black rounded-md text-white p-3 font-bold tracking-[0.5px]'>{correctWord}</span> </div>}
 
-      {/* <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
-        <div className='absolute top-0 left-0 z-20'> <LeaderBoard /> </div>
-      </Slide> */}
-
       <Slide direction="up" in={tutorial} mountOnEnter unmountOnExit timeout={300}>
         <div className='fixed top-0 left-0 z-20'> <Tutorial /> </div>
       </Slide>
@@ -205,14 +198,14 @@ const Header = () => {
       <div className='relative text-center z-0'>
 
         <div className='flex items-center mx-auto w-[500px] sm:w-screen py-2 border-b border-b-gray-300 sm:px-2'>
-            <div className='basis-[14%] flex justify-between'>
+            <div className='basis-[14%] sm:basis-[18%] flex justify-between'>
                 <HelpOutlineIcon onClick={handleTutorial} className='text-gray-400 cursor-pointer'/>
                 <LeaderboardOutlinedIcon onClick={handleLeaderBoard} className={ guestMode ? (darkMode ? 'text-gray-600' : 'text-gray-200') : 'text-gray-400 cursor-pointer' }/>
             </div>
-            <div className='basis-[70%] pl-6'>
-                <div className={`${hardMode && 'text-red-600'} pl-7 select-none text-center font-bold uppercase text-3xl sm:text-[calc(100vw_/_40_*_1.875)] tracking-[0.2rem] pr-4`}>Wordle Clone</div>
+            <div className='basis-[70%] xs:basis-[60%] pl-6 sm:p-0'>
+                <div className={`${hardMode && 'text-red-600'} pl-7 xs:p-0 select-none text-center font-bold uppercase text-3xl sm:text-[calc(100vw_/_40_*_1.875)] tracking-[0.2rem] pr-4`}>Wordle Clone</div>
             </div>
-            <div className='basis-[20%] flex justify-between'>
+            <div className='basis-[20%] sm:basis-[25%] flex justify-between'>
                 <AccountBoxOutlinedIcon onClick={handleProfile} className={ guestMode ? (darkMode ? 'text-gray-600' : 'text-gray-200') : 'text-gray-400 cursor-pointer' }/>
                 <ShowChartIcon onClick={handleStats} className='text-gray-400 cursor-pointer'/>
                 <SettingsIcon onClick={handleSettings} className='text-gray-400 cursor-pointer'/>

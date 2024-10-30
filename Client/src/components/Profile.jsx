@@ -131,7 +131,7 @@ const Profile = () => {
   return (
     <div>
         { changeName && //Opaque background for when popup changeName
-            <div className={`absolute top-0 left-0 w-screen h-[930px] ${darkMode ? 'bg-black/50' : 'bg-white/50' } z-20`}>
+            <div className={`absolute top-0 left-0 w-screen h-screen ${darkMode ? 'bg-black/50' : 'bg-white/50' } z-20`}>
             </div>
         }
         {/* Change Name pop up */}

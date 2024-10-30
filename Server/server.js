@@ -251,7 +251,7 @@ const authenticateToken = (req, res, next) => {
                     } else res.json({message: "Username or password is incorrect"});
 
                 } catch (compareErr) {
-                    return res.json(compareErr)
+                    return res.json({message: 'ERROR API'});
                 }
                 // return res.json({ message: "Logged in", accessToken: accessToken });
             } else

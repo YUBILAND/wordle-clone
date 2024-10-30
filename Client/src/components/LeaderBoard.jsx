@@ -28,6 +28,7 @@ const LeaderBoard = () => {
 
   function handleX() {
     showLeaderBoard(!leaderBoard);
+    // window.scrollTo(0, 0);
     }
 
     useEffect(() => { // fetches leaderboard data namely highest streak
@@ -105,9 +106,9 @@ const LeaderBoard = () => {
 
   return (
     <>
-        <div className={`absolute top-0 left-0 right-0 mx-auto h-fit z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+        <div className={`absolute top-0 left-0 right-0 mx-auto ${leaderBoard ? 'overflow-y-auto' : 'overflow-hidden'} h-screen z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
             <div className='w-[500px] sm:w-screen mx-auto'>
-                <div className={`w-[500px] rounded-md sm:w-screen fixed top-0 left-0 right-0 mx-auto ${darkMode ? 'bg-[#121213]' : 'bg-white'} z-10`}>
+                <div className={`w-[500px] rounded-b-md sm:w-screen fixed top-0 left-0 right-0 mx-auto ${darkMode ? 'bg-[#121213]' : 'bg-white'} z-10`}>
                     <div className='flex justify-between font-bold tracking-widest uppercase my-2'>
                         <CloseIcon sx={{opacity: '0'}}/>
                         <button className='uppercase cursor-default select-none'>Leaderboard</button>

@@ -190,12 +190,12 @@ function App() {
         <>
           <div className={`absolute top-0 left-0 z-[-10] ${darkMode ? 'bg-[#121213]' : 'bg-white' } `}/>
           <div className='w-screen h-screen flex flex-col justify-between'>
-            <Header />
-            <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
-              <div className='absolute top-0 w-screen bg-black left-0 z-20'> <LeaderBoard /> </div>
-            </Slide>
-            <Grid />
-            <Keys />
+              <Slide direction="up" in={leaderBoard} mountOnEnter unmountOnExit timeout={300}>
+                <div className='fixed top-0 w-screen bg-black left-0 z-20'> <LeaderBoard /> </div>
+              </Slide>
+              <Header />
+              <Grid />
+              <Keys />
           </div>
         </>
         }
