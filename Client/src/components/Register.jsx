@@ -50,7 +50,7 @@ const Register = () => {
     }
 
   return (
-    <div className='mt-[150px] w-[400px] mx-auto bg-white rounded-md shadow-xl'>
+    <div className='mt-[150px] w-[400px] mx-auto bg-white text-black rounded-md shadow-xl'>
         <div className='pt-2 pr-2 text-right'>
             <CloseIcon className='cursor-pointer' onClick={handleClose} sx={{color: '#787c7e'}}/>
         </div>

@@ -330,17 +330,17 @@ const Settings = () => {
             <div className='text-center py-4'>
               {guestMode && 
               <div className='flex justify-around'>
-                <button onClick={handleLogIn} className='basis-1/2 green text-white w-full h-full py-2 mx-4 font-bold rounded-xl'>Log In</button>
-                <button onClick={handleRegister} className='basis-1/2 green text-white w-full h-full py-2 mx-4 font-bold rounded-xl'>Create an account</button>
+                <button onClick={handleLogIn} className={`${colorBlind ? 'bg-[#f5793a]' : 'green'} basis-1/2 text-white w-full h-full py-2 mx-4 font-bold rounded-xl`}>Log In</button>
+                <button onClick={handleRegister} className={`${colorBlind ? 'bg-[#f5793a]' : 'green'} basis-1/2 text-white w-full h-full py-2 mx-4 font-bold rounded-xl`}>Create an account</button>
               </div>
               }
               {userMode && 
-                <button onClick={handleLogOut} className='bg-red-500 text-white py-2 px-2 font-bold rounded-xl'>Sign Out</button>
+                <button onClick={handleLogOut} className={`${colorBlind ? 'bg-[#871F78]' : 'bg-red-500'} text-white py-2 px-2 font-bold rounded-xl`}>Sign Out</button>
               }
             </div>
 
             <div className='flex justify-center'>
-            <button onClick={handleEraseGuestData} className='bg-red-500 text-white w-1/2 h-full py-2  font-bold rounded-xl'>Erase local data</button>
+            <button onClick={handleEraseGuestData} className={`${colorBlind ? 'bg-[#871F78]' : 'bg-red-500'} text-white w-1/2 h-full py-2  font-bold rounded-xl`}>Erase local data</button>
 
 
             </div>

@@ -35,7 +35,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className='fixed top-0 left-0 bg-[#e3e3e1] w-screen h-screen'>
+    <div className='fixed top-0 left-0 bg-[#e3e3e1] text-black w-screen h-screen'>
         <div className='w-[500px] sm:w-screen mx-auto mt-8'>
 
             <div className='flex flex-col items-center'>
