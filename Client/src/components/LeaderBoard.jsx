@@ -108,13 +108,14 @@ const LeaderBoard = () => {
     <>
         <div className={`absolute top-0 left-0 right-0 mx-auto ${leaderBoard ? 'overflow-y-auto' : 'overflow-hidden'} h-screen z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
             <div className='w-[500px] sm:w-screen mx-auto'>
-                <div className={`w-[500px] rounded-b-md sm:w-screen fixed top-0 left-0 right-0 mx-auto ${darkMode ? 'bg-[#121213]' : 'bg-white'} z-10`}>
+                <div className={`w-[500px] rounded-b-md sm:w-screen fixed top-0 ${darkMode ? 'bg-[#121213]' : 'bg-white'} z-10`}>
+                    {/* Title and Close Button */}
                     <div className='flex justify-between font-bold tracking-widest uppercase my-2'>
                         <CloseIcon sx={{opacity: '0'}}/>
                         <button className='uppercase cursor-default select-none'>Leaderboard</button>
                         <CloseIcon className='cursor-pointer' onClick={handleX} sx={{color: '#787c7e'}}/>
                     </div>
-
+                    {/* Top Nav */}
                     <div className='flex justify-around font-bold tracking-widest p-2 border-2 border-[#787c7e] rounded-md mb-2'>
                         <button onClick={handleHighestStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer select-none ${highestButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-yellow-400')}`}>Top Streak</button>
                         <button onClick={handleCurrentStreak} className={`p-2 border-2 border-[#787c7e] rounded-xl cursor-pointer select-none ${streakButton && (darkMode ? 'bg-gray-200 text-black' : 'bg-yellow-400')}`}>Current Streak</button>

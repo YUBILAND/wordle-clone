@@ -136,28 +136,30 @@ const Profile = () => {
         }
         {/* Change Name pop up */}
         <Zoom in={changeName} > 
-            <div className={`text-base absolute w-64 top-[30%] left-[43.5%] border-8 ${darkMode ? 'bg-[#121213] border-gray-400' : 'bg-white border-gray-200'} rounded-md z-30 pb-2`}>
-                <div className='flex justify-between items-center tracking-wide pb-1'>
-                    <CloseIcon sx={{opacity: '0'}}/>
-                    <div className='text-red-500 text-sm pt-2'>{incorrectMsg.short ? 'Username too short' : incorrectMsg.taken ? 'Username already taken' : incorrectMsg.same && 'Bruh thats U'}</div>
-                    <CloseIcon className='cursor-pointer' onClick={handleXChangeName} sx={{color: '#787c7e'}}/>
-                </div>
-                    <div className='text-center pb-2'>
-                        <button className=' pb-2 font-bold tracking-widest cursor-default'>
-                            Change username
-                        </button>
-                        <form onSubmit={handleChangeName}>
-                            <input id="nameField" onChange={handleNewName} className=' !text-black border-2 rounded-md px-2 border-gray-200' type="text" placeholder='New username'/>
-                        
-                            <button type='submit' className=' border-4 border-gray-400 px-2 mt-3 rounded-md font-bold tracking-widest'>
-                                Change
-                            </button>
-                        </form>  
+            <div className='w-screen h-screen'>
+                <div className={`text-base absolute w-64 top-[40%] mt-[-82px] left-0 right-0 mx-auto border-8 ${darkMode ? 'bg-[#121213] border-gray-400' : 'bg-white border-gray-200'} rounded-md z-30 pb-2`}>
+                    <div className='flex justify-between items-center tracking-wide pb-1'>
+                        <CloseIcon sx={{opacity: '0'}}/>
+                        <div className='text-red-500 text-sm pt-2'>{incorrectMsg.short ? 'Username too short' : incorrectMsg.taken ? 'Username already taken' : incorrectMsg.same && 'Bruh thats U'}</div>
+                        <CloseIcon className='cursor-pointer' onClick={handleXChangeName} sx={{color: '#787c7e'}}/>
                     </div>
-            </div> 
+                        <div className='text-center pb-2'>
+                            <button className=' pb-2 font-bold tracking-widest cursor-default'>
+                                Change username
+                            </button>
+                            <form onSubmit={handleChangeName}>
+                                <input id="nameField" onChange={handleNewName} className=' !text-black border-2 rounded-md px-2 border-gray-200' type="text" placeholder='New username'/>
+                            
+                                <button type='submit' className=' border-4 border-gray-400 px-2 mt-3 rounded-md font-bold tracking-widest'>
+                                    Change
+                                </button>
+                            </form>  
+                        </div>
+                </div> 
+            </div>
         </Zoom>
         
-        <div className={`absolute top-0 left-0 w-screen h-[930px] z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+        <div className={`absolute top-0 left-0 w-screen h-screen z-10 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
             <div className=' w-[500px] sm:w-screen mx-auto'>
                 <div className='flex justify-between font-bold tracking-[0.5px] uppercase my-2'>
                     <CloseIcon sx={{opacity: '0'}}/>
