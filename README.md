@@ -2,9 +2,11 @@
 
 A clone of Wordle.
 
-[Wordle Clone](https://david-chen.org)
+[Wordle Clone](https://wordle.david-chen.org)
 
 How to play?
+
+![{AB80E28F-81C9-42A2-B1F3-B6FC74523B70}](https://github.com/user-attachments/assets/aa10ada3-db92-4155-88fc-6cb190dd32c9)
 
 Front end consists of React JS, Tailwind
 
